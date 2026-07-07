@@ -14,6 +14,12 @@ printable models, electronics, firmware, the game brain, and the plan.
 > below are the full technical roadmap; the review tells you which parts a
 > beginner should actually take on first (short version: nail the **manual
 > board**, treat electronics as later, optional projects).
+>
+> **Reuse before you build:** the electronic phases mostly already exist as
+> open-source projects (sensing, opponent engine, self-moving gantry, online
+> play). See [`OPEN_SOURCE.md`](OPEN_SOURCE.md) — fork **Open-Chess** for
+> sensing, **Imperium**+**FluidNC** for the auto-mover, run **Stockfish** for
+> the opponent. Only our mechanical design is genuinely new.
 
 ---
 

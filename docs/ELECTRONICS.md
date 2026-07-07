@@ -83,6 +83,12 @@ The rules/AI are already implemented in
 (ESP32 can run JS via a small interpreter, or transpile the logic to C++ —
 the algorithms in `chess.js`/`ai.js` are the reference).
 
+> **Reuse, don't reinvent:** most of this firmware already exists as
+> open-source. For sensing, fork **Open-Chess** (MIT); for the auto-mover,
+> start from **Imperium** + **FluidNC**; for a strong opponent, run
+> **Stockfish**. See [`OPEN_SOURCE.md`](OPEN_SOURCE.md) for the full reuse map
+> — it turns these phases from "write firmware" into "port firmware."
+
 ## Safety
 
 - Fuse the 12 V rail; strain-relieve everything on the rotating side.

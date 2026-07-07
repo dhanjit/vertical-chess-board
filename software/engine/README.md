@@ -12,6 +12,16 @@ the auto-mover (Phase 3), and back the control app (Phase 4).
 - **`ai.js`** — opponent: negamax + alpha-beta pruning with a material +
   piece-square evaluation. `chooseMove(game, {depth})` returns a move.
 
+## When to use this vs. a real engine
+
+This engine is **dependency-free and tiny** — ideal for on-board move
+validation or a gentle opponent on a microcontroller. For a genuinely *strong*
+opponent, don't extend `ai.js` — run **Stockfish** (the world's best,
+open-source) and set its skill level. If you'd rather use a maintained rules
+library than our `chess.js`, the original **chess.js** (npm, BSD) is a drop-in.
+See [`../../docs/OPEN_SOURCE.md`](../../docs/OPEN_SOURCE.md) for the full reuse
+map.
+
 ## Correctness
 
 Move generation is verified with **perft** from the start position:

@@ -152,6 +152,23 @@ expensive way to do it — avoid unless you have no printer access.
 
 ---
 
+## 7.5. Don't build the electronics from scratch — reuse
+
+The electronic phases (C–E) look scary, but **you mostly won't be inventing
+anything** — the sensing, the computer opponent, the self-moving gantry, and
+online play are all **solved open-source projects** you fork and adapt. Only
+our *mechanical* idea (vertical, rotating, gravity-upright pieces) is new. See
+[`OPEN_SOURCE.md`](OPEN_SOURCE.md) for the full map; the short version:
+
+- **Opponent:** run **Stockfish** (world's best, free), not hand-written AI.
+- **Phase D sensing:** fork **Open-Chess** (MIT, well-documented, same hall-sensor idea).
+- **Phase E auto-mover:** start from **Imperium** + **FluidNC** motion firmware.
+- **App/online:** **lichess API** + a ready-made board UI.
+
+This is why the electronics stages are more approachable than they look — the
+community has done the heavy lifting, and nearly every project just runs
+Stockfish.
+
 ## 8. My recommendation in one line
 
 **Do Stage A this month. If it delights you, do Stage B and hang a board you
