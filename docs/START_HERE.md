@@ -114,6 +114,14 @@ the hand-played wall board, and it's great on its own.
 
 ---
 
+## Want the bigger picture?
+
+- [`PROJECT_REVIEW.md`](PROJECT_REVIEW.md) — an honest review of the whole idea,
+  how hard each part is, and a **staged plan (A–E)** so you always know the next
+  small step and where you can happily stop.
+- [`SOURCING_BANGALORE.md`](SOURCING_BANGALORE.md) — where to print and buy
+  everything in Bengaluru, with rough ₹ costs.
+
 ## If you get stuck
 
 Tell me exactly what happened ("the piece won't stay upright," "the magnet is

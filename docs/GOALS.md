@@ -7,6 +7,14 @@ gravity, and — eventually — plays against you and is controllable from a pho
 This repo is the **single source of truth** for making that real: designs,
 printable models, electronics, firmware, the game brain, and the plan.
 
+> **First-time builder?** Read [`PROJECT_REVIEW.md`](PROJECT_REVIEW.md) — an
+> honest review of the idea, a difficulty/risk read of each feature, and a
+> **re-scoped staged plan (A–E)** that maps onto the phases below. Bengaluru
+> sourcing is in [`SOURCING_BANGALORE.md`](SOURCING_BANGALORE.md). The phases
+> below are the full technical roadmap; the review tells you which parts a
+> beginner should actually take on first (short version: nail the **manual
+> board**, treat electronics as later, optional projects).
+
 ---
 
 ## Guiding principles
@@ -89,7 +97,7 @@ These gate the build. See discussion in [`DESIGN.md` §8](DESIGN.md#8-open-desig
 | D3 | Finish | two-tone print / paint / veneer | ⬜ open |
 | D4 | Rotate policy | every move / button / 2-player only | ⬜ open |
 | D5 | Brain location | phone / Pi / ESP32 | ⬜ open |
-| D6 | Auto-mover in scope? | yes now / later / never | ⬜ open (default later) |
+| D6 | Auto-mover in scope + path | never / later Path B (recline) / Path C (vertical) | ⬜ open (default: later, Path B) — see [DESIGN §6](DESIGN.md#6-phase-3--the-board-plays-you-auto-mover-future-scope) |
 
 When you pick, note it here and I'll propagate the parameters and parts.
 

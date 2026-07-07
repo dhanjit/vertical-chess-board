@@ -21,6 +21,9 @@ electronics, the game brain, and the plan.
 README.md              ← you are here
 CLAUDE.md              ← context for AI sessions working on this repo
 docs/
+  START_HERE.md        ← ⭐ new to this? read first (plain language)
+  PROJECT_REVIEW.md    ← honest review of the idea + re-scoped beginner plan
+  SOURCING_BANGALORE.md← where to print + buy parts locally (₹)
   DESIGN.md            ← how it works (the two mechanics, magnets, sensing)
   GOALS.md             ← vision, phases, roadmap, decisions to lock
   BOM.md               ← shopping list per phase
@@ -43,7 +46,10 @@ app/                   ← control-app spec (future)
 
 **New to 3D printing / electronics? Read [`docs/START_HERE.md`](docs/START_HERE.md)
 first** — a plain-language guide (no experience needed) with a copy-paste
-message for your printer friend and a simple shopping list.
+message for your printer friend and a simple shopping list. Then
+[`docs/PROJECT_REVIEW.md`](docs/PROJECT_REVIEW.md) reviews the idea and lays
+out a realistic staged plan, and [`docs/SOURCING_BANGALORE.md`](docs/SOURCING_BANGALORE.md)
+covers where to print and buy parts in Bengaluru.
 
 Then, when you want the deeper detail:
 1. [`docs/DESIGN.md`](docs/DESIGN.md) — the concept and mechanics.

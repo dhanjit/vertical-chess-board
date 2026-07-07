@@ -161,23 +161,48 @@ one microcontroller — see [`ELECTRONICS.md`](ELECTRONICS.md).
 
 ---
 
-## 6. Phase 3 — the board plays you (future scope)
+## 6. Phase 3 — the board plays you (auto-mover, future scope)
 
-The "board moves its own pieces" trick is the same one used by commercial
-auto-chess boards: an **electromagnet on an XY gantry behind the board**
-grabs a piece's magnet and drags it along the gaps between squares.
+The "board moves its own pieces" trick is the same one commercial auto-chess
+boards use (Square Off, "wizard chess" boards): an **electromagnet on an XY
+gantry behind the board** grabs a piece's magnet and drags it across the front.
 
-- **Gantry:** a Core-XY or H-bot behind the panel, one electromagnet on the
-  carriage. Because pieces slide on the steel sheet, the magnet can pull any
-  piece; knights route along square edges.
-- **Brain:** [`software/engine/ai.js`](../software/engine/ai.js) (negamax +
-  alpha-beta) chooses the move; the gantry executes it; the board rotates;
-  your turn.
+- **Gantry:** a Core-XY / H-bot behind the panel carrying one electromagnet.
+- **Routing:** pieces slide along the **gaps between squares**, so knights and
+  blocked pieces route *around* others; a piece never passes through another.
+- **Captures:** drag the captured piece to an edge **graveyard lane** first,
+  then move the capturing piece.
+- **Brain:** [`software/engine/ai.js`](../software/engine/ai.js) chooses the
+  move; the gantry executes it; the board rotates; your turn.
+
+### The honest hard part (it's harder because our board is vertical)
+
+Commercial auto-boards lie **flat**: gravity holds pieces down and the magnet
+only slides them sideways. Ours is **vertical**, which creates a real conflict:
+
+- Pieces need a constant holding force to the board (our **steel washers**).
+- But the moving electromagnet must reach the pieces **through** the board —
+  and **a steel backing shields/blocks a magnet**.
+
+You can't easily have *steel behind every square holding pieces up* **and**
+*an electromagnet behind the board grabbing them* in the same place. So the
+auto-mover is a **different machine** from the manual board, not a bolt-on.
+Three honest paths:
+
+| Path | What it is | Difficulty |
+|------|-----------|------------|
+| **A. Manual / motor-rotate only** (Phases 1–2) | No robot. Beautiful, achievable. Many people stop here. | approachable |
+| **B. Slight recline (~15–20°, "easel")** | Gravity helps hold pieces → drop the steel backing; the gantry electromagnet both parks pieces in shallow dimples and moves them. **The pragmatic route to real auto-movement.** | hard |
+| **C. Fully vertical auto-mover** | Keep it dead-vertical; needs strong, well-tuned electromagnet coupling + a clever holding scheme. | research-grade |
+
+**Recommendation:** build Phase 1 first; decide auto-play later. Nothing printed
+for Phase 1 is wasted — pieces, brain, and most of the frame carry into Path B.
+If/when you want auto-play, Path B gets its own design pass (a reclined,
+steel-free panel variant). Tracked as decision **D6** in
+[`GOALS.md`](GOALS.md).
+
 - **Control app:** phone app over BLE/Wi-Fi picks difficulty, shows the game,
   offers takebacks/hints. See [`app/README.md`](../app/README.md).
-
-This is intentionally **later** — Phases 1–2 give you a beautiful, fully
-working wall board first. See [`GOALS.md`](GOALS.md) for the roadmap.
 
 ---
 
