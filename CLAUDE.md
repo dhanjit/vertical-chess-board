@@ -21,6 +21,13 @@ Future scope: the board **plays you** (auto-mover) and is **app-controlled**.
 - The board will be **3-D printed** (the user has a friend who prints).
 - The user wants this repo to hold **designs, models, plan, goals, CLAUDE.md** —
   everything needed to make the physical board real.
+- **The owner is new to 3-D printing / electronics / making.** Keep guidance
+  beginner-friendly and plain-language; explain jargon; lead them to
+  `docs/START_HERE.md`. Don't assume maker knowledge. The technical friend
+  handles rendering/printing (`hardware/README.md`), but the owner drives the
+  project, so instructions aimed at them must be approachable and low-pressure.
+  Phase 1 (manual board, no electronics) is the realistic near-term target;
+  keep later phases clearly labeled optional/advanced.
 
 ## Repo layout
 

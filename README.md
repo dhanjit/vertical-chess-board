@@ -41,9 +41,14 @@ app/                   ← control-app spec (future)
 
 ## Start here
 
-1. Read [`docs/DESIGN.md`](docs/DESIGN.md) — the concept and mechanics.
-2. Skim [`docs/GOALS.md`](docs/GOALS.md) — phases and the decisions to lock.
-3. Do **Phase 0** in [`docs/BUILD_GUIDE.md`](docs/BUILD_GUIDE.md): print one
+**New to 3D printing / electronics? Read [`docs/START_HERE.md`](docs/START_HERE.md)
+first** — a plain-language guide (no experience needed) with a copy-paste
+message for your printer friend and a simple shopping list.
+
+Then, when you want the deeper detail:
+1. [`docs/DESIGN.md`](docs/DESIGN.md) — the concept and mechanics.
+2. [`docs/GOALS.md`](docs/GOALS.md) — phases and the decisions to lock.
+3. **Phase 0** in [`docs/BUILD_GUIDE.md`](docs/BUILD_GUIDE.md): print one
    gravity gimbal + one piece and prove the self-righting magnet mechanic
    before committing to a full set.
 
