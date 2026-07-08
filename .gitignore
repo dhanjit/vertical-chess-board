@@ -1,0 +1,18 @@
+# Rendered 3-D print output
+hardware/stl/
+*.stl
+*.3mf
+*.gcode
+
+# OpenSCAD editor cruft
+*.scad.bak
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*~
+.vscode/
+.idea/
+
+# Node (if the engine grows tooling later)
+node_modules/
