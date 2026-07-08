@@ -25,7 +25,8 @@ docs/
   PROJECT_REVIEW.md    ← honest review of the idea + re-scoped beginner plan
   SOURCING_BANGALORE.md← where to print + buy parts locally (₹)
   OPEN_SOURCE.md       ← existing open-source projects to reuse (don't reinvent)
-  AUTO_MOVER_ANALYSIS.md← why a vertical self-moving board is hard + how it could work
+  AUTO_MOVER_ANALYSIS.md← why a vertical self-moving board is hard (physics)
+  AUTO_MOVER_DESIGN.md ← how to actually build one (EPM matrix, prior art, prototypes)
   DESIGN.md            ← how it works (the two mechanics, magnets, sensing)
   GOALS.md             ← vision, phases, roadmap, decisions to lock
   BOM.md               ← shopping list per phase

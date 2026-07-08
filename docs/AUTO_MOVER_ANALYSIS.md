@@ -1,5 +1,11 @@
 # Auto-Mover on a Vertical Board — why it's hard, and how it could work
 
+> **Want the constructive "how would we build it" version?** See
+> [`AUTO_MOVER_DESIGN.md`](AUTO_MOVER_DESIGN.md) — proven prior art (MIT Actuated
+> Workbench, Madgets), the recommended **electropermanent-magnet matrix**, a
+> force/thermal budget, and a cheap prototype ladder. This doc is the *why*;
+> that one is the *how*.
+
 **Question:** the board plays you by moving its own pieces. On a horizontal
 board that's a solved, commercial trick. Why is it hard on our *vertical* wall
 board — and is it actually impossible? (Short answer: **not impossible**, but

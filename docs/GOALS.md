@@ -103,7 +103,7 @@ These gate the build. See discussion in [`DESIGN.md` §8](DESIGN.md#8-open-desig
 | D3 | Finish | two-tone print / paint / veneer | ⬜ open |
 | D4 | Rotate policy | every move / button / 2-player only | ⬜ open |
 | D5 | Brain location | phone / Pi / ESP32 | ⬜ open |
-| D6 | Auto-mover in scope + path | never / switchable-magnet matrix / thin-backing+recline / front-arm | ⬜ open (default: later; matrix is the elegant path) — full analysis in [AUTO_MOVER_ANALYSIS.md](AUTO_MOVER_ANALYSIS.md) |
+| D6 | Auto-mover in scope + path | never / **EPM matrix (Path B)** / reclined gantry (Path D) | ⬜ open (default: later; EPM matrix, prototype-gated) — why in [AUTO_MOVER_ANALYSIS.md](AUTO_MOVER_ANALYSIS.md), how in [AUTO_MOVER_DESIGN.md](AUTO_MOVER_DESIGN.md) |
 
 When you pick, note it here and I'll propagate the parameters and parts.
 
