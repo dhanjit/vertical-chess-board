@@ -103,7 +103,7 @@ These gate the build. See discussion in [`DESIGN.md` §8](DESIGN.md#8-open-desig
 | D3 | Finish | two-tone print / paint / veneer | ⬜ open |
 | D4 | Rotate policy | every move / button / 2-player only | ⬜ open |
 | D5 | Brain location | phone / Pi / ESP32 | ⬜ open |
-| D6 | Auto-mover in scope + path | never / later Path B (recline) / Path C (vertical) | ⬜ open (default: later, Path B) — see [DESIGN §6](DESIGN.md#6-phase-3--the-board-plays-you-auto-mover-future-scope) |
+| D6 | Auto-mover in scope + path | never / switchable-magnet matrix / thin-backing+recline / front-arm | ⬜ open (default: later; matrix is the elegant path) — full analysis in [AUTO_MOVER_ANALYSIS.md](AUTO_MOVER_ANALYSIS.md) |
 
 When you pick, note it here and I'll propagate the parameters and parts.
 

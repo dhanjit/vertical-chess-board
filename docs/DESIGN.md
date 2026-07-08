@@ -201,6 +201,13 @@ If/when you want auto-play, Path B gets its own design pass (a reclined,
 steel-free panel variant). Tracked as decision **D6** in
 [`GOALS.md`](GOALS.md).
 
+> **Full analysis:** the physics of *why* a vertical auto-mover is hard (the
+> hold shields the mover, the hold is what the mover fights, and it must be
+> everywhere while the mover is one point), the recline math, and the viable
+> paths — including a **switchable-magnet matrix** that dissolves the conflict —
+> are worked out with sources in
+> [`AUTO_MOVER_ANALYSIS.md`](AUTO_MOVER_ANALYSIS.md).
+
 - **Control app:** phone app over BLE/Wi-Fi picks difficulty, shows the game,
   offers takebacks/hints. See [`app/README.md`](../app/README.md).
 
