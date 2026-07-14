@@ -36,6 +36,10 @@ turntable bearing, a wall cleat.
 
 ## How it works (30 seconds)
 
+<p align="center">
+  <img src="images/mechanics.svg" width="720" alt="The two signature mechanics. Left: the board rotates 180 degrees each turn on a central turntable, so the player to move always sees it from their side. Right: each piece hangs on a pivot with a heavy base, so gravity keeps it upright like a pendulum however the board is turned.">
+</p>
+
 - The board is a **vertical plane on a central turntable**. Behind every square
   is a **steel washer**; every piece carries a **magnet**, so pieces grip the
   surface through a thin front wall and even **self-center** on their square.
@@ -45,6 +49,10 @@ turntable bearing, a wall cleat.
   square read the position, and the built-in chess engine follows and
   validates the game.
 
+<p align="center">
+  <img src="images/hold.svg" width="720" alt="Cross-section through one square. A magnet in the piece hub grips a steel washer through the thin front wall, holding the piece on the vertical board. The washer's centre hole is open air, so a hall sensor behind it reads the piece magnet without being shielded by steel.">
+</p>
+
 Full engineering detail: [`DESIGN.md`](DESIGN.md).
 
 ---
@@ -53,6 +61,28 @@ Full engineering detail: [`DESIGN.md`](DESIGN.md).
 
 Build in **phases**, and **each phase is a complete, usable thing on its own**.
 You can stop after any of them and have something real.
+
+```mermaid
+flowchart LR
+    P0["<b>Phase 0</b><br/>Prove the magic<br/><i>~1 evening · ~₹500</i>"]
+    P1["<b>Phase 1</b> ⭐<br/>Manual wall board<br/><i>hang &amp; play by hand</i>"]
+    P2["<b>Phase 2</b><br/>Powered rotation<br/>+ sensing"]
+    P3["<b>Phase 3</b><br/>Board plays you<br/>(auto-mover)"]
+    P4["<b>Phase 4</b><br/>App &amp; polish"]
+    P0 --> P1 --> P2 -.-> P3 -.-> P4
+    P1 -. "stop here &amp;<br/>be delighted" .-> DONE([complete board])
+    classDef focus fill:#1a7f37,stroke:#0d4020,color:#ffffff;
+    classDef optional fill:#9a6700,stroke:#5c3d00,color:#ffffff;
+    classDef asp fill:#8250df,stroke:#432c85,color:#ffffff;
+    classDef done fill:#eaf6ee,stroke:#1a7f37,color:#0d4020;
+    class P0,P1 focus;
+    class P2 optional;
+    class P3,P4 asp;
+    class DONE done;
+```
+
+**Legend:** 🟩 focused on now · 🟧 optional, later · 🟪 aspirational (parked).
+Solid arrows are the path we're building; dotted ones are further out.
 
 | Phase | What you get | Where it sits |
 |---|---|---|
@@ -105,6 +135,22 @@ context (what this is, why, what you're printing toward), it's right here:
 3. [`START_HERE.md`](START_HERE.md) — a plain-language, **no-experience-needed**
    walk-through, including a **print spec** (what to render first) and the
    small shopping list.
+
+```mermaid
+flowchart TD
+    A["📖 <b>OVERVIEW.md</b><br/><i>what · why · the plan</i>"]
+    A --> B["🖨️ <b>hardware/README.md</b><br/><i>render STLs + print settings</i>"]
+    A --> C["🌱 <b>START_HERE.md</b><br/><i>plain-language walkthrough</i>"]
+    B --> D(["Print a <b>test batch</b><br/>1 gimbal + 1 king"])
+    C --> D
+    D --> E(["Prove it → print the full set"])
+    classDef hub fill:#0969da,stroke:#0a3069,color:#ffffff;
+    classDef step fill:#eef2f6,stroke:#57606a,color:#1f2328;
+    classDef goal fill:#eaf6ee,stroke:#1a7f37,color:#0d4020;
+    class A hub;
+    class B,C step;
+    class D,E goal;
+```
 
 **Short version:** render a **test batch first** — one gravity gimbal + one
 king — prove the piece sticks and self-rights, *then* print the full set.

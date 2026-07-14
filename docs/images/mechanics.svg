@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 340" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
+  <defs>
+    <marker id="g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1a7f37"/>
+    </marker>
+    <marker id="b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0969da"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="758" height="338" rx="14" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="380" y="34" text-anchor="middle" font-size="18" font-weight="700" fill="#1f2328">How it works — the two signature mechanics</text>
+  <line x1="380" y1="58" x2="380" y2="322" stroke="#d0d7de" stroke-dasharray="4 4"/>
+
+  <!-- LEFT: rotate to face the player -->
+  <text x="190" y="82" text-anchor="middle" font-size="15" font-weight="700" fill="#0969da">1 &#183; Rotate 180&#176; each turn</text>
+  <rect x="128" y="120" width="124" height="124" rx="8" fill="#ffffff" stroke="#57606a" stroke-width="1.5"/>
+  <g stroke="#eaeef2">
+    <line x1="128" y1="151" x2="252" y2="151"/><line x1="128" y1="182" x2="252" y2="182"/><line x1="128" y1="213" x2="252" y2="213"/>
+    <line x1="159" y1="120" x2="159" y2="244"/><line x1="190" y1="120" x2="190" y2="244"/><line x1="221" y1="120" x2="221" y2="244"/>
+  </g>
+  <circle cx="190" cy="182" r="5" fill="#57606a"/>
+  <text x="190" y="171" text-anchor="middle" font-size="10" fill="#57606a">turntable</text>
+  <path d="M 270 182 A 80 80 0 0 1 190 262" fill="none" stroke="#0969da" stroke-width="2" marker-end="url(#b)"/>
+  <path d="M 110 182 A 80 80 0 0 1 190 102" fill="none" stroke="#0969da" stroke-width="2" marker-end="url(#b)"/>
+  <text x="286" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="#0969da">180&#176;</text>
+  <text x="190" y="300" text-anchor="middle" font-size="12" font-style="italic" fill="#57606a">turns so the player to move</text>
+  <text x="190" y="316" text-anchor="middle" font-size="12" font-style="italic" fill="#57606a">sees the board from their side</text>
+
+  <!-- RIGHT: pieces stay upright by gravity -->
+  <text x="570" y="82" text-anchor="middle" font-size="15" font-weight="700" fill="#0969da">2 &#183; Pieces stay upright by gravity</text>
+  <g transform="rotate(-18 570 185)">
+    <rect x="508" y="128" width="124" height="114" rx="8" fill="#ffffff" stroke="#cbd5db" stroke-width="1.5"/>
+    <line x1="508" y1="185" x2="632" y2="185" stroke="#eef1f4"/>
+    <line x1="570" y1="128" x2="570" y2="242" stroke="#eef1f4"/>
+  </g>
+  <circle cx="556" cy="150" r="5" fill="#57606a"/>
+  <text x="567" y="140" font-size="11" fill="#57606a">pivot &#8212; axle out of the board</text>
+  <line x1="556" y1="150" x2="556" y2="256" stroke="#8250df" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <g fill="#3b3f45">
+    <rect x="553" y="150" width="6" height="12" />
+    <circle cx="556" cy="169" r="9"/>
+    <path d="M547 177 L565 177 L570 238 L542 238 Z"/>
+  </g>
+  <rect x="544" y="238" width="24" height="12" rx="2" fill="#57606a"/>
+  <text x="574" y="248" font-size="11" fill="#57606a">heavy base</text>
+  <line x1="648" y1="150" x2="648" y2="246" stroke="#1a7f37" stroke-width="2" marker-end="url(#g)"/>
+  <text x="656" y="202" font-size="11" font-weight="700" fill="#1a7f37">gravity</text>
+  <text x="570" y="300" text-anchor="middle" font-size="12" font-style="italic" fill="#57606a">a pendulum &#8212; the heavy base always</text>
+  <text x="570" y="316" text-anchor="middle" font-size="12" font-style="italic" fill="#57606a">swings down, so the piece never inverts</text>
+</svg>
