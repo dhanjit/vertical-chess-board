@@ -14,7 +14,9 @@ website or a screen app.** The two signature mechanics:
    board and is bottom-weighted, so it self-levels like a pendulum as the
    board rotates. Pieces are **magnetic** and grip a steel-backed surface.
 
-Future scope: the board **plays you** (auto-mover) and is **app-controlled**.
+Aspirational (further-out) scope: the board **plays you** (auto-mover) and is
+**app-controlled** — deliberately *not* the current focus; the near-term goal
+is the hand-played manual board.
 
 ## Project context
 
@@ -22,9 +24,10 @@ Future scope: the board **plays you** (auto-mover) and is **app-controlled**.
   printer should start at `hardware/README.md`.
 - Assume readers may be **new to 3-D printing / electronics / making**. Keep
   guidance beginner-friendly and plain-language; explain jargon; lead
-  newcomers to `docs/START_HERE.md`. Phase 1 (manual board, no electronics)
-  is the realistic near-term target; keep later phases clearly labeled
-  optional/advanced.
+  newcomers to `docs/OVERVIEW.md` (one-page what/why/how + plan) and
+  `docs/START_HERE.md`. Phase 1 (manual board, no electronics) is the realistic
+  near-term target; keep later phases clearly labeled optional/advanced, and the
+  auto-mover (Phase 3) + app (Phase 4) labeled **aspirational**.
 - **This repo is shared.** Keep committed content impersonal: no personal
   names, emails, private context, or references to specific people. Write
   docs for "the builder" / "whoever prints", not for a named individual.
@@ -36,7 +39,8 @@ Future scope: the board **plays you** (auto-mover) and is **app-controlled**.
   hardcode a dimension in a part that belongs in `common.scad`.
 - `software/engine/` — the **brain**: `chess.js` (rules, perft-verified) and
   `ai.js` (negamax opponent). Plain JS, no deps. Shared by firmware + app.
-- `docs/` — `DESIGN.md` (how it works), `GOALS.md` (roadmap/phases/decisions),
+- `docs/` — `OVERVIEW.md` (one-page what/why/how + plan — the entry point to
+  share), `DESIGN.md` (how it works), `GOALS.md` (roadmap/phases/decisions),
   `BOM.md`, `BUILD_GUIDE.md`, `ELECTRONICS.md`.
 - `app/` — future control-app spec.
 

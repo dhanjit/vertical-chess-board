@@ -1,8 +1,9 @@
 # Engine — the board's brain
 
 Plain-JavaScript, dependency-free chess **rules engine** and **AI opponent**.
-This is the shared brain that will run in the board firmware (Phase 2), drive
-the auto-mover (Phase 3), and back the control app (Phase 4).
+This is the shared brain that will run in the board firmware (Phase 2), and —
+aspirationally — drive the auto-mover (Phase 3) and back the control app
+(Phase 4).
 
 ## Files
 

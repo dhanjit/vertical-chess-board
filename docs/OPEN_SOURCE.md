@@ -56,7 +56,11 @@ square). It even talks to Stockfish already.
 
 ---
 
-## Phase 3 (moves pieces itself) — copy a self-moving board
+## Phase 3 (moves pieces itself) — 🌠 aspirational
+
+> Auto-play is a *someday* goal, out of the current focus (see
+> [`OVERVIEW.md`](OVERVIEW.md)). These are the projects to copy **if** it's
+> ever pursued.
 
 An electromagnet on a CoreXY gantry behind the board, exactly the mechanism in
 [`DESIGN.md` §6](DESIGN.md#6-phase-3--the-board-plays-you-auto-mover-future-scope):

@@ -1,5 +1,10 @@
 # Auto-Mover on a Vertical Board — why it's hard, and how it could work
 
+> 🌠 **Status: aspirational research.** Auto-play is a *someday* goal,
+> deliberately out of the current build focus (the Phase-1 manual board). This
+> doc is here for if/when it's pursued — see the scope note in
+> [`OVERVIEW.md`](OVERVIEW.md).
+
 > **Want the constructive "how would we build it" version?** See
 > [`AUTO_MOVER_DESIGN.md`](AUTO_MOVER_DESIGN.md) — proven prior art (MIT Actuated
 > Workbench, Madgets), the recommended **electropermanent-magnet matrix**, a

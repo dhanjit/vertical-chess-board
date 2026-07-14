@@ -7,8 +7,10 @@ pieces?** It surveys the proven prior art, converges on a recommended
 architecture, sketches the force/thermal/cost budget, and gives a cheap
 prototype ladder.
 
-> Status: **Phase-3 research track.** None of this is needed for the manual
-> board (Phases 0–2). It's captured so we can pick it up deliberately later.
+> 🌠 Status: **aspirational — Phase-3 research track.** None of this is needed
+> for the manual board (Phases 0–2), and it's deliberately out of the current
+> focus. It's captured so it can be picked up deliberately later — see the
+> scope note in [`OVERVIEW.md`](OVERVIEW.md).
 
 ---
 
