@@ -1,10 +1,9 @@
 # Project Review & Realistic Plan (for a first-time builder)
 
-You've never done 3D printing, electronics, or a build like this — and you have
-a friend with a printer. This document is an **honest review of the idea**, a
-**feature-by-feature risk read**, and a **re-scoped plan** that fits a
-first-timer. Bengaluru-specific sourcing is in
-[`SOURCING_BANGALORE.md`](SOURCING_BANGALORE.md).
+Maybe you've never done 3D printing, electronics, or a build like this. This
+document is an **honest review of the idea**, a **feature-by-feature risk
+read**, and a **re-scoped plan** that fits a first-timer. Bengaluru-specific
+sourcing is in [`SOURCING_BANGALORE.md`](SOURCING_BANGALORE.md).
 
 **Bottom line up front:** the idea is genuinely good and the *manual* board is
 very achievable for a beginner (a weekend of proving it out, then a couple of
@@ -135,14 +134,14 @@ Detail and shops in [`SOURCING_BANGALORE.md`](SOURCING_BANGALORE.md).
 | Path | Rough cost | Notes |
 |---|---|---|
 | Stage A test | ~₹300–600 | a few magnets, a washer, two M3 nuts; prints are grams of filament |
-| **Stage B manual board — friend prints** | **~₹2,500–4,500** | filament + magnets + washers + bearing + cleat + glue |
-| Stage B manual board — *paid* print service | +₹8,000–15,000 | large board = lots of plastic; **friend's printer is far cheaper** |
+| **Stage B manual board — own/borrowed printer** | **~₹2,500–4,500** | filament + magnets + washers + bearing + cleat + glue |
+| Stage B manual board — *paid* print service | +₹8,000–15,000 | large board = lots of plastic; **a personal printer is far cheaper** |
 | Stage C motorize | +₹1,500–3,000 | stepper, driver, controller, PSU |
 | Stage D sensing | +₹2,500–4,000 | 64 hall sensors, muxes, wiring |
 
-**Takeaway:** using your friend's printer keeps the whole manual board in the
-**low thousands of rupees**. Paying a service to print it is the single most
-expensive way to do it — avoid unless you have no printer access.
+**Takeaway:** using a printer you have access to keeps the whole manual board
+in the **low thousands of rupees**. Paying a service to print it is the single
+most expensive way to do it — avoid unless you have no printer access.
 
 ---
 

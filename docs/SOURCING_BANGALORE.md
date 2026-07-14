@@ -5,19 +5,21 @@ Where to get parts printed and buy the bits, locally. Prices are **rough,
 [`PROJECT_REVIEW.md`](PROJECT_REVIEW.md) first for what you actually need at
 each stage.
 
-> **Biggest money tip:** printing on your **friend's printer** costs only
-> filament (₹1.5–2.5k for the whole manual board). Paying a print *service*
-> for the large board panel runs ₹8–15k. Use the friend's printer if you can;
-> use a service only for one-off test parts or if you have no printer access.
+> **Biggest money tip:** printing on a **printer you have access to** (your own
+> or a borrowed one) costs only filament (₹1.5–2.5k for the whole manual board).
+> Paying a print *service* for the large board panel runs ₹8–15k. Use a personal
+> printer if you can; use a service only for one-off test parts or if you have
+> no printer access.
 
 ---
 
 ## A. Getting the parts printed
 
-### Option 1 — Your friend's printer (recommended)
-Just buy filament and hand them the files. What to tell them is in
-[`START_HERE.md`](START_HERE.md) (copy-paste message) and
-[`../hardware/README.md`](../hardware/README.md) (how to render + settings).
+### Option 1 — Your own or a borrowed printer (recommended)
+The cheapest route if you have access to a printer: just buy filament and
+render the parts. The print spec (what to render, settings) is in
+[`START_HERE.md`](START_HERE.md) and
+[`../hardware/README.md`](../hardware/README.md).
 
 **Filament (PLA), Bengaluru / online:**
 - ~₹700–1,300 per 1 kg spool (WOL3D, ClayObjects, iamRapid, Robu.in, Amazon.in).
@@ -25,8 +27,8 @@ Just buy filament and hand them the files. What to tell them is in
   ~1.5–2 kg total for the full board.
 
 ### Option 2 — Online print service (upload STL, they print & deliver)
-Good for the **Stage A test parts** or if you have no printer. You (or your
-friend) render the STLs first (see `hardware/README.md`), then upload:
+Good for the **Stage A test parts** or if you have no printer. Render the STLs
+first (see `hardware/README.md`), then upload:
 
 - **iamRapid** — Bengaluru; instant quote, FDM PLA from ~₹6/g, parts from
   ~₹99, ~24 h delivery in the city. <https://iamrapid.com/3d-printing-services-in-bangalore/>
@@ -35,7 +37,7 @@ friend) render the STLs first (see `hardware/README.md`), then upload:
 
 **Reality check on cost:** the board panel is a large part (~700–900 g). At
 ~₹6/g that's ₹4–5k for the panel *alone*, plus pieces and frame → a full board
-via a service is easily ₹10–15k. Hence: friend's printer for the big stuff.
+via a service is easily ₹10–15k. Hence: a personal printer for the big stuff.
 
 ### Option 3 — Makerspaces (print it yourself + get guidance)
 Also the best place for help when you reach the electronics stages.
@@ -91,7 +93,7 @@ Keep it tiny — you're just proving the mechanic:
 - ~10 neodymium magnets (8×3 mm) — ₹100–150
 - 4–5 steel washers (~16 mm, M8 plain) — ₹20
 - a few M3 nuts + super glue — ₹50
-- (prints: 1 gimbal + 1 king from your friend, or ~₹200–400 at a service)
+- (prints: 1 gimbal + 1 king on a personal printer, or ~₹200–400 at a service)
 
 **Total ≈ ₹300–600.** Then run the Stage A test in
 [`BUILD_GUIDE.md`](BUILD_GUIDE.md) ("Phase 0") and note how it behaves — the

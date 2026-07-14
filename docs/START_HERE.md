@@ -1,10 +1,11 @@
 # Start Here — zero experience needed
 
-**You do not need to know 3D printing, electronics, or coding.** For the first
-version — a real chess board you hang on the wall and play by hand — your whole
-job is:
+**You don't need to own a 3D printer or know electronics or coding.** For the
+first version — a real chess board you hang on the wall and play by hand — your
+whole job is:
 
-1. **Send your friend some files** (their printer makes the plastic parts).
+1. **Get the plastic parts printed** — on your own printer if you have one, or
+   a local print service / makerspace (this repo has everything they need).
 2. **Buy a short list of small parts** (magnets, washers, a spinning bracket).
 3. **Glue a few things together and hang it.**
 
@@ -19,10 +20,11 @@ Ignore all of it for now.
 - A 3D printer builds objects out of plastic by reading a file called an
   **STL**. Think of an STL as a "shape file."
 - This project describes each part in a design format (`.scad`) that turns
-  into STLs. **Your friend handles that part** — it's one command (or a few
-  clicks in a free program called OpenSCAD). Point them at
-  [`../hardware/README.md`](../hardware/README.md); it tells them exactly how.
-- You don't need OpenSCAD or a printer yourself.
+  into STLs — one command (or a few clicks) in a free program called OpenSCAD.
+  Whoever runs the printer does this;
+  [`../hardware/README.md`](../hardware/README.md) tells them exactly how.
+- If a print service or makerspace is making the parts, you don't need
+  OpenSCAD or a printer yourself — just send them the STLs.
 
 ---
 
@@ -32,7 +34,7 @@ Before printing a whole chess set, prove the two "magic" tricks work:
 **a piece sticks to the wall board, and it stays right-side-up when you spin
 the board.** This is **Phase 0** and it costs almost nothing.
 
-**Ask your friend to print just these test parts:**
+**Print just these test parts first (or have them printed):**
 - 1 × "gravity gimbal" pair (the little pivot + cap)
 - 1 × king piece
 - 1 × small board test section (optional but nice)
@@ -56,25 +58,24 @@ Full step-by-step is in [`BUILD_GUIDE.md`](BUILD_GUIDE.md) ("Phase 0").
 
 ---
 
-## Copy-paste this to your friend
+## Print spec — for whoever runs the printer
 
-> Hey! I'm building a wall-mounted chess board and the 3D-printable parts live
-> in this repo: https://github.com/dhanjit/vertical-chess-board
->
-> Could you render and print a **test batch first**, before the whole set?
-> Everything you need (how to turn the `.scad` files into STLs, and print
-> settings) is in `hardware/README.md`. In short:
-> - Install **OpenSCAD** (free), then from the `hardware/` folder run `make`
->   to generate all the STLs — or just render the ones I list below.
-> - **Test batch:** one `gimbal_testpair`, one `piece_king`, (optional) one
->   `board_test` tile (`make gimbal board_test` + the king render).
-> - **Material:** PLA is fine. ~15–20% infill, 0.2 mm layers, **no supports
->   needed** (parts are designed to print flat).
-> - The pieces print in **two colors** (one for white, one for black) — but
->   for the test, any color is fine.
->
-> If the test works I'll send the full print list (32 pieces + the board
-> panel + frame). Thanks!!
+If someone else is printing (a print service, makerspace, or anyone with a
+printer), this is everything they need. Print a **test batch first**, before
+the whole set:
+
+- **Source:** the 3D-printable parts live in this repo. Full render + print
+  instructions are in [`../hardware/README.md`](../hardware/README.md).
+- **Render:** install **OpenSCAD** (free), then from the `hardware/` folder run
+  `make` to generate all the STLs — or render just the ones listed below.
+- **Test batch:** one `gimbal_testpair`, one `piece_king`, (optional) one
+  `board_test` tile (`make gimbal board_test` + the king render).
+- **Material:** PLA is fine. ~15–20% infill, 0.2 mm layers, **no supports
+  needed** (parts are designed to print flat).
+- **Colors:** the pieces print in **two colors** (one for White, one for
+  Black) — for the test, any color is fine.
+- **Full set (after the test passes):** 32 pieces + the board panel + frame —
+  see [`BOM.md`](BOM.md) and [`BUILD_GUIDE.md`](BUILD_GUIDE.md).
 
 ---
 
