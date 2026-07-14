@@ -9,9 +9,13 @@ whole job is:
 2. **Buy a short list of small parts** (magnets, washers, a spinning bracket).
 3. **Glue a few things together and hang it.**
 
-That's it. The fancy stuff — a motor that spins the board, sensors, a board
-that plays against you, a phone app — is **optional and comes much later**.
-Ignore all of it for now.
+That's it. The fancy stuff — a motor that spins the board, sensors, and
+(aspirationally) a board that plays *you* and a phone app — is **optional and
+comes much later**. Ignore all of it for now.
+
+> **Want the what/why/how first?** [`OVERVIEW.md`](OVERVIEW.md) is the whole
+> project on one page — what it is, why, and the plan. Good to read (or share)
+> before you start.
 
 ---
 
@@ -123,6 +127,8 @@ the hand-played wall board, and it's great on its own.
 
 ## Want the bigger picture?
 
+- [`OVERVIEW.md`](OVERVIEW.md) — the whole project on one page: what it is, why,
+  and the plan. The best thing to read (or share) for context.
 - [`PROJECT_REVIEW.md`](PROJECT_REVIEW.md) — an honest review of the whole idea,
   how hard each part is, and a **staged plan (A–E)** so you always know the next
   small step and where you can happily stop.

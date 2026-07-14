@@ -37,11 +37,12 @@ working manual wall board; later phases layer on.
 
 **Phase 2 add:** ~$100–130.
 
-## Phase 3 — Auto-mover (adds to Phase 2)
+## Phase 3 — Auto-mover (adds to Phase 2) — 🌠 aspirational
 
-> This table prices the **reclined-gantry fallback**. The default route per
-> decision D6 is the **EPM matrix** — its (different) parts budget is worked
-> out in [`AUTO_MOVER_DESIGN.md`](AUTO_MOVER_DESIGN.md).
+> **Aspirational / not the current focus** — the manual board needs none of
+> this. This table prices the **reclined-gantry fallback**; if auto-play is
+> ever pursued, the researched route per decision D6 is the **EPM matrix** —
+> its (different) parts budget is in [`AUTO_MOVER_DESIGN.md`](AUTO_MOVER_DESIGN.md).
 
 | Item | Qty | Notes | ~Cost |
 |------|-----|-------|-------|

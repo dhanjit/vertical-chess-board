@@ -10,7 +10,9 @@ vertically — with two signature mechanics:
   upside-down.
 - 🧲 **Magnetic pieces** grip a steel-backed vertical surface.
 - 🖨️ **3-D printable** — parametric models, ready for any FDM printer.
-- 🤖 **Future:** the board plays against you, controllable from a phone app.
+- 🌠 **Aspirational (later):** the board plays *you* (auto-mover) and is
+  controllable from a phone app — researched, but deliberately out of the
+  initial focus. The near-term goal is the hand-played manual board.
 
 This repo is the **single source of truth** for building it: designs, models,
 electronics, the game brain, and the plan.
@@ -21,7 +23,8 @@ electronics, the game brain, and the plan.
 README.md              ← you are here
 CLAUDE.md              ← context for AI sessions working on this repo
 docs/
-  START_HERE.md        ← ⭐ new to this? read first (plain language)
+  OVERVIEW.md          ← ⭐ one-page what / why / how + the plan (share this)
+  START_HERE.md        ← new to printing? plain-language first steps + print spec
   PROJECT_REVIEW.md    ← honest review of the idea + re-scoped beginner plan
   SOURCING_BANGALORE.md← where to print + buy parts locally (₹)
   OPEN_SOURCE.md       ← existing open-source projects to reuse (don't reinvent)
@@ -47,8 +50,13 @@ app/                   ← control-app spec (future)
 
 ## Start here
 
+**Want the whole project on one page?** Read
+[`docs/OVERVIEW.md`](docs/OVERVIEW.md) — what it is, why we're building it, and
+the plan. It's the doc to share with anyone new, including whoever prints the
+parts.
+
 **New to 3D printing / electronics? Read [`docs/START_HERE.md`](docs/START_HERE.md)
-first** — a plain-language guide (no experience needed) with a print spec for
+next** — a plain-language guide (no experience needed) with a print spec for
 whoever runs the printer and a simple shopping list. Then
 [`docs/PROJECT_REVIEW.md`](docs/PROJECT_REVIEW.md) reviews the idea and lays
 out a realistic staged plan, and [`docs/SOURCING_BANGALORE.md`](docs/SOURCING_BANGALORE.md)
@@ -71,8 +79,8 @@ Then, when you want the deeper detail:
 | Anything physically built | ⬜ over to Phase 0 |
 
 Phased so **Phase 1 alone is a complete, beautiful manual board** you can hang
-and play; later phases add powered rotation, sensing, an auto-mover, and the
-app without a rebuild.
+and play; later phases add powered rotation and sensing, and — aspirationally —
+an auto-mover and app, without a rebuild.
 
 ## Building the STLs
 

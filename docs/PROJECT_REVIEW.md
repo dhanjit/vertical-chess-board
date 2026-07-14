@@ -5,6 +5,9 @@ document is an **honest review of the idea**, a **feature-by-feature risk
 read**, and a **re-scoped plan** that fits a first-timer. Bengaluru-specific
 sourcing is in [`SOURCING_BANGALORE.md`](SOURCING_BANGALORE.md).
 
+> **Just want the plan?** [`OVERVIEW.md`](OVERVIEW.md) is the one-page
+> what / why / how. This doc is the deeper difficulty/risk read behind it.
+
 **Bottom line up front:** the idea is genuinely good and the *manual* board is
 very achievable for a beginner (a weekend of proving it out, then a couple of
 weekends to build). The *electronic* features (motorized spin, sensing,
@@ -101,10 +104,11 @@ Add the 64-sensor grid + a small controller running the chess brain, so the
 board follows the game and flags illegal moves. A substantial standalone
 project.
 
-### Stage E — Auto-play + app (optional, biggest)
+### Stage E — Auto-play + app (🌠 aspirational, biggest)
 The auto-mover (EPM matrix, or the reclined-gantry fallback — see
 [`AUTO_MOVER_DESIGN.md`](AUTO_MOVER_DESIGN.md)) and a phone app. Real robotics
-+ software. Only if you've caught the bug and want a long project.
++ software. This is the **aspirational far end — parked, not part of the plan
+we're focused on.** Only if you've caught the bug and want a long project.
 
 > **You can stop after any stage** and have a complete, working thing. The
 > repo is built so later stages don't require redoing earlier ones.

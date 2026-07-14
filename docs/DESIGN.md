@@ -164,6 +164,10 @@ an 8×8 matrix, into one microcontroller — see [`ELECTRONICS.md`](ELECTRONICS.
 
 ## 6. Phase 3 — the board plays you (auto-mover, future scope)
 
+> 🌠 **Aspirational — not a current focus.** The manual board (Phases 0–2)
+> needs none of this. It's captured so auto-play can be picked up deliberately
+> later; it does not drive near-term work.
+
 Commercial auto-chess boards (Square Off, "wizard chess" boards) all use the
 same trick: an **electromagnet on an XY gantry behind the board** grabs a
 piece's magnet and drags it across the front.
@@ -198,11 +202,12 @@ Three honest routes:
 | **EPM matrix** (switchable-magnet grid) | An electropermanent magnet behind *every* square: the holders **are** the movers, so nothing shields anything. Holds with zero standing power (blackout-safe). **The recommended path to true vertical auto-play.** | hard, most parts |
 | **Reclined gantry** (~45–63° from vertical — an easel, not a wall piece) | The classic gantry works once the board leans back far enough for gravity + friction to hold idle pieces without steel. The math in [`AUTO_MOVER_ANALYSIS.md` §6](AUTO_MOVER_ANALYSIS.md) shows a gentle 15–20° tilt does **not** suffice. | hard, proven parts |
 
-**Recommendation:** build Phase 1 first; decide auto-play later. Nothing
-printed for Phase 1 is wasted — pieces, brain, and most of the frame carry
-into either route. The default plan (decision **D6** in [`GOALS.md`](GOALS.md))
-is the **EPM matrix**, gated behind cheap prototypes, with the **reclined
-gantry** as the low-risk fallback — full design in
+**Recommendation:** build Phase 1 first; treat auto-play as **aspirational** and
+decide on it much later. Nothing printed for Phase 1 is wasted — pieces, brain,
+and most of the frame carry into either route. *If* it's ever pursued, the
+researched route (decision **D6** in [`GOALS.md`](GOALS.md)) is the **EPM
+matrix**, gated behind cheap prototypes, with the **reclined gantry** as the
+low-risk fallback — full design in
 [`AUTO_MOVER_DESIGN.md`](AUTO_MOVER_DESIGN.md).
 
 > **Full analysis:** the physics of *why* a vertical auto-mover is hard (the

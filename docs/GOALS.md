@@ -2,10 +2,15 @@
 
 **Vision:** a chess board that hangs on the living-room wall like art, plays
 vertically, rotates to face whoever's turn it is, keeps its pieces upright by
-gravity, and — eventually — plays against you and is controllable from a phone.
+gravity, and — aspirationally, further out — could play against you and be
+controllable from a phone.
 
 This repo is the **single source of truth** for making that real: designs,
 printable models, electronics, firmware, the game brain, and the plan.
+
+> **New here?** [`OVERVIEW.md`](OVERVIEW.md) is the one-page summary — what it
+> is, why, and the plan at a glance. This doc is the full technical roadmap
+> that summary expands on.
 
 > **First-time builder?** Read [`PROJECT_REVIEW.md`](PROJECT_REVIEW.md) — an
 > honest review of the idea, a difficulty/risk read of each feature, and a
@@ -69,8 +74,12 @@ The board turns itself and follows the game.
 - **Exit criteria:** play a full legal game; board follows every move and
   flips itself; illegal moves are flagged.
 
-### Phase 3 — The board plays you (auto-mover) ⬜
-- [ ] Auto-mover per decision **D6** (below): default **EPM matrix** (the
+### Phase 3 — The board plays you (auto-mover) — 🌠 aspirational ⬜
+> **Not a current focus.** Parked as a *someday* goal (see the scope note in
+> [`OVERVIEW.md`](OVERVIEW.md)). Captured here and in the AUTO_MOVER docs so it
+> can be picked up deliberately later — it does **not** drive near-term work,
+> and nothing in Phases 0–1 depends on it.
+- [ ] Auto-mover per decision **D6** (below): if pursued, **EPM matrix** (the
       switchable magnets hold *and* move); fallback **reclined gantry** —
       how-to in [AUTO_MOVER_DESIGN.md](AUTO_MOVER_DESIGN.md), why in
       [AUTO_MOVER_ANALYSIS.md](AUTO_MOVER_ANALYSIS.md).
@@ -94,8 +103,8 @@ The board turns itself and follows the game.
 - [ ] **M0** mechanics proven (Phase 0)
 - [ ] **M1** hangable manual board (Phase 1)
 - [ ] **M2** self-tracking powered board (Phase 2)
-- [ ] **M3** plays against you (Phase 3)
-- [ ] **M4** app-controlled (Phase 4)
+- [ ] **M3** plays against you (Phase 3) — 🌠 aspirational
+- [ ] **M4** app-controlled (Phase 4) — 🌠 aspirational
 
 ---
 
@@ -110,7 +119,7 @@ These gate the build. See discussion in [`DESIGN.md` §8](DESIGN.md#8-open-desig
 | D3 | Finish | two-tone print / paint / veneer | ⬜ open |
 | D4 | Rotate policy | every move / button / 2-player only | ⬜ open |
 | D5 | Brain location | phone / Pi / ESP32 | ⬜ open |
-| D6 | Auto-mover in scope + route | never / **EPM matrix** / reclined gantry (~45–63°) | ⬜ open (default: later; EPM matrix, prototype-gated) — why in [AUTO_MOVER_ANALYSIS.md](AUTO_MOVER_ANALYSIS.md), how in [AUTO_MOVER_DESIGN.md](AUTO_MOVER_DESIGN.md) |
+| D6 | Auto-mover in scope + route | never / **EPM matrix** / reclined gantry (~45–63°) | ⬜ open — **aspirational, out of initial scope**; if ever pursued, the researched route is the EPM matrix (prototype-gated), reclined-gantry fallback — why in [AUTO_MOVER_ANALYSIS.md](AUTO_MOVER_ANALYSIS.md), how in [AUTO_MOVER_DESIGN.md](AUTO_MOVER_DESIGN.md) |
 
 When a decision is locked, record it here and propagate the values into
 `hardware/common.scad` and the affected parts/docs.
