@@ -9,7 +9,7 @@ vertically — with two signature mechanics:
   bottom-weighted, so as the board turns, every piece self-levels and is never
   upside-down.
 - 🧲 **Magnetic pieces** grip a steel-backed vertical surface.
-- 🖨️ **3-D printable** — parametric models, ready for your friend's printer.
+- 🖨️ **3-D printable** — parametric models, ready for any FDM printer.
 - 🤖 **Future:** the board plays against you, controllable from a phone app.
 
 This repo is the **single source of truth** for building it: designs, models,
@@ -49,7 +49,7 @@ app/                   ← control-app spec (future)
 
 **New to 3D printing / electronics? Read [`docs/START_HERE.md`](docs/START_HERE.md)
 first** — a plain-language guide (no experience needed) with a copy-paste
-message for your printer friend and a simple shopping list. Then
+message for whoever's printing and a simple shopping list. Then
 [`docs/PROJECT_REVIEW.md`](docs/PROJECT_REVIEW.md) reviews the idea and lays
 out a realistic staged plan, and [`docs/SOURCING_BANGALORE.md`](docs/SOURCING_BANGALORE.md)
 covers where to print and buy parts in Bengaluru.
@@ -83,6 +83,5 @@ cd hardware && make          # needs OpenSCAD; outputs to hardware/stl/
 ## Using the brain
 
 ```
-node -e 'const {Chess}=require("./software/engine/chess.js"); \
-         const g=new Chess(); console.log(g.legalMoves().length)'   # 20
+node -e 'const {Chess}=require("./software/engine/chess.js"); const g=new Chess(); console.log(g.legalMoves().length)'   # 20
 ```

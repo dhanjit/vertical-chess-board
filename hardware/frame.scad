@@ -7,12 +7,15 @@
 //   * gives the whole assembly rigidity so it stays flat while rotating,
 //   * carries four bolt bosses on its back that mate the turntable
 //     (rotation_hub.scad) at the center of mass,
-//   * hides the steel sheet, sensor PCB and wiring behind the panel.
+//   * hides the per-square steel washers, sensor wiring and electronics
+//     behind the panel.
 //
-// Print as four L-shaped corners (default) that bolt together with the
-// splices, or as full edges on a large bed.
+// Print as four L-shaped corners (epoxy the butt joints; the bezel lip and
+// the four turntable bolts give the ring its rigidity), or print the full
+// ring in one piece on a large bed.
 //
 //   openscad -D 'PART="corner"' -o frame_corner.stl frame.scad   // x4
+//   (the default render below is the full ring, for preview)
 // =====================================================================
 
 include <common.scad>
@@ -37,11 +40,24 @@ module frame_full() {
             rrect3(grid_size + 2*board_margin - 2*4, grid_size + 2*board_margin - 2*4,
                    lip + 2, 4);
     }
-    // Turntable bolt bosses on the back, on a circle matching the hub
-    // (same radius as the turntable's bolt pattern in rotation_hub.scad).
+    // Back web: two diagonal straps across the open back (behind the panel,
+    // which sits at z = lip .. lip + board_thickness) that carry the
+    // turntable bolt bosses and tie them into the bezel ring. Without these
+    // the bosses would float in the panel-pocket void. The straps run
+    // corner-to-corner because the square panel pocket leaves ring material
+    // on the diagonal only near the corners (radius ~outer/sqrt(2)).
+    web_len = outer * sqrt(2) - 26;
+    for (a = [45, 135])
+        rotate([0, 0, a])
+            translate([-web_len/2, -12, frame_h - wall])
+                cube([web_len, 24, wall]);
+    // Turntable bolt bosses on the straps, at hub_bolt_r (common.scad) —
+    // the SAME shared value the turntable's bolt pattern uses, at the same
+    // 45/135/225/315 deg angles, so the two parts actually mate. The 45 deg
+    // offset also keeps each boss whole within one printed corner.
     translate([0,0,frame_h - wall])
-        for (a = [0:90:359])
-            rotate([0,0,a]) translate([(bearing_od + 6)/2 - 4, 0, 0])
+        for (a = [45:90:359])
+            rotate([0,0,a]) translate([hub_bolt_r, 0, 0])
                 difference() {
                     cylinder(d = 9, h = wall + 4);
                     translate([0,0,-0.5]) cylinder(d = 2.9, h = wall + 5);
@@ -59,7 +75,9 @@ module rrect3(w, h, d, r) {
 module frame_corner() {
     intersection() {
         translate([-outer/2, -outer/2, 0]) frame_full_at_origin();
-        cube([outer/2, outer/2, frame_h]);   // keep the +X+Y quadrant
+        // Keep the +X+Y quadrant; tall enough to include the bolt-boss
+        // tips, which project 4 mm past the frame back.
+        cube([outer/2, outer/2, frame_h + 6]);
     }
 }
 module frame_full_at_origin() {

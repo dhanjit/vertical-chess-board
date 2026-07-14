@@ -16,18 +16,18 @@ website or a screen app.** The two signature mechanics:
 
 Future scope: the board **plays you** (auto-mover) and is **app-controlled**.
 
-## Owner context
+## Project context
 
-- The board will be **3-D printed** (the user has a friend who prints).
-- The user wants this repo to hold **designs, models, plan, goals, CLAUDE.md** —
-  everything needed to make the physical board real.
-- **The owner is new to 3-D printing / electronics / making.** Keep guidance
-  beginner-friendly and plain-language; explain jargon; lead them to
-  `docs/START_HERE.md`. Don't assume maker knowledge. The technical friend
-  handles rendering/printing (`hardware/README.md`), but the owner drives the
-  project, so instructions aimed at them must be approachable and low-pressure.
-  Phase 1 (manual board, no electronics) is the realistic near-term target;
-  keep later phases clearly labeled optional/advanced.
+- Parts are **3-D printed** from parametric OpenSCAD models; whoever runs the
+  printer should start at `hardware/README.md`.
+- Assume readers may be **new to 3-D printing / electronics / making**. Keep
+  guidance beginner-friendly and plain-language; explain jargon; lead
+  newcomers to `docs/START_HERE.md`. Phase 1 (manual board, no electronics)
+  is the realistic near-term target; keep later phases clearly labeled
+  optional/advanced.
+- **This repo is shared.** Keep committed content impersonal: no personal
+  names, emails, private context, or references to specific people. Write
+  docs for "the builder" / "whoever prints", not for a named individual.
 
 ## Repo layout
 
@@ -44,17 +44,20 @@ Future scope: the board **plays you** (auto-mover) and is **app-controlled**.
 
 - **Keep it physical-first.** Deliverables are printable parts, real BOM items,
   buildable steps — not UI. If tempted to build a screen app, stop: a digital
-  *twin/simulator* is only worth it if the user asks.
+  *twin/simulator* is only worth it if explicitly requested.
 - **Parametric discipline.** Add new dimensions to `common.scad`; reference
-  them. Keep parts renderable (this environment has no OpenSCAD — write clean,
-  standard OpenSCAD; verify syntax carefully, don't rely on rendering here).
+  them. If OpenSCAD is on PATH, actually render touched parts (`cd hardware &&
+  make FN=32` for a quick pass) and check the log for `non-manifold`/`WARNING`;
+  otherwise write clean, standard OpenSCAD and verify syntax by careful reading.
+  A clean render still doesn't prove connectivity — count shells in the STL if
+  a change could disconnect geometry (thin silhouettes, added bosses).
 - **Engine correctness.** If you touch `chess.js`, re-run the perft check
   (start position: depth 1/2/3 = 20/400/8902) with Node before committing.
 - **Phasing.** Respect the phases in `GOALS.md`: Phase 1 must stay a complete
   manual board with no electronics. Don't let later-phase complexity leak into
   Phase 1 parts.
 - **Decisions.** Open decisions live in `GOALS.md` (D1–D6) and `DESIGN.md §8`.
-  If a task depends on one, either use the documented default or ask the user;
+  If a task depends on one, either use the documented default or ask;
   then record the choice in `GOALS.md`.
 
 ## Conventions

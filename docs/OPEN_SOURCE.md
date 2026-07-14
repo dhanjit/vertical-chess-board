@@ -74,9 +74,9 @@ You send simple G-code ("move to X,Y; magnet on/off"); the firmware handles the
 motors. Imperium already does this.
 
 **Our twist:** all these are **horizontal** (gravity holds pieces down). Ours
-is vertical — see the "Path B / reclined" note in `DESIGN.md §6`. We'd reuse
-their gantry + firmware + engine and adapt the *holding* scheme. Still a huge
-head start.
+is vertical — a gantry only works on the **reclined-gantry fallback** (see
+`DESIGN.md §6` and `AUTO_MOVER_DESIGN.md`). We'd reuse their gantry +
+firmware + engine and adapt the *holding* scheme. Still a huge head start.
 
 ---
 

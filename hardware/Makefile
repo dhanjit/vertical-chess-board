@@ -16,7 +16,7 @@ PIECES    = pawn knight bishop rook queen king
 
 FLAGS = -D '$$fn=$(FN)'
 
-all: dirs pieces board mech
+all: dirs pieces gimbal board board_test mech
 
 dirs:
 	@mkdir -p $(OUT)
@@ -39,6 +39,10 @@ board: dirs
 		$(OPENSCAD) $(FLAGS) -D "QUARTER=\"$$q\"" -o $(OUT)/board_panel_$$q.stl board_panel.scad; \
 	done
 
+# --- Phase-0 board test tile (1x2 squares) ----------------------------
+board_test: dirs
+	$(OPENSCAD) $(FLAGS) -D 'QUARTER="test"' -o $(OUT)/board_test.stl board_panel.scad
+
 # --- Rotation mechanism + frame ---------------------------------------
 mech: dirs
 	$(OPENSCAD) $(FLAGS) -D 'PART="wall"'      -o $(OUT)/hub_wall_plate.stl rotation_hub.scad
@@ -49,4 +53,4 @@ mech: dirs
 clean:
 	rm -rf $(OUT)
 
-.PHONY: all dirs pieces gimbal board mech clean
+.PHONY: all dirs pieces gimbal board board_test mech clean

@@ -25,7 +25,7 @@ powered board: rotate on turn, sense the pieces, run the rules engine, and
 ## Rotation drive (Phase 2)
 
 - **Motor:** NEMA-17, microstepped (TMC2209 for silence).
-- **Ratio:** `motor_gear_teeth:ring_gear_teeth` = 20:120 = **6:1** via GT2 belt.
+- **Ratio:** `motor_gear_teeth:ring_gear_teeth` = 20:200 = **10:1** via GT2 belt.
 - **Homing:** two magnets 180° apart on the turntable + one hall sensor on the
   wall plate define the two stops. On boot, rotate until the index trips.
 - **Move sequence per turn:** detect legal move complete → step 180° →
@@ -57,6 +57,11 @@ WS2812 under each square (behind a diffusing front) to highlight legal moves,
 last move, check, or the square the auto-mover is about to use.
 
 ## Auto-mover (Phase 3)
+
+> **Architecture per decision D6 in [`GOALS.md`](GOALS.md):** the default
+> route is the **EPM matrix** (switchable magnets that hold *and* move — see
+> [`AUTO_MOVER_DESIGN.md`](AUTO_MOVER_DESIGN.md)); the gantry described below
+> is the **reclined-gantry fallback**.
 
 - **Core-XY gantry** behind the panel; one **electromagnet** on the carriage.
 - Energize the magnet, drive to the origin square, drag along the **grid gaps**
@@ -94,5 +99,5 @@ the algorithms in `chess.js`/`ai.js` are the reference).
 - Fuse the 12 V rail; strain-relieve everything on the rotating side.
 - Give the rotation a **torque limit / current limit** so a hand or cat in the
   way stalls the motor instead of forcing it.
-- Mount to a **stud or proper anchors** — a 460 mm steel-backed board is not
-  light.
+- Mount to a **stud or proper anchors** — a ~410 mm board full of steel
+  washers, plus frame and turntable, is not light.

@@ -6,8 +6,10 @@ captures intent so we design toward it.
 ## What it does
 
 - **Pair** with the board over **BLE** (setup) / **Wi-Fi** (gameplay, updates).
-- **Play the machine:** pick difficulty (maps to `ai.js` search depth/eval),
-  request hints, take back moves.
+- **Play the machine:** pick difficulty. Opponent is **Stockfish** (e.g.
+  stockfish.js in-app — see [`OPEN_SOURCE.md`](../docs/OPEN_SOURCE.md)), with
+  [`ai.js`](../software/engine/ai.js) as the zero-dependency fallback
+  (difficulty maps to engine strength / search depth). Hints, takebacks.
 - **Follow along:** live board mirror, move list (SAN/PGN), clocks, captures.
 - **Two-player helpers:** clock, auto-rotate on/off, illegal-move nudges.
 - **Setup:** "set position" flow (resolve piece-identity ambiguity the sensors
@@ -18,7 +20,8 @@ captures intent so we design toward it.
 
 The app and the board run the **same logic** already in this repo:
 - [`software/engine/chess.js`](../software/engine/chess.js) — rules/state,
-- [`software/engine/ai.js`](../software/engine/ai.js) — opponent.
+- [`software/engine/ai.js`](../software/engine/ai.js) — fallback opponent
+  (default opponent is Stockfish, per [`OPEN_SOURCE.md`](../docs/OPEN_SOURCE.md)).
 
 Keeping one engine means the app can validate/preview locally and the board
 stays authoritative over the physical state.

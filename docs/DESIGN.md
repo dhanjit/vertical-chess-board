@@ -36,7 +36,8 @@ re-sizes.
 ```
 
 The board is a **vertical plane** on a **central turntable**. The playing
-surface has a thin **steel sheet** behind it; every piece has a **magnet**
+surface has a **steel washer behind every square** (see §4 — deliberately
+*not* one big steel sheet); every piece has a **magnet**
 in its hub, so pieces grip the vertical surface and can slide square to
 square. Each piece body hangs on a **low-friction pivot** and is
 **bottom-weighted**, making it a pendulum that always points up.
@@ -53,7 +54,7 @@ player now looks at the board "the right way up" from their side.
   keeps it flat against the wall.
 - **Drive:** a **NEMA-17 stepper** turns a **GT2 timing belt** around a
   toothed rim on the turntable. Ratio is `motor_gear_teeth : ring_gear_teeth`
-  (default 20:120 = **6:1**) — plenty of torque, and the board holds still
+  (default 20:200 = **10:1**) — plenty of torque, and the board holds still
   between moves.
 - **Homing:** two magnets 180° apart on the turntable pass a **hall sensor**
   on the wall plate. That gives the two exact stop positions
@@ -93,7 +94,7 @@ Each piece is **two printed parts** (see
 |------|------|
 | **Hub puck** | Neodymium magnet press-fit in the back grips the steel board. An **axle post** projects toward the room. The puck rotates *with* the board. |
 | **Body** | A flat **silhouette** (reads across the room, prints flat, no supports) with a **pivot bore** that drops onto the post, and a **base pocket** for a steel weight. The body spins freely and self-levels. |
-| **Snap cap** | Clips into the axle groove so the body can't fall off but still spins. |
+| **Snap cap** | Snaps over the flared axle tip so the body can't fall off but still spins. |
 
 Design notes:
 - **Pivot above middle, weight at the base** → a strong, unambiguous "down,"
@@ -151,8 +152,8 @@ Combined with the rules engine
 - keep the game state, clocks, and move history,
 - (Phase 3) compute and physically play the opponent's reply.
 
-64 sensors are read through **two 8-channel multiplexers** (or a matrix) into
-one microcontroller — see [`ELECTRONICS.md`](ELECTRONICS.md).
+64 sensors are read through **four 16-channel multiplexers** (CD74HC4067), or
+an 8×8 matrix, into one microcontroller — see [`ELECTRONICS.md`](ELECTRONICS.md).
 
 > Occupancy alone tells you *which* squares are full, not *which piece* is
 > where. That's fine: the firmware knows the full game state, so it only needs
@@ -163,17 +164,19 @@ one microcontroller — see [`ELECTRONICS.md`](ELECTRONICS.md).
 
 ## 6. Phase 3 — the board plays you (auto-mover, future scope)
 
-The "board moves its own pieces" trick is the same one commercial auto-chess
-boards use (Square Off, "wizard chess" boards): an **electromagnet on an XY
-gantry behind the board** grabs a piece's magnet and drags it across the front.
+Commercial auto-chess boards (Square Off, "wizard chess" boards) all use the
+same trick: an **electromagnet on an XY gantry behind the board** grabs a
+piece's magnet and drags it across the front.
 
 - **Gantry:** a Core-XY / H-bot behind the panel carrying one electromagnet.
 - **Routing:** pieces slide along the **gaps between squares**, so knights and
   blocked pieces route *around* others; a piece never passes through another.
 - **Captures:** drag the captured piece to an edge **graveyard lane** first,
   then move the capturing piece.
-- **Brain:** [`software/engine/ai.js`](../software/engine/ai.js) chooses the
-  move; the gantry executes it; the board rotates; your turn.
+- **Brain:** **Stockfish** at selectable strength (see
+  [`OPEN_SOURCE.md`](OPEN_SOURCE.md)) — or the built-in zero-dependency
+  [`ai.js`](../software/engine/ai.js) as fallback — chooses the move; the
+  mover executes it; the board rotates; your turn.
 
 ### The honest hard part (it's harder because our board is vertical)
 
@@ -187,19 +190,20 @@ only slides them sideways. Ours is **vertical**, which creates a real conflict:
 You can't easily have *steel behind every square holding pieces up* **and**
 *an electromagnet behind the board grabbing them* in the same place. So the
 auto-mover is a **different machine** from the manual board, not a bolt-on.
-Three honest paths:
+Three honest routes:
 
-| Path | What it is | Difficulty |
+| Route | What it is | Difficulty |
 |------|-----------|------------|
-| **A. Manual / motor-rotate only** (Phases 1–2) | No robot. Beautiful, achievable. Many people stop here. | approachable |
-| **B. Slight recline (~15–20°, "easel")** | Gravity helps hold pieces → drop the steel backing; the gantry electromagnet both parks pieces in shallow dimples and moves them. **The pragmatic route to real auto-movement.** | hard |
-| **C. Fully vertical auto-mover** | Keep it dead-vertical; needs strong, well-tuned electromagnet coupling + a clever holding scheme. | research-grade |
+| **Manual / motor-rotate only** (Phases 1–2) | No robot. Beautiful, achievable. Many people stop here. | approachable |
+| **EPM matrix** (switchable-magnet grid) | An electropermanent magnet behind *every* square: the holders **are** the movers, so nothing shields anything. Holds with zero standing power (blackout-safe). **The recommended path to true vertical auto-play.** | hard, most parts |
+| **Reclined gantry** (~45–63° from vertical — an easel, not a wall piece) | The classic gantry works once the board leans back far enough for gravity + friction to hold idle pieces without steel. The math in [`AUTO_MOVER_ANALYSIS.md` §6](AUTO_MOVER_ANALYSIS.md) shows a gentle 15–20° tilt does **not** suffice. | hard, proven parts |
 
-**Recommendation:** build Phase 1 first; decide auto-play later. Nothing printed
-for Phase 1 is wasted — pieces, brain, and most of the frame carry into Path B.
-If/when you want auto-play, Path B gets its own design pass (a reclined,
-steel-free panel variant). Tracked as decision **D6** in
-[`GOALS.md`](GOALS.md).
+**Recommendation:** build Phase 1 first; decide auto-play later. Nothing
+printed for Phase 1 is wasted — pieces, brain, and most of the frame carry
+into either route. The default plan (decision **D6** in [`GOALS.md`](GOALS.md))
+is the **EPM matrix**, gated behind cheap prototypes, with the **reclined
+gantry** as the low-risk fallback — full design in
+[`AUTO_MOVER_DESIGN.md`](AUTO_MOVER_DESIGN.md).
 
 > **Full analysis:** the physics of *why* a vertical auto-mover is hard (the
 > hold shields the mover, the hold is what the mover fights, and it must be
@@ -223,13 +227,14 @@ steel-free panel variant). Tracked as decision **D6** in
 | `hub_dia` / `axle_dia` | 22 / 4 mm | gravity pivot |
 | `axle_fit` | 0.35 mm | swivel clearance (lower = tighter) |
 | `bearing_od` / `bearing_id` | 90 / 60 mm | turntable bearing |
-| `ring_gear_teeth` : `motor_gear_teeth` | 120 : 20 | rotation reduction |
+| `ring_gear_teeth` : `motor_gear_teeth` | 200 : 20 | rotation reduction (10:1) |
 | `front_wall` | 2.5 mm | wall between piece magnet and washer/sensor |
 | `washer_od` / `washer_id` | 16 / 8.4 mm | per-square steel washer (hold + sense) |
 
-A full 8×8 at `square_size = 45` gives a **~410 mm** playing area and a
-**~460 mm** panel — a substantial, readable wall piece. Bump `square_size`
-to 55–60 mm for a real statement board (re-check magnet hold).
+A full 8×8 at `square_size = 45` gives a **360 mm** playing area and a
+**410 mm** panel (~434 mm over the frame) — a substantial, readable wall
+piece. Bump `square_size` to 55–60 mm for a real statement board (re-check
+magnet hold).
 
 ---
 
