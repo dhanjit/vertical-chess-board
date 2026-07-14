@@ -16,8 +16,10 @@
 //                  keeps it upright: as the board turns, the body counter-
 //                  rotates on the post and never appears upside-down.
 //
-//   3) SNAP CAP  — a small printed cap that clips into the end of the axle
-//                  so the body cannot fall off, while still spinning.
+//   3) SNAP CAP  — a small printed cap that snaps over a flared lip at the
+//                  axle tip so the body cannot fall off, while still
+//                  spinning. Three slits let its grip fingers flex over
+//                  the lip during assembly.
 //
 // Print the hub and cap in any material; PETG is a good tough choice.
 // Keep the axle friction LOW (a drop of dry PTFE lube helps) so the
@@ -42,36 +44,41 @@ module hub_puck() {
     }
 }
 
-// The axle post + snap groove + retention lip at the tip.
+// The axle post: plain full-diameter shaft (no groove — a groove would neck
+// the 4 mm post to a break point) with a printable double-cone snap LIP at
+// the tip. The cap's fingers ride the entry ramp out, then settle behind
+// the lip. Both cones are ~45 deg, so the post prints upright w/o supports.
+lip_d = axle_dia + 1.2;      // widest point of the tip lip
 module axle_post() {
-    groove_z = axle_len - cap_dia * 0.35;   // where the cap clips
-    difference() {
-        union() {
-            cylinder(d = axle_dia, h = axle_len);
-            // Retention lip (slightly wider tip so the cap snaps behind it).
-            translate([0, 0, axle_len - 0.8])
-                cylinder(d1 = axle_dia, d2 = axle_dia + 1.2, h = 0.8);
-        }
-        // Snap groove.
-        translate([0, 0, groove_z])
-            rotate_extrude()
-                translate([axle_dia/2 - 0.4, 0])
-                    circle(d = 1.0);
-    }
+    cylinder(d = axle_dia, h = axle_len - 1.6);
+    // Support cone (widens toward the tip).
+    translate([0, 0, axle_len - 1.6])
+        cylinder(d1 = axle_dia, d2 = lip_d, h = 0.8);
+    // Entry ramp (narrows to the very tip so the cap slides on easily).
+    translate([0, 0, axle_len - 0.8])
+        cylinder(d1 = lip_d, d2 = axle_dia + 0.2, h = 0.8);
 }
 
 // ---- Snap cap: retains the body on the post but lets it spin ----------
+// A short grip bore (split into three fingers by the slits) flexes over the
+// tip lip; the lip then sits in a wider internal chamber and the fingers'
+// rear shoulder retains it. Closed back hides the post tip. Pulls off with
+// firm finger pressure for servicing.
 module snap_cap() {
+    grip = 2.2;    // length of the finger (grip) zone
     difference() {
-        cylinder(d = cap_dia, h = cap_dia * 0.5);
-        // Bore that grips the axle groove.
+        cylinder(d = cap_dia, h = 5.5);
+        // Grip bore (rides the plain 4 mm post).
         translate([0, 0, -0.01])
-            cylinder(d = axle_dia + 2*axle_fit, h = cap_dia * 0.5 + 0.02);
-        // Internal bump matching the groove (printed as a shallow ring).
-        translate([0, 0, cap_dia * 0.25])
-            rotate_extrude()
-                translate([(axle_dia + 2*axle_fit)/2, 0])
-                    circle(d = 0.9);
+            cylinder(d = axle_dia + 2*axle_fit, h = grip + 0.01);
+        // Lip chamber (houses the flared tip; 5.5 total - 4.7 = solid back).
+        translate([0, 0, grip])
+            cylinder(d = lip_d + 0.6, h = 2.5);
+        // Three radial slits so the grip fingers can flex over the lip.
+        for (a = [0, 120, 240])
+            rotate([0, 0, a])
+                translate([cap_dia/2, 0, (grip + 1.5)/2])
+                    cube([cap_dia, 1.2, grip + 1.5 + 0.02], center = true);
     }
 }
 

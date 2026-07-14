@@ -60,26 +60,31 @@ fights our own design, because our board is **vertical**:
 - But a moving electromagnet behind the board can't reach the pieces *through*
   a steel backing — steel shields magnets.
 
-So the "board plays you" version is a **different machine** (likely a slightly
-reclined, steel-free variant — "Path B" in [`DESIGN.md` §6](DESIGN.md#6-phase-3--the-board-plays-you-auto-mover-future-scope)).
+So the "board plays you" version is a **different machine**. The recommended
+route is an **EPM matrix** — a switchable magnet behind every square, so the
+holders *are* the movers (see
+[`AUTO_MOVER_DESIGN.md`](AUTO_MOVER_DESIGN.md)); the fallback is a **steeply
+reclined (~45–63°) gantry** variant — a gentle 15–20° lean does *not* work,
+per the math in [`AUTO_MOVER_ANALYSIS.md`](AUTO_MOVER_ANALYSIS.md) §6.
 This is captured so nobody discovers it the hard way later. **It does not
 affect the manual board at all** — pieces, brain, and most of the frame carry
 over if you ever pursue auto-play.
 
 ---
 
-## 4. Re-scoped plan (what I actually recommend you do)
+## 4. Re-scoped plan (the recommended path)
 
 Five stages, each a clean stopping point. **Most first-timers should aim for
 Stage B and be delighted.**
 
 ### Stage A — Prove the magic (1 weekend, ~₹500)
 Print **one** pendulum pivot + **one** piece; buy a few magnets + a washer +
-a nut. Confirm: piece **sticks** to a vertical steel surface and **stays
-upright** when you spin it.
-→ **GO/NO-GO gate.** If it needs tuning, tell me what happened and I'll adjust
-the numbers before you print a whole set. *(This is exactly why we test one
-piece before printing 32.)*
+two M3 nuts. Confirm: piece **sticks** to a vertical steel surface and
+**stays upright** when you spin it.
+→ **GO/NO-GO gate.** If it needs tuning, adjust the numbers in
+`hardware/common.scad` (the Phase-0 tuning table in
+[`BUILD_GUIDE.md`](BUILD_GUIDE.md) maps symptom → parameter) before printing a
+whole set. *(This is exactly why we test one piece before printing 32.)*
 
 ### Stage B — The manual wall board (1–2 weekends, ~₹3–4.5k) ⭐ the real goal
 Print the full set + board panel (in quarters) + frame; add the lazy-susan
@@ -98,8 +103,9 @@ board follows the game and flags illegal moves. A substantial standalone
 project.
 
 ### Stage E — Auto-play + app (optional, biggest)
-The reclined "Path B" auto-mover and a phone app. Real robotics + software.
-Only if you've caught the bug and want a long project.
+The auto-mover (EPM matrix, or the reclined-gantry fallback — see
+[`AUTO_MOVER_DESIGN.md`](AUTO_MOVER_DESIGN.md)) and a phone app. Real robotics
++ software. Only if you've caught the bug and want a long project.
 
 > **You can stop after any stage** and have a complete, working thing. The
 > repo is built so later stages don't require redoing earlier ones.
@@ -112,13 +118,13 @@ Only if you've caught the bug and want a long project.
   removes all the Stage-C electronics.
 - **Bigger squares, bigger magnets** — a 55–60 mm board is easier to assemble
   and holds pieces more confidently than tiny parts. (One number in
-  `common.scad`; I'll change it.)
+  `common.scad` — `square_size`.)
 - **Tune, don't redesign** — if pieces don't self-right cleanly, the fix is
   usually more base weight or less pivot friction, not a new design.
 - **Fallback if the pendulum frustrates you:** pieces whose shape reads the
   same either way up (letters, or symmetric silhouettes) need *no* pivot and
-  *no* rotation — you lose the "wow," but it's a guaranteed-simple board. I'd
-  only suggest this if Stage A really fights you.
+  *no* rotation — you lose the "wow," but it's a guaranteed-simple board. Only
+  worth considering if Stage A really fights you.
 
 ---
 
@@ -128,7 +134,7 @@ Detail and shops in [`SOURCING_BANGALORE.md`](SOURCING_BANGALORE.md).
 
 | Path | Rough cost | Notes |
 |---|---|---|
-| Stage A test | ~₹300–600 | a few magnets, a washer, one nut; prints are grams of filament |
+| Stage A test | ~₹300–600 | a few magnets, a washer, two M3 nuts; prints are grams of filament |
 | **Stage B manual board — friend prints** | **~₹2,500–4,500** | filament + magnets + washers + bearing + cleat + glue |
 | Stage B manual board — *paid* print service | +₹8,000–15,000 | large board = lots of plastic; **friend's printer is far cheaper** |
 | Stage C motorize | +₹1,500–3,000 | stepper, driver, controller, PSU |
@@ -169,7 +175,7 @@ This is why the electronics stages are more approachable than they look — the
 community has done the heavy lifting, and nearly every project just runs
 Stockfish.
 
-## 8. My recommendation in one line
+## 8. Recommendation in one line
 
 **Do Stage A this month. If it delights you, do Stage B and hang a board you
 built. Decide on electronics only after that — with a finished board already on

@@ -37,18 +37,20 @@ the board.** This is **Phase 0** and it costs almost nothing.
 - 1 × king piece
 - 1 × small board test section (optional but nice)
 
-**You buy:** a couple of the small magnets and one steel washer (see the list
-below — you only need a few for the test).
+**You buy:** a couple of the small magnets, one steel washer, two tiny M3
+nuts, and super glue (see the list below — you only need a few for the test).
 
-**Then:** press a magnet into the pivot, drop a small steel weight (a nut) into
-the piece's base, click the piece onto the pivot, and stick it to a steel
-surface held sideways (a fridge side, a steel washer taped to cardboard,
-anything steel). It should **hold on** and **stay upright when you rotate it**.
+**Then:** press a magnet into the pivot, glue the two small steel nuts
+(stacked) into the pocket at the piece's base, click the piece onto the pivot,
+and stick it to a steel surface held sideways (a fridge side, a steel washer
+taped to cardboard, anything steel). It should **hold on** and **stay upright
+when you rotate it**.
 
 If that works and feels good → print the rest. If it needs tuning (spins too
-freely, or won't hold), tell me what happened and I'll adjust the design
-numbers for you. **This is the whole reason we test first — it's much cheaper
-to tweak one piece than 32.**
+freely, or won't hold), the fix is usually one number in
+`hardware/common.scad` — the tuning table in [`BUILD_GUIDE.md`](BUILD_GUIDE.md)
+("Phase 0") says which one for each symptom. **This is the whole reason we
+test first — it's much cheaper to tweak one piece than 32.**
 
 Full step-by-step is in [`BUILD_GUIDE.md`](BUILD_GUIDE.md) ("Phase 0").
 
@@ -64,8 +66,8 @@ Full step-by-step is in [`BUILD_GUIDE.md`](BUILD_GUIDE.md) ("Phase 0").
 > settings) is in `hardware/README.md`. In short:
 > - Install **OpenSCAD** (free), then from the `hardware/` folder run `make`
 >   to generate all the STLs — or just render the ones I list below.
-> - **Test batch:** one `gravity_gimbal`, one `piece_king`, (optional) one
->   small board offcut.
+> - **Test batch:** one `gimbal_testpair`, one `piece_king`, (optional) one
+>   `board_test` tile (`make gimbal board_test` + the king render).
 > - **Material:** PLA is fine. ~15–20% infill, 0.2 mm layers, **no supports
 >   needed** (parts are designed to print flat).
 > - The pieces print in **two colors** (one for white, one for black) — but
@@ -84,16 +86,20 @@ manual board**, get the quantities in [`BOM.md`](BOM.md). In plain terms:
 | What | Why | Where |
 |------|-----|-------|
 | Small **neodymium disc magnets** (8 mm × 3 mm) | go inside each piece so it sticks to the board | Amazon / hobby store |
-| **Steel washers** (~16 mm, with a hole — "M8 fender washers") | one behind each square; the magnet grabs these | hardware store (get plain **steel**, not stainless) |
-| Small **steel nuts** (M6) | tiny weights that keep pieces upright | hardware store |
+| **Steel washers** (~16 mm, with a hole — ask for "M8 plain/flat washers") | one behind each square; the magnet grabs these | hardware store (get plain **steel**, not stainless) |
+| Small **steel nuts** (**M3** — two per piece, glued) | tiny weights that keep pieces upright (M6 nuts are too big for the pocket) | hardware store |
 | A **lazy-susan / turntable bearing** (~90 mm) | lets the board spin on the wall | Amazon / hardware store |
 | A **French cleat** (a slanted hanging bracket) | how it hangs on the wall | hardware store |
 | Super glue / epoxy | assembly | anywhere |
 
 > **One tip that saves headaches:** magnets and washers come in slightly
 > different sizes. Buy the sizes above, and during the Phase 0 test we confirm
-> they fit. If they don't, I change one number in the design and your friend
-> re-prints — no problem.
+> they fit. If they don't, one number changes in the design
+> (`hardware/common.scad`) and the part gets re-printed — no problem.
+>
+> This table covers the hand-played board's main parts; the frame assembly
+> also needs **M3 bolts + heat-set inserts** and **PTFE lube** — the complete
+> per-phase list is [`BOM.md`](BOM.md).
 
 ---
 
@@ -124,6 +130,9 @@ the hand-played wall board, and it's great on its own.
 
 ## If you get stuck
 
-Tell me exactly what happened ("the piece won't stay upright," "the magnet is
-too weak," "my friend's printer bed is small") and I'll adjust the design or
-the plan. That's what this repo is for.
+Note exactly what happened ("the piece won't stay upright," "the magnet is
+too weak," "the printer bed is small"). Nearly every symptom maps to one
+number in `hardware/common.scad` — the troubleshooting table in
+[`BUILD_GUIDE.md`](BUILD_GUIDE.md) and the "ways to make it easier" list in
+[`PROJECT_REVIEW.md`](PROJECT_REVIEW.md) §5 cover the common ones. The design
+is parametric on purpose: tune the number, re-print the one part.

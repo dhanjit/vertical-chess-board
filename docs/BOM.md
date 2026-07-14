@@ -10,8 +10,8 @@ working manual wall board; later phases layer on.
 |------|-----|-------|-------|
 | 3-D printer filament (PLA/PETG) | ~1.5–2 kg | 2 colors for White/Black + board | $30–50 |
 | Neodymium disc magnets, **8 × 3 mm N52** | ~40 | 32 pieces + spares; press-fit into hubs | $10–15 |
-| Steel washers (**~16 mm OD, 8.4 mm ID**, e.g. M8 fender) | ~70 | one behind each of the 64 squares (+ spares); pieces grip + self-center on these | $8–12 |
-| Steel weights for piece bases (M6 nuts or 6 mm discs) | ~40 | drop into base pocket to tune self-righting | $5 |
+| Steel washers (**~16 mm OD, 8.4 mm ID** — standard **M8 plain/flat** washer, DIN 125) | ~70 | one behind each of the 64 squares (+ spares); pieces grip + self-center on these | $8–12 |
+| Steel weights for piece bases (**M3 nuts**, two per piece, or ~6 mm steel balls/discs) | ~70 | glue into the 7 mm base pocket to tune self-righting. **An M6 nut is too big for the pocket** | $5 |
 | **Lazy-susan / turntable bearing** (~90 mm OD) | 1 | carries the board, lets it rotate | $8–15 |
 | French cleat (wood/metal) or heavy Z-bracket | 1 | wall mount | $10 |
 | M3 bolts/heat-set inserts assortment | 1 kit | frame ↔ turntable, panel bosses | $10 |
@@ -28,8 +28,8 @@ working manual wall board; later phases layer on.
 | Stepper driver (A4988/DRV8825/TMC2209) | 1 | TMC2209 = quiet | $3–10 |
 | **GT2 timing belt** (6 mm) + 20T pulley | 1 | belt loop around turntable rim | $8 |
 | Microcontroller — **ESP32** (Wi-Fi/BLE) | 1 | reads sensors, drives motor, hosts brain | $6–10 |
-| **Hall-effect sensors** (A3144 or 49E) | 64 + 2 | 64 board grid + 2 home index | $12–20 |
-| 8-channel analog/digital multiplexers (CD74HC4067) | 4–8 | scan the 64 sensors | $8 |
+| **Hall-effect sensors** (A3144 or 49E) | 64 + 2 | 64 board grid + 2 home index (the 2 index *magnets* come out of the Phase-1 magnet spares) | $12–20 |
+| **16-channel** analog/digital multiplexers (CD74HC4067) | 4 | scan the 64 sensors (or wire an 8×8 matrix instead) | $8 |
 | 12 V power supply (2–3 A) + buck to 5 V | 1 | motor + logic | $12 |
 | Perfboard/PCB, wiring, connectors | — | sensor grid harness | $15 |
 | WS2812 LEDs (optional, per-square hints) | 64 | move highlights | $10 |
@@ -38,6 +38,10 @@ working manual wall board; later phases layer on.
 **Phase 2 add:** ~$100–130.
 
 ## Phase 3 — Auto-mover (adds to Phase 2)
+
+> This table prices the **reclined-gantry fallback**. The default route per
+> decision D6 is the **EPM matrix** — its (different) parts budget is worked
+> out in [`AUTO_MOVER_DESIGN.md`](AUTO_MOVER_DESIGN.md).
 
 | Item | Qty | Notes | ~Cost |
 |------|-----|-------|-------|
@@ -55,8 +59,10 @@ working manual wall board; later phases layer on.
   consistent when you press them in (mark one face).
 - **Steel washers:** must be *ferromagnetic* (zinc-plated/mild steel — **not**
   stainless 304 or aluminum; test with a fridge magnet before buying). Standard
-  M8 fender washers (~16 mm OD) are ideal and cheap in bulk.
+  **M8 plain/flat washers** (~16 mm OD, DIN 125) are ideal and cheap in bulk.
+  Don't ask for "fender/repair" washers — those are ~24 mm and won't fit the
+  printed pockets.
 - **Bearing:** any turntable/lazy-susan bearing near `bearing_od` works; adjust
   `bearing_od`/`bearing_id` in `common.scad` to what you buy.
-- **Stepper torque:** 6:1 reduction (default) makes a standard NEMA-17 ample for
-  a 2–3 kg board. If you go big (60 mm squares), recheck.
+- **Stepper torque:** 10:1 reduction (default) makes a standard NEMA-17 ample
+  for a 2–3 kg board. If you go big (60 mm squares), recheck.

@@ -42,8 +42,9 @@ printable models, electronics, firmware, the game brain, and the plan.
 Prove the ideas cheaply before committing to a full board.
 - [ ] Print one **gravity gimbal** pair (`gravity_gimbal.scad`) + one piece;
       confirm it **self-rights** smoothly and a magnet **holds on steel**.
-- [ ] Print one **board tile** section; confirm magnet slide + hold through the
-      front wall, and hall sensor trips under a piece.
+- [ ] Print one **board test tile** (`make board_test`); confirm magnet slide +
+      hold through the front wall. (Optional Phase-2 lookahead: a hall sensor
+      in the pocket trips under a piece — no electronics needed for Phase 0.)
 - [ ] Tune `axle_fit`, `magnet_dia`, weight pocket until swing is crisp.
 - **Exit criteria:** a piece sticks to a vertical steel scrap and stays upright
   when you rotate the scrap by hand.
@@ -51,7 +52,8 @@ Prove the ideas cheaply before committing to a full board.
 ### Phase 1 — Manual magnetic wall board (no electronics) ⬜
 A complete, beautiful board you can hang and play today.
 - [ ] Full **32-piece set** (2 finishes) + spares.
-- [ ] Full **board panel** (whole or quartered) with steel sheet + labels.
+- [ ] Full **board panel** (whole or quartered) with per-square steel washers
+      + labels.
 - [ ] **Frame** + **turntable on the lazy-susan bearing**, hand-rotated.
 - [ ] Wall mount (French cleat) and balance so it flips with a light push.
 - **Exit criteria:** hangs level, holds all pieces, spins 180° by hand, pieces
@@ -68,8 +70,13 @@ The board turns itself and follows the game.
   flips itself; illegal moves are flagged.
 
 ### Phase 3 — The board plays you (auto-mover) ⬜
-- [ ] Behind-panel **Core-XY gantry + electromagnet** moves the board's pieces.
-- [ ] [`ai.js`](../software/engine/ai.js) picks moves at selectable strength.
+- [ ] Auto-mover per decision **D6** (below): default **EPM matrix** (the
+      switchable magnets hold *and* move); fallback **reclined gantry** —
+      how-to in [AUTO_MOVER_DESIGN.md](AUTO_MOVER_DESIGN.md), why in
+      [AUTO_MOVER_ANALYSIS.md](AUTO_MOVER_ANALYSIS.md).
+- [ ] Opponent: **Stockfish** at selectable strength (see
+      [OPEN_SOURCE.md](OPEN_SOURCE.md)); [`ai.js`](../software/engine/ai.js)
+      is the built-in zero-dependency fallback.
 - [ ] Captures routed to an off-board "graveyard" lane.
 - **Exit criteria:** pick a difficulty, the board makes its own legal moves,
   including captures and castling.
@@ -92,7 +99,7 @@ The board turns itself and follows the game.
 
 ---
 
-## Decisions to lock (owner: you)
+## Decisions to lock
 
 These gate the build. See discussion in [`DESIGN.md` §8](DESIGN.md#8-open-design-questions).
 
@@ -103,9 +110,10 @@ These gate the build. See discussion in [`DESIGN.md` §8](DESIGN.md#8-open-desig
 | D3 | Finish | two-tone print / paint / veneer | ⬜ open |
 | D4 | Rotate policy | every move / button / 2-player only | ⬜ open |
 | D5 | Brain location | phone / Pi / ESP32 | ⬜ open |
-| D6 | Auto-mover in scope + path | never / **EPM matrix (Path B)** / reclined gantry (Path D) | ⬜ open (default: later; EPM matrix, prototype-gated) — why in [AUTO_MOVER_ANALYSIS.md](AUTO_MOVER_ANALYSIS.md), how in [AUTO_MOVER_DESIGN.md](AUTO_MOVER_DESIGN.md) |
+| D6 | Auto-mover in scope + route | never / **EPM matrix** / reclined gantry (~45–63°) | ⬜ open (default: later; EPM matrix, prototype-gated) — why in [AUTO_MOVER_ANALYSIS.md](AUTO_MOVER_ANALYSIS.md), how in [AUTO_MOVER_DESIGN.md](AUTO_MOVER_DESIGN.md) |
 
-When you pick, note it here and I'll propagate the parameters and parts.
+When a decision is locked, record it here and propagate the values into
+`hardware/common.scad` and the affected parts/docs.
 
 ---
 
@@ -113,7 +121,9 @@ When you pick, note it here and I'll propagate the parameters and parts.
 
 - ✅ **Rules engine** — full legal move gen, check/mate/stalemate, castling,
   en passant, promotion, SAN, draws. Verified with perft (20 / 400 / 8902).
-- ✅ **AI opponent** — negamax + alpha-beta + piece-square eval (Phase 3 brain).
+- ✅ **AI opponent** — negamax + alpha-beta + piece-square eval (the built-in
+  fallback opponent; the Phase-3 default is Stockfish, see
+  [OPEN_SOURCE.md](OPEN_SOURCE.md)).
 - ✅ **Parametric hardware** — pieces, gravity gimbal, board panel, frame,
   rotation hub, drive pulley; `Makefile` renders all STLs.
 - ✅ **Docs** — this roadmap, the design, electronics plan, BOM, build guide.

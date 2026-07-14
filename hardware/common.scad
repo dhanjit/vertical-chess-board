@@ -35,7 +35,7 @@ tile_engrave     = 1.2;     // depth of the engraved square grid / dark squares
 // washer's center hole and reads the piece magnet through the thin front wall
 // -- the washer's HOLE is why the sensor isn't magnetically shielded.
 front_wall       = 2.5;     // plastic between piece magnet and washer/sensor
-washer_od        = 16;      // steel washer outer dia (e.g. M8 fender washer)
+washer_od        = 16;      // steel washer outer dia (standard M8 plain/flat)
 washer_id        = 8.4;     // washer center hole (sensor pokes up into it)
 washer_thk       = 1.6;     // washer thickness
 washer_fit       = 0.3;     // pocket clearance around the washer
@@ -49,17 +49,25 @@ magnet_fit       = 0.15;    // radial press-fit clearance (per side)
 
 // ---- Gravity gimbal / pivot ----
 axle_dia         = 4;       // diameter of the pivot post
-axle_len         = 9;       // how far the post projects from the hub
+axle_len         = 10;      // how far the post projects from the hub
 axle_fit         = 0.35;    // clearance so the body spins freely on the post
 hub_dia          = 22;      // diameter of the magnetic hub puck
 hub_thk          = 6;       // thickness of the hub puck
 cap_dia          = 8;       // retaining cap that keeps the body on the axle
-weight_pocket    = 7;       // dia of pocket at piece bottom for a steel weight
-weight_pocket_h  = 6;       // depth of that pocket
+weight_pocket    = 7;       // dia of the base weight pocket. Fits two stacked
+                            //   M3 nuts (2 x 2.4 = 4.8 mm, flush) or a steel
+                            //   ball/disc kept flush-or-below with glue.
+                            //   (An M6 nut is ~11 mm across corners - too big.)
+weight_pocket_h  = 5;       // pocket depth. BLIND: less than piece_thk so a
+                            //   1 mm floor remains at the front face; the
+                            //   weight goes in from the back, glued, and must
+                            //   sit flush so it can't rub the hub puck.
 
 // ---- Piece bodies (flat silhouettes, read from across the room) ----
 piece_thk        = 6;       // extrusion thickness of the silhouette plate
 piece_scale      = 1.0;     // global scale multiplier for all pieces
+pivot_frac       = 0.60;    // pivot height as a fraction of piece height
+                            //   (above the middle => clear "down" + fast settle)
 // Nominal silhouette heights per type (mm), scaled by piece_scale.
 h_pawn   = 26;
 h_knight = 30;
@@ -72,7 +80,10 @@ h_king   = 40;
 bearing_od       = 90;      // outer dia of the turntable bearing seat
 bearing_id       = 60;      // inner bore
 motor_gear_teeth = 20;      // drive pinion on the NEMA-17
-ring_gear_teeth  = 120;     // ring gear on the board (6:1 reduction)
+ring_gear_teeth  = 200;     // GT2 ring on the turntable (10:1 reduction).
+                            //   Must be large enough that the toothed rim
+                            //   clears the turntable disc: pitch dia =
+                            //   teeth*2/PI must exceed bearing_od + 28 + 6.
 
 // ---- Print tolerances ----
 slop             = 0.2;     // general clearance for mating printed parts
@@ -82,6 +93,11 @@ $fn              = 64;      // curve smoothness (bump to 128 for final render)
 // Derived values -------------------------------------------------------
 grid_size   = 8 * square_size;                 // playing area edge
 panel_size  = grid_size + 2 * board_margin;    // full panel edge
+hub_bolt_r  = bearing_od/2 + 9;                // frame <-> turntable bolt circle;
+                                               //   outside the bearing OD so the
+                                               //   bolts clear the bearing race.
+                                               //   Shared by frame.scad and
+                                               //   rotation_hub.scad.
 
 // Center coordinate of square (file f 0..7, rank r 0..7) on the panel,
 // measured from the panel's own corner.

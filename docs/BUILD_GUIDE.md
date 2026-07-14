@@ -22,15 +22,20 @@ phases. Read [`DESIGN.md`](DESIGN.md) first for the "why."
 
 Cheap insurance before printing 32 pieces.
 1. `make gimbal` → print one **hub + cap**; press an 8×3 magnet into the hub.
-2. Print **one king** (`make pieces` then just use `piece_king.stl`); drop a
-   steel nut in its base pocket; slide it onto the hub post; clip the cap.
+2. Print **one king** (`make pieces` then just use `piece_king.stl`); **glue**
+   two stacked **M3 nuts** (or a ~6 mm steel ball) into its base pocket —
+   the pocket opens at the back face; a dab of super glue holds the weight —
+   then slide the body onto the hub post and snap the cap on.
 3. Stick it to any **steel** surface held vertically. It should **hold** and
-   **stay upright** when you rotate the surface. Tune:
+   **stay upright** when you rotate the surface. Tune (all in
+   `hardware/common.scad`):
    - swings sluggishly / won't turn → increase `axle_fit`, add PTFE lube;
    - won't self-right → heavier base weight, or raise `pivot_frac`;
-   - falls off → bigger magnet or thinner front wall (`steel_pocket_thk`).
-4. Print a small **board offcut** and check a magnet holds & slides through the
-   front face, and (Phase 2) that a hall sensor in the pocket trips.
+   - falls off → bigger magnet (`magnet_dia`) or thinner front wall
+     (`front_wall`).
+4. Print the **board test tile** (`make board_test`) and check a magnet holds
+   & slides through the front face, and (Phase 2) that a hall sensor in the
+   pocket trips.
 
 ## 2. Print the set
 
@@ -57,9 +62,9 @@ Cheap insurance before printing 32 pieces.
 ## 4. Assemble pieces
 
 For each piece: press a **magnet** into the hub (consistent polarity — mark a
-face), drop the **steel weight** into the body's base pocket (a dab of glue),
-slide the body onto the **axle post**, and **snap the cap** on. Spin-test: it
-should rotate freely and settle upright.
+face), glue the **steel weight** (two stacked M3 nuts or a ~6 mm ball) into
+the body's base pocket, slide the body onto the **axle post**, and **snap the
+cap** on. Spin-test: it should rotate freely and settle upright.
 
 ## 5. Frame + turntable
 
@@ -84,7 +89,9 @@ should rotate freely and settle upright.
   sensors**; see [`ELECTRONICS.md`](ELECTRONICS.md).
 - Populate the **64 hall sensors** and wire through muxes to an **ESP32**;
   run the rules engine so the board follows and validates the game.
-- Later, add the **Core-XY + electromagnet** auto-mover and the **app**.
+- Later, add the auto-mover (per **D6** in [`GOALS.md`](GOALS.md): EPM matrix
+  default, reclined-gantry fallback — see
+  [`AUTO_MOVER_DESIGN.md`](AUTO_MOVER_DESIGN.md)) and the **app**.
 
 ## Troubleshooting
 

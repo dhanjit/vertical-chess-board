@@ -21,13 +21,15 @@
 //   * cross RIBS stiffen the large thin front wall.
 //
 // Print whole on a large bed, or in quarters for a small bed:
-//   openscad -D 'QUARTER="bl"'  -o panel_bl.stl  board_panel.scad
-//   openscad -D 'QUARTER="all"' -o panel.stl     board_panel.scad
+//   openscad -D 'QUARTER="bl"'   -o panel_bl.stl   board_panel.scad
+//   openscad -D 'QUARTER="all"'  -o panel.stl      board_panel.scad
+// Phase-0 test tile (1x2 squares, same wall/washer/sensor stack):
+//   openscad -D 'QUARTER="test"' -o board_test.stl board_panel.scad
 // =====================================================================
 
 include <common.scad>
 
-QUARTER   = "all";        // "all" | "bl" | "br" | "tl" | "tr"
+QUARTER   = "all";        // "all" | "bl" | "br" | "tl" | "tr" | "test"
 rib_w     = 2.4;          // stiffening rib thickness
 boss_wall = 3;            // material around each washer pocket
 label_depth = 0.8;
@@ -144,10 +146,51 @@ module panel_solid() {
     }
 }
 
+// ---- Phase-0 test tile: a 1x2-square offcut of the panel -------------
+// Same front wall, washer pocket and sensor bore as the real panel, so the
+// magnet-through-wall hold (and later a hall sensor) can be tested for the
+// price of a coaster. One square is engraved dark for the two-tone check.
+module board_test() {
+    n      = 2;                        // squares
+    border = 10;                       // rim around the squares
+    tx     = n * square_size + 2*border;
+    ty     = square_size + 2*border;
+    difference() {
+        union() {
+            // Tray shell (rim + thin front wall, like the full panel).
+            difference() {
+                cube([tx, ty, board_thickness]);
+                translate([border, border, -0.01])
+                    cube([n * square_size, square_size, fw_inner + 0.01]);
+            }
+            // Washer bosses.
+            for (i = [0:n-1])
+                translate([border + square_size*(i + 0.5), ty/2, 0])
+                    cylinder(d = washer_od + 2*washer_fit + 2*boss_wall,
+                             h = fw_inner);
+        }
+        for (i = [0:n-1]) {
+            // Washer pocket against the back of the front wall.
+            translate([border + square_size*(i + 0.5), ty/2, fw_inner - washer_thk])
+                cylinder(d = washer_od + 2*washer_fit, h = washer_thk + 0.01);
+            // Sensor bore from the open back up to the washer floor.
+            translate([border + square_size*(i + 0.5), ty/2, -0.01])
+                cylinder(d = sensor_dia + 2*slop,
+                         h = fw_inner - washer_thk + 0.02);
+        }
+        // Engrave the first square dark (two-tone / paint-fill check).
+        translate([border + square_size*0.5, ty/2, board_thickness - tile_engrave])
+            linear_extrude(tile_engrave + 0.1)
+                square(square_size - 0.6, center = true);
+    }
+}
+
 // ---- Quartering for smaller print beds ------------------------------
 module panel() {
     if (QUARTER == "all") {
         panel_solid();
+    } else if (QUARTER == "test") {
+        board_test();
     } else {
         half = panel_size/2;
         xr = (QUARTER == "bl" || QUARTER == "tl") ? [0, half] : [half, panel_size];

@@ -5,9 +5,12 @@
 // Each piece is a flat SILHOUETTE plate (a bas-relief profile) so it reads
 // cleanly from across the living room and prints flat with no supports.
 // It carries:
-//   * a central PIVOT BORE (rides on the hub's axle — see gravity_gimbal.scad)
-//   * a WEIGHT POCKET at the base (drop in a steel nut / M6 grub / magnet)
-//     to push the center of mass below the pivot => it self-rights.
+//   * a central PIVOT BORE (rides on the hub's axle — see gravity_gimbal.scad),
+//     reinforced by a round boss so thin silhouettes keep a solid wall;
+//   * a blind WEIGHT POCKET at the base (glue in two stacked M3 nuts or a
+//     ~6 mm steel ball — see common.scad `weight_pocket`) to push the center
+//     of mass below the pivot => it self-rights. A round boss in the
+//     silhouette guarantees material all around the pocket.
 //
 // The pivot is placed ABOVE the geometric middle; combined with the base
 // weight this gives a clear "down" so the pendulum settles fast and upright.
@@ -22,8 +25,8 @@ include <common.scad>
 use <gravity_gimbal.scad>
 
 PART = "all";   // overridden with -D on the command line
-
-pivot_frac = 0.60;   // pivot height as a fraction of piece height (above middle)
+// (pivot_frac — the pivot height as a fraction of piece height — lives in
+//  common.scad with the other tuning knobs.)
 
 // ---- 2D silhouette profiles (base sits on y=0, symmetric about x=0) ---
 
@@ -123,8 +126,9 @@ module king2d(H) {
     }
     // crown band
     translate([0, H*0.64]) square([w*0.60, H*0.06], center = true);
-    // cross
-    translate([0, H*0.80]) square([w*0.10, H*0.22], center = true);
+    // cross (vertical bar reaches down to overlap the crown band by ~1 mm,
+    // so the cross is solidly connected — not a floating island)
+    translate([0, H*0.78]) square([w*0.10, H*0.26], center = true);
     translate([0, H*0.84]) square([w*0.26, H*0.09], center = true);
 }
 
@@ -172,20 +176,31 @@ module silhouette2d(t, H) {
 
 // ---- 3D piece: extruded silhouette + pivot bore + base weight pocket --
 module piece(t) {
-    H = piece_height(t);
+    H  = piece_height(t);
     py = pivot_frac * H;   // pivot height from base
+    // Weight pocket center: as low as possible, but high enough that the
+    // pocket + a 1.7 mm rim stays inside its boss (small pieces like the
+    // pawn would otherwise have the pocket break out of the base edge).
+    wy = max(H * 0.09, weight_pocket/2 + 1.7);
     difference() {
         // Body, translated so the pivot point sits at the origin.
         translate([0, -py, 0])
-            linear_extrude(height = piece_thk)
+            linear_extrude(height = piece_thk) {
                 silhouette2d(t, H);
+                // Boss around the weight pocket (>= 1.7 mm wall all around).
+                translate([0, wy]) circle(d = weight_pocket + 3.4);
+                // Boss around the pivot bore, so thin silhouettes (pawn neck,
+                // bishop mitre) keep a >= 1.5 mm wall and stay one solid body.
+                translate([0, py]) circle(d = axle_dia + 2*axle_fit + 3);
+            }
 
         // Pivot bore at origin (through the plate).
         translate([0, 0, -0.5])
             cylinder(d = axle_dia + 2*axle_fit, h = piece_thk + 1);
 
-        // Weight pocket near the base (open at the back face).
-        translate([0, -py + H*0.09, piece_thk - weight_pocket_h])
+        // Blind weight pocket near the base: opens at the BACK face only
+        // (a floor of piece_thk - weight_pocket_h remains at the front).
+        translate([0, -py + wy, piece_thk - weight_pocket_h])
             cylinder(d = weight_pocket, h = weight_pocket_h + 0.5);
     }
 }
