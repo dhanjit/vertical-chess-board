@@ -48,8 +48,8 @@ app/                   ← control-app spec (future)
 ## Start here
 
 **New to 3D printing / electronics? Read [`docs/START_HERE.md`](docs/START_HERE.md)
-first** — a plain-language guide (no experience needed) with a copy-paste
-message for whoever's printing and a simple shopping list. Then
+first** — a plain-language guide (no experience needed) with a print spec for
+whoever runs the printer and a simple shopping list. Then
 [`docs/PROJECT_REVIEW.md`](docs/PROJECT_REVIEW.md) reviews the idea and lays
 out a realistic staged plan, and [`docs/SOURCING_BANGALORE.md`](docs/SOURCING_BANGALORE.md)
 covers where to print and buy parts in Bengaluru.

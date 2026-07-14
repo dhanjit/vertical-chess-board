@@ -1,8 +1,8 @@
 # Hardware — parametric 3-D models
 
 All parts are **OpenSCAD**, driven by one shared config so the whole board
-resizes from a few numbers. Give these files (or the rendered STLs) to whoever
-is printing.
+resizes from a few numbers. These files (or the rendered STLs) are the input
+to whoever runs the printer — your own printer, a print service, or a makerspace.
 
 ## Files
 
