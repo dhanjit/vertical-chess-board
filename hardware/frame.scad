@@ -60,7 +60,7 @@ module frame_full() {
             rotate([0,0,a]) translate([hub_bolt_r, 0, 0])
                 difference() {
                     cylinder(d = 9, h = wall + 4);
-                    translate([0,0,-0.5]) cylinder(d = 2.9, h = wall + 5);
+                    translate([0,0,-0.5]) cylinder(d = m3_tap, h = wall + 5);
                 }
 }
 

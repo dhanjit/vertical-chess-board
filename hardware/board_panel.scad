@@ -128,7 +128,7 @@ module mount_bosses() {
         translate([x, y, 0])
             difference() {
                 cylinder(d = 12, h = board_thickness);
-                translate([0,0,-0.01]) cylinder(d = 3.2, h = board_thickness + 0.02);
+                translate([0,0,-0.01]) cylinder(d = m3_clear, h = board_thickness + 0.02);
             }
 }
 

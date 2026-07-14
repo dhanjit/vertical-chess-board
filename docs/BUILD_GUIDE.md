@@ -33,9 +33,9 @@ Cheap insurance before printing 32 pieces.
    - won't self-right → heavier base weight, or raise `pivot_frac`;
    - falls off → bigger magnet (`magnet_dia`) or thinner front wall
      (`front_wall`).
-4. Print the **board test tile** (`make board_test`) and check a magnet holds
-   & slides through the front face, and (Phase 2) that a hall sensor in the
-   pocket trips.
+4. *(Optional)* Print the **board test tile** (`make board_test`) and check a
+   magnet holds & slides through the front face, and (Phase 2) that a hall
+   sensor in the pocket trips.
 
 ## 2. Print the set
 
@@ -89,8 +89,9 @@ cap** on. Spin-test: it should rotate freely and settle upright.
   sensors**; see [`ELECTRONICS.md`](ELECTRONICS.md).
 - Populate the **64 hall sensors** and wire through muxes to an **ESP32**;
   run the rules engine so the board follows and validates the game.
-- Later, add the auto-mover (per **D6** in [`GOALS.md`](GOALS.md): EPM matrix
-  default, reclined-gantry fallback — see
+- Later, add the auto-mover (per **D6** in [`GOALS.md`](GOALS.md) — aspirational,
+  out of initial scope: if pursued, the researched route is the **EPM matrix**
+  (prototype-gated), reclined-gantry fallback — see
   [`AUTO_MOVER_DESIGN.md`](AUTO_MOVER_DESIGN.md)) and the **app**.
 
 ## Troubleshooting

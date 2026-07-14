@@ -80,7 +80,7 @@ module wall_plate() {
         translate([nema_offset, 0, -0.5]) {
             cylinder(d = 23, h = plate_thk + 1);
             for (dx = [-15.5, 15.5], dy = [-15.5, 15.5])
-                translate([dx, dy, 0]) cylinder(d = 3.2, h = plate_thk + 1);
+                translate([dx, dy, 0]) cylinder(d = m3_clear, h = plate_thk + 1);
         }
         // Wall mounting holes (4x, keyhole-friendly).
         for (a = [45:90:359])
@@ -120,7 +120,7 @@ module turntable() {
         // the SAME value frame.scad uses, so the parts actually mate).
         for (a = [45:90:359])
             rotate([0,0,a]) translate([hub_bolt_r, 0, -0.5])
-                cylinder(d = 3.2, h = turntable_thk + 1);
+                cylinder(d = m3_clear, h = turntable_thk + 1);
         // Two home-index magnet pockets, 180 deg apart (White-up / Black-up),
         // on hub_bolt_r so they pass over the wall plate's index sensor.
         for (a = [0, 180])
@@ -141,7 +141,7 @@ module drive_pulley() {
         }
         translate([0,0,-0.5]) cylinder(d = 5 + slop, h = 9);   // 5 mm motor shaft
         // Radial grub-screw bore (M3) — reaches the shaft through the hub wall.
-        translate([0, 0, 3.5]) rotate([0, 90, 0]) cylinder(d = 3.2, h = pd);
+        translate([0, 0, 3.5]) rotate([0, 90, 0]) cylinder(d = m3_clear, h = pd);
     }
 }
 
