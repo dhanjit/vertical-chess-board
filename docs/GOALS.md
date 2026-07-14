@@ -47,9 +47,9 @@ printable models, electronics, firmware, the game brain, and the plan.
 Prove the ideas cheaply before committing to a full board.
 - [ ] Print one **gravity gimbal** pair (`gravity_gimbal.scad`) + one piece;
       confirm it **self-rights** smoothly and a magnet **holds on steel**.
-- [ ] Print one **board test tile** (`make board_test`); confirm magnet slide +
-      hold through the front wall. (Optional Phase-2 lookahead: a hall sensor
-      in the pocket trips under a piece — no electronics needed for Phase 0.)
+- [ ] *(Optional)* Print one **board test tile** (`make board_test`) and confirm
+      a magnet slides + holds through the front wall. (Phase-2 lookahead: a hall
+      sensor in the pocket trips under a piece — no electronics needed here.)
 - [ ] Tune `axle_fit`, `magnet_dia`, weight pocket until swing is crisp.
 - **Exit criteria:** a piece sticks to a vertical steel scrap and stays upright
   when you rotate the scrap by hand.
@@ -90,7 +90,7 @@ The board turns itself and follows the game.
 - **Exit criteria:** pick a difficulty, the board makes its own legal moves,
   including captures and castling.
 
-### Phase 4 — App & polish ⬜
+### Phase 4 — App & polish — 🌠 aspirational ⬜
 - [ ] Phone **app** (BLE/Wi-Fi): difficulty, hints, takeback, clock, PGN export.
 - [ ] Online play / puzzles / "play a friend remotely, board mirrors it."
 - [ ] Sound, LED move hints, ambient "attract" mode.
@@ -110,7 +110,10 @@ The board turns itself and follows the game.
 
 ## Decisions to lock
 
-These gate the build. See discussion in [`DESIGN.md` §8](DESIGN.md#8-open-design-questions).
+These gate the build. D1–D5 are discussed in
+[`DESIGN.md` §8](DESIGN.md#8-open-design-questions); D6 (auto-mover) in
+[`AUTO_MOVER_ANALYSIS.md`](AUTO_MOVER_ANALYSIS.md) (why) and
+[`AUTO_MOVER_DESIGN.md`](AUTO_MOVER_DESIGN.md) (how).
 
 | # | Decision | Options | Status |
 |---|----------|---------|--------|

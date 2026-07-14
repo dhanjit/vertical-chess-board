@@ -85,6 +85,10 @@ ring_gear_teeth  = 200;     // GT2 ring on the turntable (10:1 reduction).
                             //   clears the turntable disc: pitch dia =
                             //   teeth*2/PI must exceed bearing_od + 28 + 6.
 
+// ---- Fasteners (M3 throughout) ----
+m3_clear         = 3.2;     // clearance hole an M3 bolt/screw passes through
+m3_tap           = 2.9;     // thread-forming hole an M3 screw cuts its thread into
+
 // ---- Print tolerances ----
 slop             = 0.2;     // general clearance for mating printed parts
 $fn              = 64;      // curve smoothness (bump to 128 for final render)
