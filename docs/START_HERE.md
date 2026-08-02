@@ -6,7 +6,8 @@ whole job is:
 
 1. **Get the plastic parts printed** — on your own printer if you have one, or
    a local print service / makerspace (this repo has everything they need).
-2. **Buy a short list of small parts** (magnets, washers, a spinning bracket).
+2. **Buy a short list of small parts** (magnets, a steel sheet, a spinning
+   bracket).
 3. **Glue a few things together and hang it.**
 
 That's it. The fancy stuff — a motor that spins the board, sensors, and
@@ -43,14 +44,15 @@ the board.** This is **Phase 0** and it costs almost nothing.
 - 1 × king piece
 - 1 × small board test section (optional but nice)
 
-**You buy:** a couple of the small magnets, one steel washer, two tiny M3
-nuts, and super glue (see the list below — you only need a few for the test).
+**You buy:** a couple of the small magnets, a few self-adhesive felt discs,
+two tiny M3 nuts, and super glue (see the list below — you only need a few for
+the test).
 
-**Then:** press a magnet into the pivot, glue the two small steel nuts
-(stacked) into the pocket at the piece's base, click the piece onto the pivot,
-and stick it to a steel surface held sideways (a fridge side, a steel washer
-taped to cardboard, anything steel). It should **hold on** and **stay upright
-when you rotate it**.
+**Then:** press a magnet into the pivot, stick a felt disc over it, glue the
+two small steel nuts (stacked) into the pocket at the piece's base, click the
+piece onto the pivot, and stick it to a steel surface held sideways (a fridge
+side, a filing cabinet, any steel offcut). It should **hold on** and **stay
+upright when you rotate it**.
 
 If that works and feels good → print the rest. If it needs tuning (spins too
 freely, or won't hold), the fix is usually one number in
@@ -91,15 +93,16 @@ manual board**, get the quantities in [`BOM.md`](BOM.md). In plain terms:
 | What | Why | Where |
 |------|-----|-------|
 | Small **neodymium disc magnets** (8 mm × 3 mm) | go inside each piece so it sticks to the board | Amazon / hobby store |
-| **Steel washers** (~16 mm, with a hole — ask for "M8 plain/flat washers") | one behind each square; the magnet grabs these | hardware store (get plain **steel**, not stainless) |
+| **Self-adhesive felt discs** (~10 mm) | one over each magnet — sets the glide and protects the board's paint | stationery / hardware store |
+| A **thin steel sheet** (0.5–1 mm plain or galvanized steel, 360 mm square) | the playing surface — glued to the board front; the magnets grip it directly | sheet-metal / fabrication shop (get plain **steel**, not stainless) |
 | Small **steel nuts** (**M3** — two per piece, glued) | tiny weights that keep pieces upright (M6 nuts are too big for the pocket) | hardware store |
 | A **lazy-susan / turntable bearing** (~90 mm) | lets the board spin on the wall | Amazon / hardware store |
 | A **French cleat** (a slanted hanging bracket) | how it hangs on the wall | hardware store |
 | Super glue / epoxy | assembly | anywhere |
 
-> **One tip that saves headaches:** magnets and washers come in slightly
-> different sizes. Buy the sizes above, and during the Phase 0 test we confirm
-> they fit. If they don't, one number changes in the design
+> **One tip that saves headaches:** magnet sizes vary slightly between
+> sellers. Buy the size above, and during the Phase 0 test we confirm it fits
+> the printed pocket. If it doesn't, one number changes in the design
 > (`hardware/common.scad`) and the part gets re-printed — no problem.
 >
 > This table covers the hand-played board's main parts; the frame assembly

@@ -7,8 +7,8 @@
 //   * gives the whole assembly rigidity so it stays flat while rotating,
 //   * carries four bolt bosses on its back that mate the turntable
 //     (rotation_hub.scad) at the center of mass,
-//   * hides the per-square steel washers, sensor wiring and electronics
-//     behind the panel.
+//   * hides the sensor wiring and electronics behind the panel (the steel
+//     playing sheet glues onto the panel's front).
 //
 // Print as four L-shaped corners (epoxy the butt joints; the bezel lip and
 // the four turntable bolts give the ring its rigidity), or print the full

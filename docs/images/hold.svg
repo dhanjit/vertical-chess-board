@@ -19,35 +19,40 @@
   <line x1="272" y1="233" x2="272" y2="184" stroke="#57606a" stroke-width="1" marker-end="url(#s)"/>
   <text x="272" y="246" text-anchor="middle" font-size="12" fill="#d1495b" font-weight="700">magnet</text>
 
-  <!-- front wall -->
-  <rect x="300" y="66" width="12" height="170" fill="#cbd5db" stroke="#9aa4ad"/>
-  <!-- steel washer: two blocks, gap = centre hole -->
-  <rect x="316" y="66" width="18" height="62" fill="#9aa4ad" stroke="#6b7480"/>
-  <rect x="316" y="174" width="18" height="62" fill="#9aa4ad" stroke="#6b7480"/>
-  <!-- hall sensor behind the hole -->
-  <rect x="340" y="140" width="20" height="22" rx="3" fill="#1a7f37"/>
+  <!-- felt disc on the magnet face -->
+  <rect x="282" y="119" width="6" height="64" rx="2" fill="#9a6700"/>
 
-  <!-- magnetic grip: magnet to steel rings, through the wall -->
+  <!-- steel sheet (thin, spans the face): two blocks, gap = small sensing hole -->
+  <rect x="288" y="66" width="6" height="74" fill="#9aa4ad" stroke="#6b7480"/>
+  <rect x="288" y="162" width="6" height="74" fill="#9aa4ad" stroke="#6b7480"/>
+  <!-- printed wall behind the sheet: two blocks, gap = sensor bore -->
+  <rect x="294" y="66" width="16" height="74" fill="#cbd5db" stroke="#9aa4ad"/>
+  <rect x="294" y="162" width="16" height="74" fill="#cbd5db" stroke="#9aa4ad"/>
+  <!-- hall sensor in the bore, slid in from the open back, tip flush under the hole -->
+  <rect x="294" y="140" width="32" height="22" rx="3" fill="#1a7f37"/>
+
+  <!-- magnetic grip: magnet straight onto the sheet -->
   <g fill="none" stroke="#d1495b" stroke-width="1.4" opacity="0.85">
-    <path d="M280 132 Q300 118 320 121"/>
-    <path d="M280 170 Q300 184 320 181"/>
+    <path d="M279 127 Q284 117 288 121"/>
+    <path d="M279 175 Q284 185 288 181"/>
   </g>
-  <text x="300" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#d1495b">grips through the wall</text>
-  <!-- sensing: magnet read through the air hole -->
-  <line x1="281" y1="151" x2="340" y2="151" stroke="#1a7f37" stroke-width="1.5" stroke-dasharray="2 3"/>
+  <text x="298" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#d1495b">grips the sheet directly</text>
+  <!-- sensing: magnet read through the felt + the hole's air -->
+  <line x1="273" y1="151" x2="293" y2="151" stroke="#1a7f37" stroke-width="1.5" stroke-dasharray="2 3"/>
 
   <!-- right-side labels with leaders -->
   <g stroke="#8c959f" stroke-width="1">
-    <line x1="312" y1="96"  x2="424" y2="98"/>
-    <line x1="334" y1="112" x2="424" y2="142"/>
-    <line x1="326" y1="151" x2="424" y2="184"/>
-    <line x1="360" y1="151" x2="424" y2="226"/>
+    <line x1="285" y1="121" x2="424" y2="96"/>
+    <line x1="291" y1="128" x2="424" y2="130"/>
+    <line x1="291" y1="151" x2="424" y2="164"/>
+    <line x1="322" y1="162" x2="424" y2="198"/>
+    <line x1="306" y1="178" x2="424" y2="232"/>
   </g>
   <g font-size="12" fill="#1f2328">
-    <text x="430" y="102">front wall (~2.5 mm)</text>
-    <text x="430" y="146" font-weight="700">steel washer</text><text x="524" y="146" fill="#57606a"> &#8212; holds the piece</text>
-    <text x="430" y="188">centre hole = air (no shielding)</text>
-    <text x="430" y="222" font-weight="700" fill="#1a7f37">hall sensor</text>
-    <text x="430" y="238" fill="#57606a">reads the magnet through the hole</text>
+    <text x="430" y="100">felt disc &#8212; sets the glide</text>
+    <text x="430" y="134" font-weight="700">steel sheet (0.5&#8211;1 mm)</text><text x="578" y="134" fill="#57606a"> &#8212; holds the piece</text>
+    <text x="430" y="168">small hole = air (no shielding)</text>
+    <text x="430" y="202" font-weight="700" fill="#1a7f37">hall sensor</text><text x="516" y="202" fill="#57606a"> &#8212; tip flush under the hole</text>
+    <text x="430" y="236">printed wall (~2.5 mm)</text><text x="576" y="236" fill="#57606a"> &#8212; bore from the open back</text>
   </g>
 </svg>

@@ -36,10 +36,11 @@ powered board: rotate on turn, sense the pieces, run the rules engine, and
 
 ## Piece sensing (Phase 2)
 
-- One **hall sensor per square** (64), pocketed behind each square's steel
-  washer in `board_panel.scad`. The sensor reads the piece magnet through the
-  **washer's center hole** (so the steel doesn't shield it) plus the thin front
-  wall. A piece on the square trips its sensor.
+- One **hall sensor per square** (64). Each sensor slides into a through-bore
+  in `board_panel.scad` from the panel's open back until its tip sits **flush
+  at the front face**, directly under that square's laser-cut hole in the
+  steel sheet (`sheet_hole`) — it reads the piece magnet through **air**, so
+  the sheet doesn't shield it. A piece on the square trips its sensor.
 - Scan via **CD74HC4067 multiplexers** (4 muxes × 16, or 8 × 8) into a few
   ESP32 GPIO/ADC pins. Debounce in firmware.
 - The firmware holds the true game state (from `chess.js`); it only needs
@@ -99,5 +100,5 @@ the algorithms in `chess.js`/`ai.js` are the reference).
 - Fuse the 12 V rail; strain-relieve everything on the rotating side.
 - Give the rotation a **torque limit / current limit** so a hand or cat in the
   way stalls the motor instead of forcing it.
-- Mount to a **stud or proper anchors** — a ~410 mm board full of steel
-  washers, plus frame and turntable, is not light.
+- Mount to a **stud or proper anchors** — a ~410 mm board faced with a steel
+  sheet, plus frame and turntable, is not light.

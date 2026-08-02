@@ -93,10 +93,10 @@ pulse** flips it ON or OFF; it then **holds with zero power**.
   (continuous hold, fail-safe, heat) is what EPM is *good at*.
 
 ### C. Hybrid — passive hold + sparse active assist
-Keep our per-square **passive** washers for baseline hold; add a smaller active
-element only to *nudge* a piece out of one square's detent toward the next.
-Reduces power vs A, but reintroduces the shielding/one-point problems for the
-active part. Middle child; only if B's fabrication proves too hard.
+Keep our **passive** steel-sheet face for baseline hold; add a smaller active
+element only to *nudge* a piece from square to square. Reduces power vs A, but
+reintroduces the shielding/one-point problems for the active part. Middle
+child; only if B's fabrication proves too hard.
 
 ### D. Reclined easel + horizontal-style gantry — cheapest bridge
 Tilt the board back far enough that gravity does much of the holding (recall
@@ -165,8 +165,8 @@ roughly **m ≈ 15–25 g** → weight **≈ 0.15–0.25 N**.
 **Holding force needed is small.** On a vertical face, friction must beat
 gravity: `μN ≥ mg` → `N ≥ mg/μ`. With `μ ≈ 0.3–0.5`, **N ≈ 0.3–0.8 N** of
 magnetic normal force per piece. For reference an 8 mm N52 disc pulls ~**10 N**
-to thick steel in ideal contact; through a ~2.5 mm wall to a small pole it's
-much less but still a **few N** — comfortably above the ~0.5 N needed. **So the
+to thick steel in ideal contact; against our 0.5–1 mm sheet, through a felt
+disc, it's less but still a **few N** — comfortably above the ~0.5 N needed. **So the
 hold is easy to *achieve*; the whole game is delivering it at every square at
 once, cheaply — which is the A-vs-B story.**
 

@@ -1,37 +1,40 @@
 // =====================================================================
-// board_panel.scad — the vertical 8x8 playing surface
+// board_panel.scad — the vertical 8x8 playing surface (steel-sheet face)
 // =====================================================================
 //
-// Printed as a shallow TRAY: the closed face is the FRONT (the playing
-// surface, printed face-down for a clean finish); the open face is the
-// BACK (toward the wall), which holds the piece-holding hardware and, later,
-// the sensor + electronics.
+// Printed as a shallow TRAY: the closed face is the FRONT (printed
+// face-down for a flat gluing surface); the open face is the BACK (toward
+// the wall) for sensors and wiring. The playing surface itself is a thin
+// STEEL SHEET glued onto the front over the grid area: piece magnets grip
+// the sheet DIRECTLY — the proven attachment every commercial magnetic
+// wall set uses. Squares are painted / vinyl on the sheet; the printed
+// border around it keeps the engraved a..h / 1..8 labels.
 //
-// FRONT (room-facing):
-//   * 8x8 grid; dark squares recessed by `tile_engrave` (two-color print or
-//     paint fill); thin engraved grid lines; a..h / 1..8 border labels.
+// Per square, the printed panel carries:
+//   * a through BORE from the open back to the front face: a hall sensor
+//     (Phase 2) slides in from behind until its tip sits flush at the face,
+//     reading the piece magnet through a small hole laser-cut in the sheet
+//     (`sheet_hole` in common.scad) — so the sheet never shields it.
+//   * a BOSS around the bore, plus cross RIBS, stiffening the front wall.
 //
-// BACK (wall-facing), per square:
-//   * a BOSS with a shallow pocket for a STEEL WASHER pressed against the
-//     back of the front wall. The piece magnet grips the washer through the
-//     front wall AND snaps to its center -> pieces self-center on the square.
-//   * a smaller blind pocket behind the washer for a HALL SENSOR. The sensor
-//     reads the piece magnet through the washer's CENTER HOLE (so it is not
-//     magnetically shielded) plus the thin front wall.
-//   * cross RIBS stiffen the large thin front wall.
+// The steel sheet is bought / laser-cut, not printed. Export its 1:1
+// cutting outline (grid square + the 64 sensing holes) for the fab shop:
+//   openscad -D 'QUARTER="sheet_dxf"' -o steel_sheet.dxf board_panel.scad
+// A plain un-holed sheet works fine for Phase 1 (no sensing).
 //
 // Print whole on a large bed, or in quarters for a small bed:
 //   openscad -D 'QUARTER="bl"'   -o panel_bl.stl   board_panel.scad
 //   openscad -D 'QUARTER="all"'  -o panel.stl      board_panel.scad
-// Phase-0 test tile (1x2 squares, same wall/washer/sensor stack):
+// Phase-0 test tile (1x2 squares — glue any steel offcut on its face):
 //   openscad -D 'QUARTER="test"' -o board_test.stl board_panel.scad
 // =====================================================================
 
 include <common.scad>
 
 QUARTER   = "all";        // "all" | "bl" | "br" | "tl" | "tr" | "test"
+                          //   | "sheet" (3D ref) | "sheet_dxf" (2D cut path)
 rib_w     = 2.4;          // stiffening rib thickness
-boss_wall = 3;            // material around each washer pocket
+boss_wall = 3;            // material around each sensor bore
 label_depth = 0.8;
 label_size  = board_margin * 0.45;
 
@@ -44,25 +47,6 @@ module shell() {
         // Hollow the back over the grid, leaving the front wall + the rim.
         translate([board_margin, board_margin, -0.01])
             cube([grid_size, grid_size, fw_inner + 0.01]);
-    }
-}
-
-// ---- Front engraving: dark squares + grid lines ----------------------
-module front_engrave() {
-    for (f = [0:7], r = [0:7])
-        if (is_dark(f, r)) {
-            c = sq_center(f, r);
-            translate([c[0], c[1], board_thickness - tile_engrave])
-                linear_extrude(tile_engrave + 0.1)
-                    square(square_size - 0.6, center = true);
-        }
-    for (i = [0:8]) {
-        translate([board_margin + i*square_size, board_margin + grid_size/2,
-                   board_thickness - 0.4])
-            linear_extrude(0.5) square([0.8, grid_size], center = true);
-        translate([board_margin + grid_size/2, board_margin + i*square_size,
-                   board_thickness - 0.4])
-            linear_extrude(0.5) square([grid_size, 0.8], center = true);
     }
 }
 
@@ -95,29 +79,27 @@ module ribs() {
     }
 }
 
-// ---- Per-square washer boss (added material) -------------------------
+// ---- Per-square sensor boss (added material) --------------------------
 // A stud hanging from the front-wall inner face down through the cavity,
-// giving material to seat the washer (at the front) and hold the sensor
-// (behind it). Prints as an upward stud when the panel is face-down.
-module square_bosses() {
+// giving the sensor bore a snug full-depth guide. Prints as an upward stud
+// when the panel is face-down.
+module sensor_bosses() {
     for (f = [0:7], r = [0:7]) {
         c = sq_center(f, r);
         translate([c[0], c[1], 0])
-            cylinder(d = washer_od + 2*washer_fit + 2*boss_wall, h = fw_inner);
+            cylinder(d = sensor_dia + 2*slop + 2*boss_wall, h = fw_inner);
     }
 }
 
-// ---- Per-square subtractions: washer pocket + sensor bore ------------
-module square_pockets() {
+// ---- Per-square sensor bore: back cavity through to the front face ----
+// The sensor slides in from behind; its tip ends up flush at the face,
+// directly under the sheet's sensing hole. The face opening is hidden
+// under the glued sheet.
+module sensor_bores() {
     for (f = [0:7], r = [0:7]) {
         c = sq_center(f, r);
-        // Washer pocket: seats against the back of the front wall.
-        translate([c[0], c[1], fw_inner - washer_thk])
-            cylinder(d = washer_od + 2*washer_fit, h = washer_thk + 0.01);
-        // Sensor bore: from the open back up to the washer floor; the sensor
-        // slides in from behind and its tip sits under the washer's hole.
         translate([c[0], c[1], -0.01])
-            cylinder(d = sensor_dia + 2*slop, h = fw_inner - washer_thk + 0.02);
+            cylinder(d = sensor_dia + 2*slop, h = board_thickness + 0.02);
     }
 }
 
@@ -137,19 +119,40 @@ module panel_solid() {
         union() {
             shell();
             ribs();
-            square_bosses();
+            sensor_bosses();
             mount_bosses();
         }
-        front_engrave();
         labels();
-        square_pockets();
+        sensor_bores();
     }
 }
 
+// ---- Steel sheet cutting outline -------------------------------------
+// 2D: the exact part to hand a laser/waterjet shop (or cut by hand and
+// skip the holes for Phase 1). Origin at the sheet's own corner; it glues
+// onto the panel covering the grid area exactly.
+module sheet2d() {
+    difference() {
+        square(grid_size);
+        if (sheet_hole > 0)
+            for (f = [0:7], r = [0:7]) {
+                c = sq_center(f, r);
+                translate([c[0] - board_margin, c[1] - board_margin])
+                    circle(d = sheet_hole);
+            }
+    }
+}
+
+// 3D reference of the same sheet (for previews / fit checks — not printed).
+module sheet3d() {
+    linear_extrude(height = sheet_thk) sheet2d();
+}
+
 // ---- Phase-0 test tile: a 1x2-square offcut of the panel -------------
-// Same front wall, washer pocket and sensor bore as the real panel, so the
-// magnet-through-wall hold (and later a hall sensor) can be tested for the
-// price of a coaster. One square is engraved dark for the two-tone check.
+// Same front wall and sensor bores as the real panel. Glue any steel
+// offcut on its face and check the magnet holds, slides square-to-square
+// nicely (tune the felt disc), and (Phase 2) that a hall sensor in the
+// rear bore trips under a piece.
 module board_test() {
     n      = 2;                        // squares
     border = 10;                       // rim around the squares
@@ -163,25 +166,16 @@ module board_test() {
                 translate([border, border, -0.01])
                     cube([n * square_size, square_size, fw_inner + 0.01]);
             }
-            // Washer bosses.
+            // Sensor bosses.
             for (i = [0:n-1])
                 translate([border + square_size*(i + 0.5), ty/2, 0])
-                    cylinder(d = washer_od + 2*washer_fit + 2*boss_wall,
+                    cylinder(d = sensor_dia + 2*slop + 2*boss_wall,
                              h = fw_inner);
         }
-        for (i = [0:n-1]) {
-            // Washer pocket against the back of the front wall.
-            translate([border + square_size*(i + 0.5), ty/2, fw_inner - washer_thk])
-                cylinder(d = washer_od + 2*washer_fit, h = washer_thk + 0.01);
-            // Sensor bore from the open back up to the washer floor.
+        // Sensor bores, back cavity through to the face.
+        for (i = [0:n-1])
             translate([border + square_size*(i + 0.5), ty/2, -0.01])
-                cylinder(d = sensor_dia + 2*slop,
-                         h = fw_inner - washer_thk + 0.02);
-        }
-        // Engrave the first square dark (two-tone / paint-fill check).
-        translate([border + square_size*0.5, ty/2, board_thickness - tile_engrave])
-            linear_extrude(tile_engrave + 0.1)
-                square(square_size - 0.6, center = true);
+                cylinder(d = sensor_dia + 2*slop, h = board_thickness + 0.02);
     }
 }
 
@@ -191,6 +185,10 @@ module panel() {
         panel_solid();
     } else if (QUARTER == "test") {
         board_test();
+    } else if (QUARTER == "sheet") {
+        sheet3d();
+    } else if (QUARTER == "sheet_dxf") {
+        sheet2d();
     } else {
         half = panel_size/2;
         xr = (QUARTER == "bl" || QUARTER == "tl") ? [0, half] : [half, panel_size];

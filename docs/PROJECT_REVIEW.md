@@ -38,7 +38,7 @@ much fiddly tuning and how much electronics do you want to take on."
 
 | Feature | Difficulty for a beginner | Risk | Notes |
 |---|---|---|---|
-| Magnetic pieces holding on a steel-washer board | 🟢 Easy | Low | Proven idea; just pick magnet strength. |
+| Magnetic pieces holding on a steel-sheet board | 🟢 Easy | Low | Proven idea (every commercial magnetic wall set); just pick magnet strength. |
 | **Gravity self-righting** pieces (the pendulum) | 🟡 Medium | **Medium** | The one thing to prototype first. Tuning = friction + base weight. |
 | Hanging on the wall (French cleat) | 🟢 Easy | Low | Standard picture-hanging method. |
 | Manual 180° rotation on a bearing | 🟡 Medium | Low–Med | Mostly about balancing the board on its axis. |
@@ -58,9 +58,9 @@ manual board and picked up basic skills.
 The **auto-mover** (pieces moving themselves) is the hardest part **and** it
 fights our own design, because our board is **vertical**:
 
-- Pieces need constant magnetic hold to the board (steel washers).
+- Pieces need constant magnetic hold to the board (the steel-sheet face).
 - But a moving electromagnet behind the board can't reach the pieces *through*
-  a steel backing — steel shields magnets.
+  that steel sheet — steel shields magnets.
 
 So the "board plays you" version is a **different machine**. The recommended
 route is an **EPM matrix** — a switchable magnet behind every square, so the
@@ -80,7 +80,7 @@ Five stages, each a clean stopping point. **Most first-timers should aim for
 Stage B and be delighted.**
 
 ### Stage A — Prove the magic (1 weekend, ~₹500)
-Print **one** pendulum pivot + **one** piece; buy a few magnets + a washer +
+Print **one** pendulum pivot + **one** piece; buy a few magnets + felt discs +
 two M3 nuts. Confirm: piece **sticks** to a vertical steel surface and
 **stays upright** when you spin it.
 → **GO/NO-GO gate.** If it needs tuning, adjust the numbers in
@@ -137,8 +137,8 @@ Detail and shops in [`SOURCING_BANGALORE.md`](SOURCING_BANGALORE.md).
 
 | Path | Rough cost | Notes |
 |---|---|---|
-| Stage A test | ~₹300–600 | a few magnets, a washer, two M3 nuts; prints are grams of filament |
-| **Stage B manual board — own/borrowed printer** | **~₹2,500–4,500** | filament + magnets + washers + bearing + cleat + glue |
+| Stage A test | ~₹300–600 | a few magnets, felt discs, two M3 nuts; prints are grams of filament |
+| **Stage B manual board — own/borrowed printer** | **~₹2,500–4,500** | filament + magnets + steel sheet + bearing + cleat + glue |
 | Stage B manual board — *paid* print service | +₹8,000–15,000 | large board = lots of plastic; **a personal printer is far cheaper** |
 | Stage C motorize | +₹1,500–3,000 | stepper, driver, controller, PSU |
 | Stage D sensing | +₹2,500–4,000 | 64 hall sensors, muxes, wiring |

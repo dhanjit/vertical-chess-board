@@ -56,7 +56,8 @@ Also the best place for help when you reach the electronics stages.
 | Part | Where (Bengaluru) | Rough ₹ |
 |---|---|---|
 | **Neodymium disc magnets** 8×3 mm N52 (~40) | **SP Road** magnet dealers (physical); Robu.in, Amazon.in, IndiaMART online | ₹5–15 each → ₹300–600 |
-| **Steel washers** ~16 mm (**M8 plain/flat**, DIN 125 — *not* "fender/repair" washers, those are ~24 mm), plain steel (~70) | any hardware store; SP Road; online | ₹1–3 each → ₹150–300 |
+| **Steel sheet** 0.5–1 mm **mild/GI** (galvanized) — *not* stainless (most isn't magnetic) — one ~360 mm square offcut; for Phase 2 have the 64 sensing holes laser-cut (`make sheet` exports the 1:1 cutting DXF) | any sheet-metal/fabrication shop; SP Road; laser-cutting services (small DXF jobs are cheap and common in Bengaluru) | ₹300–800 incl. cutting |
+| **Self-adhesive felt discs** ~10 mm (one per piece + spares; ~40) | stationery/hardware stores; Amazon.in | ₹50–150 |
 | **Steel nuts** **M3** (piece weights — two per piece, glued; ~70) | hardware store | ₹1–2 each → ₹100 |
 | **Lazy-susan / turntable bearing** ~90 mm (design default; any size works if you set `bearing_od`/`bearing_id` in `hardware/common.scad` **before printing**) | IndiaMART, Amazon.in; hardware/furniture-fittings shops | ₹80–400 |
 | **French cleat** (or a strip of wood/aluminium to make one) | timber/hardware shop; Amazon.in | ₹150–500 |
@@ -91,8 +92,10 @@ Online stores: **Robu.in**, **Robocraze.com**, **Quartzcomponents**,
 
 Keep it tiny — you're just proving the mechanic:
 - ~10 neodymium magnets (8×3 mm) — ₹100–150
-- 4–5 steel washers (~16 mm, M8 plain) — ₹20
+- a strip of self-adhesive felt discs — ₹50
 - a few M3 nuts + super glue — ₹50
+- steel to stick to: any fridge side or offcut works — buy the real sheet at
+  Stage B — ₹0
 - (prints: 1 gimbal + 1 king on a personal printer, or ~₹200–400 at a service)
 
 **Total ≈ ₹300–600.** Then run the Stage A test in
