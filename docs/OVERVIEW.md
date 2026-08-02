@@ -16,12 +16,12 @@ and plays vertically. Three things make it special:
 - 🌍 **Pieces stay upright by gravity** — each piece hangs on a pivot and is
   bottom-weighted, so as the board turns, every piece self-levels like a
   pendulum and is never upside-down.
-- 🧲 **Pieces are magnetic** — they grip a steel-backed vertical surface, so
+- 🧲 **Pieces are magnetic** — they grip the board's vertical steel face, so
   they hold on and slide square to square.
 
 It's **3-D printed** from parametric models (a few numbers resize the whole
-board) plus a short list of off-the-shelf parts — magnets, steel washers, a
-turntable bearing, a wall cleat.
+board) plus a short list of off-the-shelf parts — magnets, a thin steel
+sheet, a turntable bearing, a wall cleat.
 
 ## Why we're building it
 
@@ -40,9 +40,10 @@ turntable bearing, a wall cleat.
   <img src="images/mechanics.svg" width="720" alt="The two signature mechanics. Left: the board rotates 180 degrees each turn on a central turntable, so the player to move always sees it from their side. Right: each piece hangs on a pivot with a heavy base, so gravity keeps it upright like a pendulum however the board is turned.">
 </p>
 
-- The board is a **vertical plane on a central turntable**. Behind every square
-  is a **steel washer**; every piece carries a **magnet**, so pieces grip the
-  surface through a thin front wall and even **self-center** on their square.
+- The board is a **vertical plane on a central turntable**. Its playing face
+  is a **thin steel sheet**; every piece carries a **magnet** under a small
+  **felt disc**, so pieces grip the sheet directly and glide square to
+  square — the same hold every commercial magnetic wall set uses.
 - Each piece body hangs on a **low-friction pivot** with a **weight in its
   base** — a pendulum that always points up, no matter how the board is turned.
 - *(Later, optionally)* a motor spins the board, hall sensors behind each
@@ -50,7 +51,7 @@ turntable bearing, a wall cleat.
   validates the game.
 
 <p align="center">
-  <img src="images/hold.svg" width="720" alt="Cross-section through one square. A magnet in the piece hub grips a steel washer through the thin front wall, holding the piece on the vertical board. The washer's centre hole is open air, so a hall sensor behind it reads the piece magnet without being shielded by steel.">
+  <img src="images/hold.svg" width="720" alt="Cross-section through one square. A magnet in the piece hub, capped with a felt disc, grips the thin steel sheet directly, holding the piece on the vertical board. A small hole in the sheet at the square's centre is open air, so a hall sensor sitting flush in the printed wall behind it reads the piece magnet without being shielded by steel.">
 </p>
 
 Full engineering detail: [`DESIGN.md`](DESIGN.md).
@@ -108,7 +109,7 @@ near-term repo work — printable parts, BOM, build steps — all serves this.
 **Aspirational — deliberately *not* the current focus:**
 
 - **The auto-mover** (Phase 3 — a board that moves its own pieces and plays
-  you). On a *vertical* board this is genuinely hard: the steel backing that
+  you). On a *vertical* board this is genuinely hard: the steel sheet that
   **holds** pieces up also **shields** the magnet that would **move** them, so
   it's a **different machine**, not a bolt-on. We've researched *how* it could
   work and *why* it's hard — [`AUTO_MOVER_ANALYSIS.md`](AUTO_MOVER_ANALYSIS.md)

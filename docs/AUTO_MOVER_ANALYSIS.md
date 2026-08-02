@@ -67,8 +67,8 @@ there under their own weight. Nothing competes, nothing is shielded.
 ## 3. Why the same trick breaks vertically — three stacked conflicts
 
 **① The "hold" knob and the "shield" knob are the same knob.**
-On a wall the hold must be strong and behind *every* square (a steel sheet, or
-our per-square washers). But a ferromagnetic backing sitting *between* the
+On a wall the hold must be strong at *every* square (a steel sheet — exactly
+what our board uses). But a ferromagnetic backing sitting *between* the
 piece magnet and the robot's electromagnet **redirects/absorbs the flux** —
 the piece's field loops into the nearby steel instead of reaching the
 electromagnet behind it, and the field on the far side of the plate falls as
@@ -117,9 +117,9 @@ usable takeaways are:
 
 - A **solid/thick** steel backing → strong hold, strong shielding (mover blind).
 - A **thin** backing → weaker shielding (mover couples better) **but weaker
-  hold**. The washer-with-a-hole idea exploits this — but a gantry travelling in
-  the gaps between squares isn't aligned to the holes, so the surrounding steel
-  still dominates.
+  hold**. Our sheet's small per-square sensing holes exploit this for the *hall
+  sensors* — but a gantry travelling in the gaps between squares isn't aligned
+  to the holes, so the continuous steel still dominates.
 - Net: there's a **genuine trade**, not a wall. That's why the escapes below are
   about *changing the architecture*, not tuning one number.
 

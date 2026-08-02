@@ -198,6 +198,13 @@ module piece(t) {
         translate([0, 0, -0.5])
             cylinder(d = axle_dia + 2*axle_fit, h = piece_thk + 1);
 
+        // Countersink at the back bore entrance: clears the post's root
+        // fillet (see gravity_gimbal.scad) so the body still seats flush.
+        translate([0, 0, piece_thk - axle_root_fillet - 0.15])
+            cylinder(d1 = axle_dia + 2*axle_fit,
+                     d2 = axle_dia + 2*axle_root_fillet + 2*axle_fit + 0.3,
+                     h  = axle_root_fillet + 0.16);
+
         // Blind weight pocket near the base: opens at the BACK face only
         // (a floor of piece_thk - weight_pocket_h remains at the front).
         translate([0, -py + wy, piece_thk - weight_pocket_h])

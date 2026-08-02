@@ -9,6 +9,7 @@ phases. Read [`DESIGN.md`](DESIGN.md) first for the "why."
 2. Open [`hardware/common.scad`](../hardware/common.scad) and set:
    - `square_size` (45 default; 55–60 for a statement piece),
    - `magnet_dia`/`magnet_thk` to the magnets you bought,
+   - `sheet_thk` to the steel sheet you'll order,
    - `bearing_od`/`bearing_id` to your lazy-susan bearing.
 3. From `hardware/`, render everything:
    ```
@@ -31,11 +32,11 @@ Cheap insurance before printing 32 pieces.
    `hardware/common.scad`):
    - swings sluggishly / won't turn → increase `axle_fit`, add PTFE lube;
    - won't self-right → heavier base weight, or raise `pivot_frac`;
-   - falls off → bigger magnet (`magnet_dia`) or thinner front wall
-     (`front_wall`).
-4. *(Optional)* Print the **board test tile** (`make board_test`) and check a
-   magnet holds & slides through the front face, and (Phase 2) that a hall
-   sensor in the pocket trips.
+   - falls off → bigger magnet (`magnet_dia`) or thinner felt disc.
+4. *(Optional)* Print the **board test tile** (`make board_test`), glue any
+   steel offcut on its face, and check the magnet holds & slides square to
+   square nicely (a felt disc on the hub tames the drag), and (Phase 2) that
+   a hall sensor in the rear bore trips under a piece.
 
 ## 2. Print the set
 
@@ -50,21 +51,26 @@ Cheap insurance before printing 32 pieces.
 
 ## 3. Assemble the board panel
 
-1. From the **back**, drop a **steel washer** into each square's boss pocket
-   (against the back of the front wall) with a dab of epoxy. The washer is what
-   the piece magnet grips and self-centers on.
-2. (Phase 2) seat a **hall sensor** in the blind pocket behind each washer;
-   route leads through the open back cavity to the mux boards.
-3. (Optional finish) fill the recessed dark squares with paint/epoxy; wipe the
-   raised light squares clean. Let cure.
-4. Press **heat-set inserts** (or tap) the four corner bosses.
+1. Cut/order the **steel sheet**: `grid_size` square (360 mm at default),
+   0.5–1 mm mild/galvanized steel. For Phase-2 sensing have the shop laser-cut
+   the 64 sensing holes — `make sheet` exports the 1:1 DXF. A plain un-holed
+   sheet is fine for Phase 1.
+2. **Mark the squares on the sheet** (paint or vinyl, two tones; mask & spray
+   works well). The printed border keeps the a–h / 1–8 labels.
+3. **Glue the sheet** to the panel front (epoxy or strong VHB tape), sensing
+   holes centered over the panel's bores. Clamp flat while it cures.
+4. (Phase 2) slide a **hall sensor** into each bore from the back until its
+   tip sits flush under the sheet hole; route leads through the open back
+   cavity to the mux boards.
+5. Press **heat-set inserts** (or tap) the four corner bosses.
 
 ## 4. Assemble pieces
 
 For each piece: press a **magnet** into the hub (consistent polarity — mark a
-face), glue the **steel weight** (two stacked M3 nuts or a ~6 mm ball) into
-the body's base pocket, slide the body onto the **axle post**, and **snap the
-cap** on. Spin-test: it should rotate freely and settle upright.
+face), stick a **felt disc** over the magnet (glide + paint protection), glue
+the **steel weight** (two stacked M3 nuts or a ~6 mm ball) into the body's
+base pocket, slide the body onto the **axle post**, and **snap the cap** on.
+Spin-test: it should rotate freely and settle upright.
 
 ## 5. Frame + turntable
 
@@ -101,5 +107,6 @@ cap** on. Spin-test: it should rotate freely and settle upright.
 | Piece slowly droops off-vertical | more base weight; lower friction; check pivot centered |
 | Piece spins past upright and oscillates | add light felt/O-ring damping at the pivot; heavier base |
 | Board sags / won't stay level | balance about the axis; check bearing seated; heavier wall anchors |
-| Magnet won't hold on the vertical face | thinner `front_wall`, bigger/stronger magnet, confirm washers are ferromagnetic steel |
+| Magnet won't hold on the vertical face | bigger/stronger magnet, thinner felt disc, confirm the sheet is ferromagnetic steel (not stainless 304) |
+| Piece drags/scratches when sliding | thicker felt disc on the hub; clear-coat the sheet's paint |
 | Belt slips (Phase 2) | tension it; increase wrap; verify pulley grub screw tight |

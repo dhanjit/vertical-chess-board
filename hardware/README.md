@@ -11,7 +11,7 @@ to whoever runs the printer — your own printer, a print service, or a makerspa
 | **`common.scad`** | Shared parameters + helpers. **Edit this to resize everything.** |
 | **`gravity_gimbal.scad`** | The self-righting pivot: hub puck (holds a magnet, carries the axle) + snap cap. |
 | **`pieces.scad`** | The six pieces as flat self-righting silhouettes (pivot bore + base weight pocket). |
-| **`board_panel.scad`** | The 8×8 playing surface: engraved grid + labels, a steel-washer pocket + hall-sensor bore behind every square. Whole, quartered, or a 1×2 Phase-0 test tile. |
+| **`board_panel.scad`** | The 8×8 playing surface: printed tray + border labels; a **steel sheet** glues onto the front (piece magnets grip it directly) with a hall-sensor bore behind every square. Whole, quartered, a 1×2 Phase-0 test tile — or the sheet's laser-cutting DXF (`make sheet`). |
 | **`frame.scad`** | Bezel that captures the panel and mounts the turntable. |
 | **`rotation_hub.scad`** | Wall plate + turntable (lazy-susan bearing) + GT2 drive pulley. |
 | **`Makefile`** | Renders every part to `stl/`. |
@@ -45,9 +45,10 @@ openscad -D 'PART="turntable"' -o tt.stl     rotation_hub.scad
 
 - **Pieces** print flat (silhouette down) — no supports. Two filament colors
   for White/Black. Glue the steel weight (two stacked M3 nuts or a ~6 mm
-  ball) into the base pocket; magnet press-fits in the hub.
-- **Board panel** — dark squares are recessed for two-tone printing (pause &
-  swap) or paint fill. Print whole on a big bed, or the four quarters.
+  ball) into the base pocket; magnet press-fits in the hub, felt disc on top.
+- **Board panel** — print whole on a big bed, or the four quarters. The
+  squares live on the **steel sheet** (paint/vinyl) that glues onto the
+  front; `make sheet` exports its cutting DXF for a laser shop.
 - **Tolerances** live in `common.scad` (`slop`, `axle_fit`, `magnet_fit`).
   Do the Phase-0 test print first and tune before committing to a full set.
 

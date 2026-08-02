@@ -43,6 +43,10 @@ board: dirs
 board_test: dirs
 	$(OPENSCAD) $(FLAGS) -D 'QUARTER="test"' -o $(OUT)/board_test.stl board_panel.scad
 
+# --- Steel sheet cutting outline (for the laser/waterjet shop) --------
+sheet: dirs
+	$(OPENSCAD) $(FLAGS) -D 'QUARTER="sheet_dxf"' -o $(OUT)/steel_sheet.dxf board_panel.scad
+
 # --- Rotation mechanism + frame ---------------------------------------
 mech: dirs
 	$(OPENSCAD) $(FLAGS) -D 'PART="wall"'      -o $(OUT)/hub_wall_plate.stl rotation_hub.scad

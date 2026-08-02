@@ -51,6 +51,10 @@ module hub_puck() {
 lip_d = axle_dia + 1.2;      // widest point of the tip lip
 module axle_post() {
     cylinder(d = axle_dia, h = axle_len - 1.6);
+    // Root fillet: 45-deg cone strengthens the layer-line-weak root against
+    // sideways knocks. Pieces countersink their bore to clear it.
+    cylinder(d1 = axle_dia + 2*axle_root_fillet, d2 = axle_dia,
+             h = axle_root_fillet);
     // Support cone (widens toward the tip).
     translate([0, 0, axle_len - 1.6])
         cylinder(d1 = axle_dia, d2 = lip_d, h = 0.8);

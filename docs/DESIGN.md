@@ -28,16 +28,16 @@ re-sizes.
         ┌───────────────┴───────────────┐
         │           FRAME / BEZEL        │
         │  ┌─────────────────────────┐  │
-        │  │      BOARD PANEL         │  │  ← 8×8 grid, steel washer per square
-        │  │   ▟ ▙ ▟ ▙ ▟ ▙ ▟ ▙       │  │  ← hall sensor behind each washer
+        │  │      BOARD PANEL         │  │  ← 8×8 grid on a steel-sheet face
+        │  │   ▟ ▙ ▟ ▙ ▟ ▙ ▟ ▙       │  │  ← hall sensor bore behind each square
         │  │   pieces stick + swivel  │  │
         │  └─────────────────────────┘  │
         └───────────────────────────────┘
 ```
 
 The board is a **vertical plane** on a **central turntable**. The playing
-surface has a **steel washer behind every square** (see §4 — deliberately
-*not* one big steel sheet); every piece has a **magnet**
+surface is a thin **steel sheet** glued onto the printed panel (see §4);
+every piece has a **magnet**
 in its hub, so pieces grip the vertical surface and can slide square to
 square. Each piece body hangs on a **low-friction pivot** and is
 **bottom-weighted**, making it a pendulum that always points up.
@@ -113,37 +113,43 @@ Design notes:
 
 ---
 
-## 4. Holding pieces on a vertical board (magnets + washers)
+## 4. Holding pieces on a vertical board (magnets + steel sheet)
 
 - Pieces carry an **8 mm × 3 mm N52 neodymium disc** (`magnet_dia`/`magnet_thk`).
-- Behind **each square** sits a **steel washer** (`washer_od`/`washer_id`),
-  pressed against the back of a thin **front wall** (`front_wall` ≈ 2.5 mm).
-  The piece magnet grips the washer *through* the front wall.
-- Because the magnet is strongest on-axis, it also **snaps to the washer's
-  center**, so **pieces self-center on their square** — a nice side effect that
-  also helps the future auto-mover.
-- Hold force with an 8×3 N52 disc through a 2.5 mm wall to a steel washer is
-  comfortably more than a light silhouette's weight, with margin for the
-  pendulum swing. If you scale pieces up, bump `magnet_dia` and re-check.
+- The playing surface is a **thin steel sheet** (`sheet_thk` ≈ 0.5–1 mm) glued
+  onto the printed panel's front. The piece magnet grips the sheet
+  **directly** — the same attachment every commercial magnetic wall chess set
+  uses, so the hold is proven rather than hoped-for (decision **D7** in
+  [`GOALS.md`](GOALS.md)).
+- A **felt disc over the hub magnet** is the tuning knob: it sets the glide
+  (thicker felt = weaker, smoother slide) and keeps the sheet's paint
+  scratch-free.
+- Direct 8×3 N52 contact holds far more than a piece weighs, with margin for
+  the pendulum swing. If you scale pieces up, hold scales with `magnet_dia`.
 
-**Why per-square washers, not one big steel sheet?** A solid steel sheet
-behind the whole board would **magnetically shield the hall sensors** (§5) so
-they couldn't read the pieces, and it forces a thicker front wall. Per-square
-washers with an open center hole solve both: the sensor reads through the hole
-(see §5), and the piece still gets a firm, self-centering hold. (A steel sheet
-*with a clearance hole per square* is an equivalent alternative if you prefer
-sheet stock — same geometry, more cutting.)
+**Sensing through steel?** A solid sheet would magnetically shield the hall
+sensors (§5), so the sheet gets a **small laser-cut hole at each square
+center** (`sheet_hole` ≈ 8 mm): the sensor tip sits flush in a bore just
+behind the hole and reads the piece magnet through air. Phase-1 builders can
+use a plain un-holed sheet and switch to the holed sheet only for Phase 2.
+
+> An earlier design buried a steel washer behind each square and gripped it
+> *through* a 2.5 mm plastic wall — cleaner face, and the washer self-centered
+> the pieces, but the through-wall grip was unproven. Direct sheet contact was
+> adopted as the tested option; players center pieces by eye, as on any
+> magnetic set.
 
 ---
 
 ## 5. Sensing the board (for validation + auto-play)
 
-Behind each square, a **hall-effect sensor** sits in a blind pocket *behind
-the washer* (`sensor_dia`/`sensor_h` in
-[`board_panel.scad`](../hardware/board_panel.scad)). It reads the piece magnet
-through the **washer's center hole** (mostly air — so it is **not**
-magnetically shielded) plus the thin front wall. Each piece magnet trips the
-sensor on its square, so the electronics read an **8×8 occupancy grid**.
+Behind each square, a **hall-effect sensor** slides into a bore from the open
+back (`sensor_dia` in [`board_panel.scad`](../hardware/board_panel.scad))
+until its tip sits flush at the front face, directly under the **sensing hole
+in the steel sheet** (`sheet_hole`). It reads the piece magnet through that
+hole — mostly air, so the sheet does **not** shield it. Each piece magnet
+trips the sensor on its square, so the electronics read an **8×8 occupancy
+grid**.
 Combined with the rules engine
 ([`software/engine/chess.js`](../software/engine/chess.js)) the board can:
 
@@ -187,7 +193,7 @@ piece's magnet and drags it across the front.
 Commercial auto-boards lie **flat**: gravity holds pieces down and the magnet
 only slides them sideways. Ours is **vertical**, which creates a real conflict:
 
-- Pieces need a constant holding force to the board (our **steel washers**).
+- Pieces need a constant holding force to the board (our **steel-sheet face**).
 - But the moving electromagnet must reach the pieces **through** the board —
   and **a steel backing shields/blocks a magnet**.
 
@@ -233,8 +239,9 @@ low-risk fallback — full design in
 | `axle_fit` | 0.35 mm | swivel clearance (lower = tighter) |
 | `bearing_od` / `bearing_id` | 90 / 60 mm | turntable bearing |
 | `ring_gear_teeth` : `motor_gear_teeth` | 200 : 20 | rotation reduction (10:1) |
-| `front_wall` | 2.5 mm | wall between piece magnet and washer/sensor |
-| `washer_od` / `washer_id` | 16 / 8.4 mm | per-square steel washer (hold + sense) |
+| `sheet_thk` | 0.8 mm | steel playing sheet glued to the panel front |
+| `sheet_hole` | 8 mm | per-square laser-cut sensing hole in the sheet |
+| `front_wall` | 2.5 mm | printed wall behind the sheet (sensor bore runs through it) |
 
 A full 8×8 at `square_size = 45` gives a **360 mm** playing area and a
 **410 mm** panel (~434 mm over the frame) — a substantial, readable wall

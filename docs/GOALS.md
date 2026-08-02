@@ -47,9 +47,10 @@ printable models, electronics, firmware, the game brain, and the plan.
 Prove the ideas cheaply before committing to a full board.
 - [ ] Print one **gravity gimbal** pair (`gravity_gimbal.scad`) + one piece;
       confirm it **self-rights** smoothly and a magnet **holds on steel**.
-- [ ] *(Optional)* Print one **board test tile** (`make board_test`) and confirm
-      a magnet slides + holds through the front wall. (Phase-2 lookahead: a hall
-      sensor in the pocket trips under a piece — no electronics needed here.)
+- [ ] *(Optional)* Print one **board test tile** (`make board_test`), glue a
+      steel offcut on its face, and confirm a magnet slides + holds nicely.
+      (Phase-2 lookahead: a hall sensor in the rear bore trips under a piece —
+      no electronics needed here.)
 - [ ] Tune `axle_fit`, `magnet_dia`, weight pocket until swing is crisp.
 - **Exit criteria:** a piece sticks to a vertical steel scrap and stays upright
   when you rotate the scrap by hand.
@@ -57,8 +58,8 @@ Prove the ideas cheaply before committing to a full board.
 ### Phase 1 — Manual magnetic wall board (no electronics) ⬜
 A complete, beautiful board you can hang and play today.
 - [ ] Full **32-piece set** (2 finishes) + spares.
-- [ ] Full **board panel** (whole or quartered) with per-square steel washers
-      + labels.
+- [ ] Full **board panel** (whole or quartered) + labels, faced with the
+      painted **steel sheet**.
 - [ ] **Frame** + **turntable on the lazy-susan bearing**, hand-rotated.
 - [ ] Wall mount (French cleat) and balance so it flips with a light push.
 - **Exit criteria:** hangs level, holds all pieces, spins 180° by hand, pieces
@@ -118,11 +119,12 @@ These gate the build. D1–D5 are discussed in
 | # | Decision | Options | Status |
 |---|----------|---------|--------|
 | D1 | Board size | 45 / 55 / 60 mm squares | ⬜ open (default 45) |
-| D2 | Piece style | flat silhouette / 3-D relief | ⬜ open (default flat) |
+| D2 | Piece style | flat silhouette / 3-D relief | ✅ **locked: flat silhouette, minimal** — exterior detailing is explicitly not a requirement; keep pieces as clean minimal silhouettes |
 | D3 | Finish | two-tone print / paint / veneer | ⬜ open |
 | D4 | Rotate policy | every move / button / 2-player only | ⬜ open |
 | D5 | Brain location | phone / Pi / ESP32 | ⬜ open |
 | D6 | Auto-mover in scope + route | never / **EPM matrix** / reclined gantry (~45–63°) | ⬜ open — **aspirational, out of initial scope**; if ever pursued, the researched route is the EPM matrix (prototype-gated), reclined-gantry fallback — why in [AUTO_MOVER_ANALYSIS.md](AUTO_MOVER_ANALYSIS.md), how in [AUTO_MOVER_DESIGN.md](AUTO_MOVER_DESIGN.md) |
+| D7 | Piece attachment | buried washers (grip through 2.5 mm wall) / **steel-sheet face (direct magnet contact)** | ✅ **locked: steel-sheet face** — the attachment every commercial magnetic wall set uses, so the grip is proven rather than hoped-for. Felt disc on the hub sets the glide; Phase-2 sensing reads through a small laser-cut hole per square. The washer design is retired. |
 
 When a decision is locked, record it here and propagate the values into
 `hardware/common.scad` and the affected parts/docs.

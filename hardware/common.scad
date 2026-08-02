@@ -22,25 +22,27 @@
 // ---- Board geometry ----
 square_size      = 45;      // edge length of one playing square
 board_margin     = 25;      // border around the 8x8 grid (holds frame + labels)
-board_thickness  = 10;      // thickness of the printed playing panel
-                            //   = front_wall + washer_thk + sensor_h + margin,
-                            //   so a washer + hall sensor stack fits behind
-                            //   each square (see board_panel.scad)
-tile_engrave     = 1.2;     // depth of the engraved square grid / dark squares
+board_thickness  = 10;      // thickness of the printed panel (back cavity +
+                            //   sensor bores; the steel sheet glues onto its
+                            //   front face -- see board_panel.scad)
 
-// ---- Piece holding + sensing (per-square steel washers) ----
-// A steel washer sits behind each square, near the front face. The piece
-// magnet grips it (holding the piece to the vertical board) AND snaps to its
-// center, so pieces self-center on the square. A hall sensor lives in the
-// washer's center hole and reads the piece magnet through the thin front wall
-// -- the washer's HOLE is why the sensor isn't magnetically shielded.
-front_wall       = 2.5;     // plastic between piece magnet and washer/sensor
-washer_od        = 16;      // steel washer outer dia (standard M8 plain/flat)
-washer_id        = 8.4;     // washer center hole (sensor pokes up into it)
-washer_thk       = 1.6;     // washer thickness
-washer_fit       = 0.3;     // pocket clearance around the washer
+// ---- Piece holding + sensing (steel-sheet face) ----
+// The playing surface is a thin steel sheet glued onto the printed panel's
+// front. Piece magnets grip the sheet DIRECTLY -- the proven attachment every
+// commercial magnetic wall set uses. A small felt disc stuck over each hub
+// magnet sets the glide and protects the sheet's paint. For Phase-2 sensing
+// the sheet gets a small laser-cut hole per square center; a hall sensor in
+// a bore from the back reads the piece magnet through that hole, so the
+// sheet never shields it.
+front_wall       = 2.5;     // printed wall behind the sheet (structure; the
+                            //   sensor bore runs through it -- no longer a
+                            //   magnetic gap, the magnet touches steel)
+sheet_thk        = 0.8;     // steel sheet thickness (source 0.5-1.0 mm mild/
+                            //   galvanized steel -- NOT stainless 304)
+sheet_hole       = 8;       // dia of the per-square sensing hole in the sheet
+                            //   (laser-cut; Phase 2 only -- a plain un-holed
+                            //   sheet is fine for the manual board)
 sensor_dia       = 4;       // hall sensor body (e.g. 49E / A3144 in TO-92, trimmed)
-sensor_h         = 5;       // depth of the sensor pocket
 
 // ---- Magnets (neodymium discs) ----
 magnet_dia       = 8;       // magnet diameter  (8 mm N52 discs work well)
@@ -49,8 +51,15 @@ magnet_fit       = 0.15;    // radial press-fit clearance (per side)
 
 // ---- Gravity gimbal / pivot ----
 axle_dia         = 4;       // diameter of the pivot post
-axle_len         = 10;      // how far the post projects from the hub
+axle_len         = 10.5;    // how far the post projects from the hub. Gives
+                            //   ~0.7 mm axial float between body and cap so
+                            //   print tolerance can't clamp the body flat
+                            //   against the hub (which would stop rotation).
 axle_fit         = 0.35;    // clearance so the body spins freely on the post
+axle_root_fillet = 1.2;     // 45-deg reinforcing cone at the post root (the
+                            //   post's weakest point under a sideways knock);
+                            //   the body bore gets a matching countersink so
+                            //   the body still seats flush.
 hub_dia          = 22;      // diameter of the magnetic hub puck
 hub_thk          = 6;       // thickness of the hub puck
 cap_dia          = 8;       // retaining cap that keeps the body on the axle
