@@ -6,7 +6,8 @@ vertically — with two signature mechanics:
 - 🔄 **Rotates 180° based on whose turn it is**, so the player to move always
   sees the board from their own side.
 - 🌍 **Pieces stay upright by gravity** — each piece hangs on a pivot and is
-  bottom-weighted, so as the board turns, every piece self-levels and is never
+  bottom-heavy *by shape* (solid below the pivot, hollow above it — nothing
+  glued in), so as the board turns, every piece self-levels and is never
   upside-down.
 - 🧲 **Magnetic pieces** grip a steel-backed vertical surface.
 - 🖨️ **3-D printable** — parametric models, ready for any FDM printer.
@@ -39,7 +40,7 @@ hardware/              ← parametric OpenSCAD models (+ Makefile → STLs)
   common.scad          ← ⭐ edit this to resize the whole board
   gravity_gimbal.scad  ← the self-righting pivot
   pieces.scad          ← the six pieces (flat self-righting silhouettes)
-  board_panel.scad     ← 8×8 surface: steel pocket + hall-sensor pockets
+  board_panel.scad     ← 8×8 surface: steel-sheet face + hall-sensor bores
   frame.scad           ← bezel
   rotation_hub.scad    ← wall plate + turntable + drive
 software/engine/       ← the brain (plain JS, no deps)

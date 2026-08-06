@@ -40,7 +40,8 @@ surface is a thin **steel sheet** glued onto the printed panel (see §4);
 every piece has a **magnet**
 in its hub, so pieces grip the vertical surface and can slide square to
 square. Each piece body hangs on a **low-friction pivot** and is
-**bottom-weighted**, making it a pendulum that always points up.
+**bottom-heavy by shape** — solid below the pivot, hollow above it — making it
+a pendulum that always points up.
 
 ---
 
@@ -71,39 +72,261 @@ Parts: [`rotation_hub.scad`](../hardware/rotation_hub.scad),
 ## 3. Mechanic 2 — pieces stay upright by gravity
 
 This is the fun one. On a vertical board the pivot axis points **straight
-out of the wall** (normal to the board). A body that spins on that axis and
-carries its mass **below** the axis behaves exactly like a **pendulum**: it
-always swings so its heavy end is down, i.e. it stays upright — regardless of
-how the board around it is rotated.
+out of the wall** (normal to the board). A body that spins freely on that axis
+and carries its mass **below** the axis behaves exactly like a **pendulum**: it
+swings until its heavy end is down and stays there — regardless of how the
+board around it is rotated.
 
 ```
-   axle (⊙, pointing out of wall)
-        │
-        ●  ← pivot at square center (rides on the hub's axle post)
-       ╱ ╲
-      │ K │   ← flat silhouette body
-       ╲ ╱
-      [ ▪ ]  ← steel weight in base pocket  →  center of mass BELOW pivot
+   front (room) ◄──────────────────────────────► back (wall)
+
+        ┌───────────┐        the stack, front to back
+        │  ░░░░░░░  │          press cap    4.7 mm    Ø6, grips the dowel tip
+        │  ░░░░░░░  │          piece body   6.0       the silhouette plate
+        │──── ⊙ ────│          hub puck     8.0       Ø11.5, magnet in its back
+        │           │          ─────────────────
+        │  ███████  │          axle: Ø3 × 16 mm steel dowel, 11 mm proud
+        │  ███████  │                6.0 + 3.5 grip = 9.5
+        └───────────┘                → 1.5 mm axial float, by design
+
+   ⊙ pivot — at the silhouette's own centre AND at the square's centre
+   ░ hollow above the pivot      █ solid below it   → centre of mass BELOW ⊙
 ```
 
-Each piece is **two printed parts** (see
+Each piece is **three printed parts plus one bought steel dowel** — see
 [`gravity_gimbal.scad`](../hardware/gravity_gimbal.scad) and
-[`pieces.scad`](../hardware/pieces.scad)):
+[`pieces.scad`](../hardware/pieces.scad):
 
 | Part | Role |
 |------|------|
-| **Hub puck** | Neodymium magnet press-fit in the back grips the steel board. An **axle post** projects toward the room. The puck rotates *with* the board. |
-| **Body** | A flat **silhouette** (reads across the room, prints flat, no supports) with a **pivot bore** that drops onto the post, and a **base pocket** for a steel weight. The body spins freely and self-levels. |
-| **Snap cap** | Snaps over the flared axle tip so the body can't fall off but still spins. |
+| **Hub puck** — Ø11.5 × 8 mm, printed | A Ø8 × 3 mm neodymium magnet press-fits into its **back** and grips the steel board face; the **front** is bored for the axle. The puck sticks to a square and turns *with* the board. It is deliberately small enough that the piece in front **hides** it (§3.2). |
+| **Axle dowel** — Ø3 × 16 mm, **bought** | A stock steel dowel pin pressed into the hub until it bottoms out **on the magnet**, so there is no thin printed web to crack. Steel because friction is what decides how straight a piece parks (§3.1). Thin because a Ø3 *steel* dowel takes a 20 N sideways knock with **3.0× margin**, where the Ø4 *printed* post it replaced had only 1.29× — it snapped at the layer line. **Thinner and stronger, not a compromise.** |
+| **Body** — the silhouette plate, 6 mm, printed | Flat, so it reads across the room and prints face-down with no supports. A central bore drops over the dowel and spins freely on it. Bottom-heavy **by shape** — solid below the pivot, hollow above — with **nothing glued in** (§3.3). |
+| **Press cap** — Ø6 mm, printed | Grips the plain dowel by interference (three slit fingers spread as it goes on) so the body cannot fall off but still turns. It is the only part of the mechanism that faces the room, sitting mid-piece, so it is sized to vanish into the silhouette rather than read as a button. |
 
-Design notes:
-- **Pivot above middle, weight at the base** → a strong, unambiguous "down,"
-  so the piece settles quickly and doesn't spin freely.
-- **Low friction matters.** Tune `axle_fit` in `common.scad`; a touch of dry
-  PTFE lube on the post makes the pendulum crisp.
-- **Flat silhouettes** are deliberate: they're readable at living-room
-  distance, cheap to print, and light (less pendulum inertia). Two finishes
-  (or two filament colors) distinguish White vs. Black.
+> **Jargon, plainly:** a **dowel pin** is a plain ground-steel rod, sold by the
+> hundred in any fastener shop. A **press fit** means the hole is cut slightly
+> *undersize* so the pin is held by friction alone — no glue, no thread. The
+> **1.5 mm axial float** is deliberate slack along the dowel: without it,
+> normal print tolerance could clamp the piece between cap and hub and stall
+> the very rotation the mechanism exists to allow.
+
+### 3.1 The physics, stated once
+
+Every number in the piece design answers to one equation. A hanging piece does
+**not** park perfectly upright — it parks at the angle where friction in the
+bore exactly cancels the gravity torque:
+
+```
+    sin(lean)  =  μ · r / d
+
+      μ  friction coefficient in the bore   assumed 0.08 (greased steel on plastic)
+      r  bore RADIUS                        1.85 mm (a Ø3.70 bore on the Ø3 dowel)
+      d  how far the centre of mass sits
+         BELOW the pivot                    4.7 – 8.7 mm across this set
+```
+
+Three consequences drive the whole design:
+
+1. **Mass cancels out — entirely.** Weight appears on both sides of the torque
+   balance and divides away. Adding ballast to a piece does **nothing** for how
+   straight it hangs; only geometry (`d`) and friction (`μ · r`) move the
+   number. This is the most counter-intuitive fact in the project, and it is
+   why the ballast was deleted rather than tuned (§3.3).
+2. **The centre of mass must sit *below* the pivot.** That is what `d` is. Above
+   the pivot it would be an inverted pendulum and would flop to whichever side
+   it was nudged.
+3. **It must also sit *directly under* the pivot.** A pendulum hangs with its
+   mass plumb below the axis, so a silhouette that is heavier on one side hangs
+   **permanently rotated** — and no amount of friction tuning fixes that,
+   because it is not a lean, it is where "down" now is for that shape. Five of
+   the six pieces are mirror-symmetric and get this for free. The knight is not,
+   and is the set's one fragile piece because of it (§3.6).
+
+So there are exactly **two levers** on the lean: **cut `μ · r`**, or **grow
+`d`**. The bought steel dowel and the damping grease attack the first (and the
+Ø4 → Ø3 change alone is ~19% less lean, for free). The pivot placement and the
+shaped-in cavity fight over the second.
+
+**Friction is a tuning knob that cuts both ways.** Too much and the piece parks
+crooked. Too little and *nothing damps the swing* — a piece on a bare ball
+bearing would ring for a minute after every flip. The answer is **silicone
+damping grease**: viscous drag kills the ringing without adding the static
+friction that causes the lean in the first place. (Dry PTFE lube makes the
+opposite trade; a ball bearing was evaluated and rejected for the same reason —
+see **D9** in [`GOALS.md`](GOALS.md).)
+
+### 3.2 Why the pivot sits at the silhouette's centre
+
+`pivot_frac = 0.50` puts the bore at the centre of the silhouette's bounding
+box, and the hub puck at the centre of the square. Two things follow:
+
+- **The piece reads centred in its square**, rather than dangling from its head
+  like a pendant.
+- **It stays centred through a flip.** Because the piece turns about its own
+  centre, whatever small angle it settles at merely **rotates it in place**
+  instead of swinging the body sideways. The sideways offset is zero at *every*
+  angle, not just at rest — which matters, because the settling happens while
+  the board is still moving. (An earlier design pivoted above the middle for a
+  stronger "down"; it bought settling speed at the price of every piece hanging
+  visibly low and swinging off-centre.) This is decision **D8**.
+
+The cost is paid in `d`, and it is real: putting the pivot at the middle brings
+the centre of mass close to it (4.7–8.7 mm across the set), and a small `d` is a
+bigger lean. That is precisely what the steel dowel and the grease buy back.
+
+A second consequence sets the board's scale. The puck sits *behind* the piece,
+so the piece must **hide** it or every piece wears a grey collar. The mechanical
+parts do not scale with the square — only the **artwork** does — so enlarging
+the square runs the taper further until it swallows the puck. At 45 mm squares
+the narrowest waist covered only Ø9.8 and the puck showed. **55 mm is the
+smallest square at which the natural waist (Ø12.0) covers the Ø11.5 puck with
+nothing added** — no skirt, no collar, no fake boss; 0.5 mm to spare. That
+resolves decision **D1**, and it is why the panel grew from ~410 mm to ~490 mm
+square.
+
+### 3.3 Bottom-heavy by shape, not by ballast
+
+There are two ways to put the centre of mass below the pivot:
+
+| | How | What happens when the material changes |
+|---|-----|-----------------------------------------|
+| ~~(a) Ballast~~ | Glue a dense slug — lead, steel nuts — into a pocket low down | `d` depends on the **ratio** of slug density to body density, so tuning done in one material **does not transfer** to another. |
+| **(b) Shape** ✅ | Make the body **solid below the pivot and hollow above it** | The piece is **one material**, so density cancels out of the equation completely. |
+
+This set does **(b)**. There is **no weight pocket, no lead, no nuts, and
+nothing to glue in** (decision **D10**).
+
+The payoff is not tidiness — it is that the cheap test is a *valid* test. Under
+(b), a PETG test print behaves **identically** to the final resin part, because
+density has dropped out of `sin(lean) = μ · r / d` on both sides. Under (a) it
+would not have, and a Phase-0 print would have proved nothing about the piece it
+was standing in for. It is also one fewer part, one fewer assembly step, and one
+fewer thing to rattle loose.
+
+Two details that are easy to get wrong:
+
+- **The cavity is modelled, not sliced.** A resin slicer's "hollow" button
+  removes material *evenly everywhere*, which produces no top-to-bottom mass
+  gradient at all — exactly the wrong thing. The cavity in `pieces.scad` is cut
+  deliberately, **above the pivot only**, inset `hollow_wall` = 0.9 mm from
+  every face and every silhouette edge. (0.9 mm is the floor for two perimeters
+  on a 0.4 mm FDM nozzle, and comfortable in resin. Thinner walls would buy more
+  lever; this is where that trade stops being safe.)
+- **Every cavity needs its drain hole.** A sealed void traps uncured resin,
+  which later leaks or bulges the wall. Each piece has a 2 mm drain through its
+  **back** face only, so the front stays a clean silhouette. Verify it worked by
+  counting shells in the exported STL: **a piece should be one shell.** A cavity
+  the drain missed shows up as a second.
+
+### 3.4 The set as modelled
+
+At 55 mm squares, with the artwork scaled by `piece_scale` = 1.222 (the hub,
+dowel and cap keep their own fixed millimetres — that asymmetry is the point,
+see §3.2):
+
+| Piece | Height | Width | Aspect | Lever `d` | Modelled lean | Mass (resin) |
+|-------|-------:|------:|-------:|----------:|--------------:|-------------:|
+| Pawn   | 31.77 | 20.74 | 0.653 | 5.71 mm | 1.49° | 2.24 g |
+| Rook   | 36.66 | 24.61 | 0.671 | 4.68 mm | **1.81°** | 3.43 g |
+| Knight | 39.10 | 26.44 | 0.676 | 6.05 mm | 1.40° | 3.75 g |
+| Bishop | 42.77 | 29.98 | 0.701 | 7.29 mm | 1.16° | 4.52 g |
+| Queen  | 46.44 | 25.34 | 0.546 | 5.72 mm | 1.48° | 4.23 g |
+| King   | 51.32 | 25.59 | 0.499 | 8.68 mm | 0.98° | 4.24 g |
+
+All six: **one shell** (so every cavity drained), pivot exactly centred,
+balanced in x, and standing inside their square. Heights step ~3 mm and open to
+4 mm at the top so the king still pulls away from the queen; the 42/26 ratio
+between king and pawn sits inside the 1.6–2.0 band that makes rank read at
+across-the-room distance.
+
+**Clearance during a flip** is a slightly different question from "fits in its
+square", because a rotating piece sweeps a *circle* of its longest corner. Five
+pieces stay inside their own square at any angle; the king's foot corners sweep
+**28.34 mm** against a 27.5 mm half-square, so they cross the square line by
+0.84 mm mid-flip. No legal position collides: neighbours rotate in lockstep, and
+the worst adjacent pair is king + queen at 28.34 + 26.10 = 54.44 mm against the
+55 mm square pitch. Two kings would exceed it — and the rules of chess forbid
+kings on adjacent squares.
+
+### 3.5 Read these numbers honestly
+
+> **Nothing in this repo has been printed.** Every figure above is measured off
+> an exported mesh, not off an object. They are model outputs, not
+> measurements of hardware.
+
+- **The lean column rests on an assumed μ = 0.08** for greased steel on plastic.
+  That is a **textbook figure, not one measured on this hardware.** Lean scales
+  linearly with μ: if the real value is double, so is every angle in the table.
+  **One printed pawn plus one hub settles it, and it is the cheapest test in the
+  project** — do it before committing to a set (Phase 0 in
+  [`BUILD_GUIDE.md`](BUILD_GUIDE.md)).
+- **The rook has the least margin:** 1.81° against a 2.2° working limit. It is
+  the squattest body in the set, so it has the shortest lever, and it is the
+  piece that breaks first if real friction comes in higher.
+- **The knight's balance is tuned, not structural** — see §3.6.
+- **Unchecked:** print orientation, overhangs, and whether a Ø8 magnet holds the
+  heaviest piece (bishop, 4.52 g, hanging 11 mm proud of the wall).
+
+### 3.6 The piece design language — "Tapered Monolith"
+
+**Flat silhouettes** are deliberate: readable at living-room distance, cheap to
+print, and light (less pendulum inertia). Two finishes or two filament colours
+separate White from Black. But "flat silhouette" is a format, not a style, so
+the six shapes are drawn to **one shared rule set** (decision **D11**) rather
+than designed piece by piece. The rules, in full:
+
+- **One slope.** Every piece is a single straight-sided taper at **1 : 4**
+  (14.04° off vertical). No piece has its own angle.
+- **One stroke.** A single width, `STROKE` = 4.4 mm, is every deliberate line in
+  the set — the pawn's crown radius, the king's cross limb and arm, the bishop's
+  cleft.
+- **One convex and one concave radius.** `CORNER` = 0.8 mm rounds every outside
+  corner and `FILLET` = 0.5 mm every inside one, applied globally as an opening
+  then a closing. **No corner is ever radiused by hand.**
+- **One shared foot.** The same kick height (3.6 mm) and the same flare
+  (1.6 mm per side) on all six. The flare is said exactly **once**, at the
+  bottom.
+- **The foot is the widest point of every piece** — verified on all six meshes.
+  The terminal event always sits *inside* the width the taper already owns, so
+  nothing overhangs the base.
+- **Rank reads twice over:** as overall height, and as **how far the taper ran
+  before the event started**.
+- **Rank = taper run + exactly one terminal event.**
+
+(Those constants are in *nominal artwork* millimetres — before `piece_scale`.
+They live in `pieces.scad`, not `common.scad`, precisely because they are
+drawing units rather than real ones.)
+
+| Piece | Where the taper stops | The one event |
+|-------|----------------------:|---------------|
+| **Pawn** | tangent, no stop | **None** — the taper runs into a dome that is *tangent* to it, so the outline never breaks. The pawn is identified by absence. |
+| **Rook** | 19.4 mm (shortest run) | A parapet of **three square merlons**, counted in the set's own units. |
+| **Knight** | 21.0 mm (cut off early) | A head that **faces left** — the only broken mirror. *The exception; see below.* |
+| **Bishop** | 28.0 mm, stopped wide | A **mitre**: a dome with one stroke-wide cleft driven through it, leaving two horns. |
+| **Queen** | 31.6 mm, down to a narrow waist | A **coronet** — four points, each finished with a rounded pearl. |
+| **King** | 32.0 mm (longest run) | A **cross**: one limb, one arm, both exactly one stroke. |
+
+Queen and king are separated structurally, not decoratively: both run the taper
+down to the same narrow waist and jump out sideways, and the coronet *is* the
+crossbar, only divided. Rook and queen are separated by shape *and* by count —
+three square merlons against four round pearls.
+
+> **⚠ The knight is the set's one deliberate exception, and its one fragile
+> part.** Its head above the shoulder uses **free angles**, outside the family's
+> restricted set. This is a priced trade, not an oversight: the allowed angles
+> contain **no diagonal**, so a jaw line, a nose bridge and an ear spike are
+> literally unbuildable inside a 32 mm piece. Three compliant redraws were
+> modelled; all three stopped being a horse.
+>
+> The trade has a second cost that matters more. Because the head is asymmetric,
+> the knight is the only piece whose centre of mass is not free — it hangs plumb
+> only because a constant, `KDX`, slides the head sideways until the moment about
+> the centreline cancels. That balance is **tuned numerically, not structural**.
+> **Edit the head polygon and the piece will still render perfectly, still look
+> right, and then hang permanently rotated** (see consequence 3 in §3.1). If you
+> touch it, re-measure the centre of mass and re-solve `KDX`. This is flagged in
+> `pieces.scad` at both the constant and the knight's branch.
 
 > **Do we need both mechanics?** Yes, and they complement each other. The
 > *rotation* flips the board coordinates so the mover sees their own back
@@ -115,7 +338,9 @@ Design notes:
 
 ## 4. Holding pieces on a vertical board (magnets + steel sheet)
 
-- Pieces carry an **8 mm × 3 mm N52 neodymium disc** (`magnet_dia`/`magnet_thk`).
+- The magnet — an **8 mm × 3 mm N52 neodymium disc** (`magnet_dia`/`magnet_thk`) —
+  lives in the **hub puck**, pressed into its back. The piece body itself
+  contains **no magnet and no metal**; it just hangs on the hub's dowel.
 - The playing surface is a **thin steel sheet** (`sheet_thk` ≈ 0.5–1 mm) glued
   onto the printed panel's front. The piece magnet grips the sheet
   **directly** — the same attachment every commercial magnetic wall chess set
@@ -232,32 +457,60 @@ low-risk fallback — full design in
 
 | Parameter | Default | Meaning |
 |-----------|---------|---------|
-| `square_size` | 45 mm | one playing square |
-| `piece_scale` | 1.0 | scales every piece |
+| `square_size` | **55 mm** | one playing square (**D1**, locked — see §3.2) |
+| `piece_scale` | **1.222** | scales the piece **artwork only**; hub, dowel and cap keep their own millimetres |
+| `pivot_frac` | 0.50 | pivot height as a fraction of piece height — 0.50 = the silhouette's centre |
+| `piece_thk` / `hollow_wall` | 6 / 0.9 mm | silhouette plate thickness, and the wall left around the cavity |
 | `magnet_dia` × `magnet_thk` | 8 × 3 mm | piece magnets |
-| `hub_dia` / `axle_dia` | 22 / 4 mm | gravity pivot |
-| `axle_fit` | 0.35 mm | swivel clearance (lower = tighter) |
+| `hub_dia` / `axle_dia` | **11.5 / 3 mm** | gravity pivot (puck diameter, dowel diameter) |
+| `axle_fit` | 0.35 mm | swivel clearance (lower = tighter); sets `r` = 1.85 mm in §3.1 |
 | `bearing_od` / `bearing_id` | 90 / 60 mm | turntable bearing |
 | `ring_gear_teeth` : `motor_gear_teeth` | 200 : 20 | rotation reduction (10:1) |
 | `sheet_thk` | 0.8 mm | steel playing sheet glued to the panel front |
 | `sheet_hole` | 8 mm | per-square laser-cut sensing hole in the sheet |
 | `front_wall` | 2.5 mm | printed wall behind the sheet (sensor bore runs through it) |
 
-A full 8×8 at `square_size = 45` gives a **360 mm** playing area and a
-**410 mm** panel (~434 mm over the frame) — a substantial, readable wall
-piece. Bump `square_size` to 55–60 mm for a real statement board (re-check
-magnet hold).
+A full 8×8 at `square_size = 55` gives a **440 mm** playing area and a
+**490 mm** panel (~514 mm over the frame) — a genuine statement wall piece.
+
+`square_size` is no longer a free knob. It was resolved to 55 mm on physical
+grounds (§3.2): it is the smallest square whose piece artwork hides the hub
+puck. **Changing it means re-checking two things** — that the narrowest waist
+still covers Ø11.5, and that `pivot_frac × king_height × piece_scale` still
+fits inside `square_size / 2` (at present: 25.66 mm into 27.5 mm, 1.84 mm of
+headroom). Going larger also means re-checking magnet hold, since the pieces get
+heavier while the Ø8 magnet does not.
 
 ---
 
 ## 8. Open design questions
 
-Tracked so we decide deliberately (see `GOALS.md` for status):
+Tracked so we decide deliberately. Full status and reasoning for every decision
+is in [`GOALS.md`](GOALS.md).
 
-- **Board size / weight budget** — how big before the turntable/motor needs
-  upsizing? (drives `square_size`, bearing, stepper choice)
-- **Piece style** — flat silhouettes (current) vs. shallow 3-D relief.
-- **Finish** — printed two-tone vs. painted vs. veneer/laminate front.
-- **Rotate every move vs. on-demand** — always flip, or a button, or only in
-  two-player mode? (UX + belt/slip-ring implications)
-- **Where the brain lives** — phone app, a Pi/ESP32 on the wall, or both.
+**Still open:**
+
+- **Finish** (D3) — printed two-tone vs. painted vs. veneer/laminate front.
+- **Rotate every move vs. on-demand** (D4) — always flip, or a button, or only
+  in two-player mode? (UX + belt/slip-ring implications)
+- **Where the brain lives** (D5) — phone app, a Pi/ESP32 on the wall, or both.
+- **Auto-mover in scope, and by which route** (D6) — aspirational; see §6.
+- **Weight budget** — how heavy before the turntable and stepper need upsizing?
+  Now bounded rather than open: the panel is fixed at 490 mm square by D1, so
+  this is a check to run at Phase 2, not a shape decision.
+
+**Recently closed** (do not re-open casually — each was settled on physical
+grounds, not taste):
+
+| | Decision | Outcome |
+|---|----------|---------|
+| **D1** | Board size | **55 mm squares** — the smallest square whose artwork hides the hub puck (§3.2) |
+| **D8** | Pivot placement | **the silhouette's centre**, so settling rotates the piece in place (§3.2) |
+| **D9** | Pivot hardware | **a bought Ø3 × 16 mm steel dowel** + silicone damping grease (§3.1) |
+| **D10** | Bottom-heaviness | **shaped into the body**; no ballast anywhere in the set (§3.3) |
+| **D11** | Piece design language | **one shared rule set**, "Tapered Monolith" (§3.6) |
+
+**Not a decision — an unmeasured input.** The friction coefficient μ is
+*assumed*, and every lean figure in this document depends on it linearly.
+Nothing has been printed. This is settled by a test, not by a discussion: print
+one pawn and one hub (Phase 0 in [`BUILD_GUIDE.md`](BUILD_GUIDE.md)).

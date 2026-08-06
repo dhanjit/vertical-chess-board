@@ -11,8 +11,10 @@ website or a screen app.** The two signature mechanics:
 1. **Rotate by turn** — the board turns 180° so the player to move sees it
    from their side (turntable + stepper).
 2. **Gravity-upright pieces** — each piece hangs on a pivot normal to the
-   board and is bottom-weighted, so it self-levels like a pendulum as the
-   board rotates. Pieces are **magnetic** and grip a steel-backed surface.
+   board and is bottom-heavy **by shape** (solid below the pivot, hollow above
+   it — no ballast, nothing glued in), so it self-levels like a pendulum as the
+   board rotates. The magnet lives in the piece's **hub puck** and grips a
+   steel-sheet playing face directly.
 
 Aspirational (further-out) scope: the board **plays you** (auto-mover) and is
 **app-controlled** — deliberately *not* the current focus; the near-term goal
@@ -60,7 +62,9 @@ is the hand-played manual board.
 - **Phasing.** Respect the phases in `GOALS.md`: Phase 1 must stay a complete
   manual board with no electronics. Don't let later-phase complexity leak into
   Phase 1 parts.
-- **Decisions.** Open decisions live in `GOALS.md` (D1–D6) and `DESIGN.md §8`.
+- **Decisions.** Decisions live in `GOALS.md` (D1–D11) and `DESIGN.md §8`.
+  D3–D6 are still open; D1, D2 and D7–D11 are locked on physical grounds — do
+  not silently re-open them.
   If a task depends on one, either use the documented default or ask;
   then record the choice in `GOALS.md`.
 
