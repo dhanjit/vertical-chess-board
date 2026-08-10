@@ -15,8 +15,8 @@ That's it. The fancy stuff — a motor that spins the board, sensors, and
 comes much later**. Ignore all of it for now.
 
 **What you end up with:** a panel about **49 cm square** (490 mm — roughly the
-size of a large framed picture), with **55 mm squares** and pieces from 32 mm
-(pawn) to 51 mm (king) tall. Big enough to read from a sofa across the room.
+size of a large framed picture), with **55 mm squares** and pieces from 40 mm
+(pawn) to 52 mm (king) tall. Big enough to read from a sofa across the room.
 
 > **Nothing here has been built yet.** This repo is a complete, worked-out
 > design, but no one has printed it and hung it on a wall — so the numbers in
@@ -40,6 +40,31 @@ size of a large framed picture), with **55 mm squares** and pieces from 32 mm
   [`../hardware/README.md`](../hardware/README.md) tells them exactly how.
 - If a print service or makerspace is making the parts, you don't need
   OpenSCAD or a printer yourself — just send them the STLs.
+
+---
+
+## There is a choice to make — but not by you, not yet
+
+You may see the design offered as **variants**. That is on purpose: this repo
+keeps more than one approach side by side so they can be compared, rather than
+throwing away the runners-up. There are two independent choices:
+
+- **What the pieces look like.** The default, `familiar`, is the chess set
+  everyone already recognises — a ball-headed pawn, a castle-topped rook, a
+  horse-head knight, a bishop's mitre, a queen's crown, a king's cross. (The
+  alternative, `monolith`, is a stylish invented look that you have to learn to
+  read.)
+- **How each piece hangs and swivels.** The default, `pin`, puts the magnet in a
+  tiny plastic hub that sticks to the board, with a small steel rod as the axle.
+  (The alternative, `magnet`, drops the hub, the rod and the cap and puts a
+  magnet inside the piece instead — two fewer parts per piece, and only one of
+  them printed instead of three — but it leans a little more, and two things
+  about it have never been tested.)
+
+**Just build the defaults: `familiar` + `pin`.** They are already set in the
+files — you don't have to change anything, and everything on this page assumes
+them. If you get curious later, [`BUILD_GUIDE.md`](BUILD_GUIDE.md) §0 explains
+how to switch, and [`BOM.md`](BOM.md) lists what each option costs to buy.
 
 ---
 
@@ -74,6 +99,18 @@ grease. See the list below — you only need a few of each for the test.
 4. Stick the hub to a steel surface held sideways — a fridge side, a filing
    cabinet, any steel offcut. It should **hold on**, and the pawn should
    **stay upright when you rotate the surface**.
+5. **Now measure it.** Turn that steel surface upside-down and back again —
+   **ten flips**. Each time, let the pawn settle and look at how far off
+   vertical it parks. **Write down the worst of the ten** (not the average — the
+   worst is what you'd actually see on the wall).
+
+**What the number means.** The design expects the pawn to park about **1.2°**
+off vertical — a lean you have to look for. Anything up to about **1.8°** is
+still fine, though the rook (the squattest piece) will have no margin left.
+Much worse than that and the pivot has more friction than the design assumed;
+the fix is more or better grease, **never** adding weight. There is a fuller
+version of this in [`BUILD_GUIDE.md`](BUILD_GUIDE.md) ("Phase 0"), including
+what the numbers become if you picked the other variants.
 
 Nothing gets glued *into* the piece. It stays upright because of its shape:
 solid at the bottom, hollow at the top, so it hangs like a pendulum. That is
@@ -82,9 +119,9 @@ same shape, same behaviour, whatever the plastic weighs.
 
 If that works and feels good → print the rest. If it needs tuning (spins too
 freely, or won't hold), the fix is usually one number in
-`hardware/common.scad` — the tuning table in [`BUILD_GUIDE.md`](BUILD_GUIDE.md)
-("Phase 0") says which one for each symptom. **This is the whole reason we
-test first — it's much cheaper to tweak one piece than 32.**
+`hardware/common.scad` — the troubleshooting table in
+[`BUILD_GUIDE.md`](BUILD_GUIDE.md) says which one for each symptom. **This is
+the whole reason we test first — it's much cheaper to tweak one piece than 32.**
 
 Full step-by-step is in [`BUILD_GUIDE.md`](BUILD_GUIDE.md) ("Phase 0").
 
@@ -99,7 +136,9 @@ the whole set:
 - **Source:** the 3D-printable parts live in this repo. Full render + print
   instructions are in [`../hardware/README.md`](../hardware/README.md).
 - **Render:** install **OpenSCAD** (free), then from the `hardware/` folder run
-  `make` to generate all the STLs — or render just the ones listed below.
+  `make` to generate all the STLs — or render just the ones listed below. The
+  files come set to the defaults (`familiar` pieces, `pin` pivot); nothing needs
+  changing.
 - **Test batch:** one `gimbal_testpair`, one `piece_pawn`, (optional) one
   `board_test` tile (`make gimbal board_test` + `make pieces`).
 - **Material:** PLA is fine. 0.2 mm layers, **no supports needed** (parts are
@@ -130,7 +169,8 @@ the whole set:
 ## Your shopping list (the non-printed bits)
 
 For the **test**, you only need a few of the first two items. For the **full
-manual board**, get the quantities in [`BOM.md`](BOM.md). In plain terms:
+manual board**, get the quantities in [`BOM.md`](BOM.md). This is the list for
+the defaults (`familiar` + `pin`). In plain terms:
 
 | What | Why | Where |
 |------|-----|-------|
@@ -154,6 +194,12 @@ manual board**, get the quantities in [`BOM.md`](BOM.md). In plain terms:
 > versions of the design glued small metal weights into the base of every
 > piece. They're gone — each piece is bottom-heavy by shape now, so it is one
 > printed part with nothing added.
+>
+> **If you ever switch to the other pivot option** (`magnet`), the first three
+> rows change: no hubs, no dowels, no caps, no felt — just a Ø4 × 5 magnet and a
+> Ø9 × 0.8 steel disc per piece. Fewer parts, slightly more lean, and two
+> untested details. [`BOM.md`](BOM.md) has that list in full. Stick with the
+> defaults for a first build.
 >
 > This table covers the hand-played board's main parts; you also need **M3
 > bolts + heat-set inserts** for the frame assembly. The complete per-phase

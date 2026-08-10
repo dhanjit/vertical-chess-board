@@ -19,19 +19,94 @@
 // =====================================================================
 
 // ---------------------------------------------------------------- CONFIG
+// ---- THE TWO VARIANT SELECTORS ---------------------------------------
+// The design is kept as SELECTABLE VARIANTS along two INDEPENDENT axes, so
+// competing approaches can sit side by side and be compared rather than
+// argued about. Any combination of the two is buildable; they do not know
+// about each other.
+//
+// AXIS 1 — PIECE STYLE: the artwork, i.e. what the silhouette looks like.
+//   One file per style in styles/, each exposing the same three-symbol
+//   contract. Adding a style is one new file plus one entry in "THE ENUM"
+//   block in pieces.scad.
+//
+//     "monolith"  One 1:4 taper, one stroke width, one convex and one
+//                 concave radius, a shared foot; rank reads as height plus
+//                 ONE terminal event. A coherent invented design language —
+//                 but one you have to learn.
+//     "familiar"  The online-chess / fridge-magnet vocabulary: ball-and-
+//                 collar pawn, crenellated rook, horse knight, cleft mitre
+//                 bishop, coronet queen, cross king. Nobody has to be taught
+//                 what any of them is.
+//
+//   MEASURED off the exported meshes, pivot "pin", 55 mm squares, mu = 0.08.
+//   Every piece: pivot exactly on the silhouette centre, single shell, inside
+//   its square. (H x W in mm, lean in deg — lower lean is straighter.)
+//        piece    familiar             monolith
+//        pawn     40.0 x 30.0  1.16    31.8 x 20.7  1.49
+//        rook     43.0 x 38.0  1.44    36.7 x 24.6  1.81
+//        knight   44.5 x 40.5  1.13    39.1 x 26.4  1.40
+//        bishop   47.5 x 36.0  0.94    42.8 x 30.0  1.16
+//        queen    50.0 x 41.8  1.12    46.4 x 25.3  1.48
+//        king     52.0 x 42.0  0.99    51.3 x 25.6  0.98
+//   "familiar" is the default: it is both the look asked for AND the better
+//   mechanism on five pieces of six — bigger pieces put more area further
+//   below the pivot, which is the whole of `d`. The trade it makes is width:
+//   its knight is 40.5 wide against the monolith's 26.4, and its pieces fill
+//   the square instead of sitting in it.
+piece_style      = "familiar";   // "monolith" | "familiar"
+
+// AXIS 2 — PIVOT ARCHITECTURE: how the piece hangs and turns. Built in
+//   gravity_gimbal.scad, which documents both in full.
+//
+//     "pin"     A separate printed HUB PUCK (Ø11.5 x 8) holds the magnet and
+//               sticks to the steel board; a bought Ø3 x 16 steel dowel
+//               presses into it; the piece turns on that dowel; a Ø6 printed
+//               press cap retains it. The magnet is on the BOARD side, so its
+//               mass never enters the pendulum.
+//               PER PIECE: 3 PRINTED (body, hub puck, press cap) + 2 BOUGHT
+//               (Ø8 x 3 magnet, Ø3 x 16 dowel) = 5 components, plus a felt disc.
+//     "magnet"  No hub, no dowel, no cap. A Ø4 x 5 magnet sits in the piece's
+//               own bore and the piece turns ON THE MAGNET; a Ø9 x 0.8 steel
+//               disc, held by that same magnet with no glue, recesses into a
+//               1.0 mm counterbore in the FRONT face and stops the piece
+//               pulling off.
+//               PER PIECE: 1 PRINTED (the body) + 2 BOUGHT (Ø4 x 5 magnet,
+//               Ø9 x 0.8 disc) = 3 components. Three named parts go away (hub,
+//               dowel, cap) and one arrives (the disc), so the NET saving is
+//               TWO components -- and, the part that matters, PRINTED parts
+//               per piece go 3 -> 1.
+//
+//   MEASURED, style "familiar": pin -> magnet costs
+//        pawn  1.16 -> 1.80 deg      king  0.99 -> 1.40 deg
+//   i.e. ~0.4-0.6 deg of extra lean to drop two of the five components per
+//   piece -- and two of the three PRINTED ones. It costs
+//   on two fronts and both are in that number: r in sin(lean) = mu*r/d
+//   becomes the Ø4.70 bore's radius instead of the Ø3.70 bore's, AND the
+//   magnet + disc now ride WITH the piece at zero lever arm, dragging the
+//   combined centre of mass toward the axis. (A Ø5 magnet was measured too
+//   and is worse on both counts: pawn 2.27, king 1.73. Ø4 is the choice.)
+//   Two things about "magnet" are UNPROVEN and are NOT in those numbers —
+//   whether the disc stays put through a board flip, and the face friction
+//   from the piece being clamped to the sheet. See gravity_gimbal.scad.
+pivot_type       = "pin";        // "pin" | "magnet"
+
 // ---- Board geometry ----
 square_size      = 55;      // edge length of one playing square. RESOLVES D1.
-                            //   Why 55 and not 45: the hub puck is a fixed Ø11.5
-                            //   disc sitting behind the piece, and the piece has
-                            //   to HIDE it or every piece wears a grey collar. At
-                            //   45 mm squares the narrowest piece only covered a
-                            //   Ø9.8 waist, so the puck showed. The mechanical
-                            //   parts do not scale with the square -- only the
-                            //   ARTWORK does -- so growing the square grows the
-                            //   taper until it outruns the puck. 55 is the
-                            //   SMALLEST square at which the natural waist
-                            //   (Ø12.0) covers Ø11.5 with nothing added: no
-                            //   skirt, no collar, no fake boss. 0.5 mm to spare.
+                            //   Why 55 and not 45: under pivot_type "pin" the hub
+                            //   puck is a fixed Ø11.5 disc sitting behind the
+                            //   piece, and the piece has to HIDE it or every
+                            //   piece wears a grey collar. At 45 mm squares the
+                            //   narrowest piece only covered a Ø9.8 waist, so the
+                            //   puck showed. The mechanical parts do not scale
+                            //   with the square -- only the ARTWORK does -- so
+                            //   growing the square grows the silhouette until it
+                            //   outruns the puck. 55 is the SMALLEST square at
+                            //   which the narrowest waist in the "monolith" style
+                            //   (Ø12.0) covers Ø11.5 with nothing added: no skirt,
+                            //   no collar, no fake boss. 0.5 mm to spare. The
+                            //   "familiar" style is far clear of it -- its
+                            //   narrowest waist is the rook's 20 mm tower.
                             //   Panel goes ~410 -> ~490 mm square as a result.
 board_margin     = 25;      // border around the 8x8 grid (holds frame + labels)
 board_thickness  = 10;      // thickness of the printed panel (back cavity +
@@ -69,11 +144,19 @@ magnet_fit       = 0.15;    // radial press-fit clearance (per side)
 //       mu = friction coefficient in the bore (~0.08, greased steel on plastic)
 //       r  = bore RADIUS  -> a thinner axle is a straighter piece
 //       d  = how far the centre of mass sits BELOW the pivot
-// MASS CANCELS OUT of that equation entirely. Adding weight to a piece does
-// NOTHING for how straight it hangs; only geometry and friction move the
-// number. (Second consequence: a piece hangs with its CoM directly below the
-// pivot, so an asymmetric silhouette must be balanced in x or it hangs
-// permanently rotated -- see KDX in pieces.scad.)
+// MASS CANCELS OUT of that equation for a single rigid piece. Adding weight
+// to a piece does NOTHING for how straight it hangs; only geometry and
+// friction move the number.
+// THE ONE EXCEPTION, and it is the whole argument between the two pivot
+// architectures above: mass added AT THE PIVOT still hurts. It contributes no
+// restoring torque but it does move the COMBINED centre of mass toward the
+// axis, which shrinks `d`. That is why pivot_type "magnet" -- which hangs the
+// magnet and the retaining disc on the piece at zero lever arm -- measures
+// worse than "pin", which leaves the magnet on the board.
+// (Second consequence of the same equation: a piece hangs with its CoM
+// directly BELOW the pivot, so an asymmetric silhouette must be balanced in x
+// or it hangs permanently rotated -- see KDX in styles/familiar.scad and in
+// styles/monolith.scad, the two knights.)
 //
 // The axle is a STOCK Ø3 x 16 mm STEEL DOWEL PIN pressed into the hub -- it
 // is NOT printed. Ground steel against a plastic bore is mu ~0.2 (~0.08 with
@@ -140,6 +223,39 @@ cap_grip_fit     = -0.15;   // cap bore = axle_dia + this. The cap grips the
                             //   plain dowel by interference (the old cap
                             //   snapped over a lip printed on the post; a
                             //   steel dowel has no lip).
+
+// ---- Gravity gimbal, pivot_type "magnet" only -------------------------
+// The whole of this architecture is two BOUGHT parts and a counterbore; there
+// is nothing printed but the piece. Unused when pivot_type is "pin".
+pivot_magnet_dia = 4;       // the magnet the piece turns ON. Ø4 not Ø5: it is
+                            //   the `r` in sin(lean) = mu*r/d, so it sets the
+                            //   lean directly. Measured, style "familiar":
+                            //   Ø4 -> pawn 1.80 / king 1.40 deg,
+                            //   Ø5 -> pawn 2.27 / king 1.73 deg.
+pivot_magnet_thk = 5;       // = piece_thk - disc_seat_depth, so the magnet
+                            //   drops in from the BACK and finishes flush with
+                            //   the back face, touching the steel sheet with
+                            //   no plastic in the gap.
+retain_disc_dia  = 9;       // steel disc on the magnet's front pole, held by
+                            //   the magnet itself -- NO GLUE. Wider than the
+                            //   Ø4.70 bore, so it cannot pass through it, and
+                            //   that is the only thing stopping the piece
+                            //   pulling off the magnet.
+                            //   UNPROVEN: nothing has verified that it stays
+                            //   put through a board flip. Print
+                            //   pivot_test_coupon() and find out.
+retain_disc_thk  = 0.8;     // stock shim thickness
+disc_seat_depth  = 1.0;     // counterbore in the piece's FRONT face. 1.0 for a
+                            //   0.8 disc, so the disc sits 0.2 below flush.
+disc_seat_slop   = 0.3;     // RADIAL clearance per side, so the seat is Ø9.6.
+                            //   Loose on purpose -- the disc is placed by a
+                            //   magnet, by hand, and does not locate anything;
+                            //   the bore locates the piece. Kept modest all the
+                            //   same: at Ø9.6 the seat plus its 0.9 wall is a
+                            //   Ø11.4 collar, and the narrowest waist the two
+                            //   styles put at the pivot is the monolith king's
+                            //   12.1 mm. Any wider and that piece runs out of
+                            //   silhouette to put the seat in.
 // ---- Bottom-heaviness: shaped in, not glued in ----------------------
 // A piece self-rights because its centre of mass sits BELOW the pivot -- that
 // is `d` in the settling equation above. There are two ways to arrange it, and
@@ -162,12 +278,22 @@ hollow_wall      = 0.9;     // solid wall kept all round the cavity: 0.9 mm at
                             //   This number matters more than it looks. The
                             //   wall is subtracted from BOTH sides of every
                             //   dimension, so on a small piece it eats most of
-                            //   the cavity. Measured on the pawn:
-                            //     1.2 mm wall -> lever 3.41 mm -> +/-3.16 deg
-                            //     0.9 mm wall -> lever 4.07 mm -> +/-2.65 deg
-                            //     0.7 mm wall -> lever 4.65 mm -> +/-2.32 deg
+                            //   the cavity -- a thicker wall leaves less void
+                            //   above the pivot, which raises the centre of
+                            //   mass, shortens `d`, and (straight out of the
+                            //   equation above) increases the lean. A thinner
+                            //   one does the reverse.
                             //   0.9 is the floor for a 0.4 mm FDM nozzle
-                            //   (2 perimeters) and is comfortable in resin.
+                            //   (2 perimeters) and is comfortable in resin, so
+                            //   it is where that trade stops being safe. If
+                            //   Phase 0 measures mu higher than assumed, 0.7 is
+                            //   the one lever left in the artwork -- at the
+                            //   cost of a wall thinner than the nozzle likes.
+                            //   (The per-wall lever figures that used to sit
+                            //   here were measured on the superseded Ø4 printed
+                            //   post and no longer describe any current piece;
+                            //   re-measure against the exported mesh if the
+                            //   number is ever changed.)
 drain_dia        = 2;       // resin drain hole through the BACK face into the
                             //   cavity. MANDATORY for resin -- a sealed void
                             //   traps uncured resin, which later leaks or
@@ -177,27 +303,18 @@ drain_dia        = 2;       // resin drain hole through the BACK face into the
                             //   shows up as a second shell).
 
 // ---- Piece bodies (flat silhouettes, read from across the room) ----
+// SIZE IS NOT HERE. How tall each piece is, and whether the artwork carries a
+// scale factor at all, belongs to the STYLE -- "monolith" is drawn at nominal
+// size and scaled up by 1.222, "familiar" is drawn at final size and has no
+// scale factor. Putting either style's heights in this file would make it look
+// as though the board depended on them. The mechanism only ever asks a style
+// for piece_height(t) and gets real printed millimetres back.
+// The one size rule the MECHANISM does impose: a piece hangs pivot_frac * H
+// below the axle, and the axle is the square centre, so every style must keep
+//     pivot_frac * H <= square_size / 2      i.e.  H <= 55 mm
+// with a little to spare for the swing. Both styles clear it (tallest pieces
+// 51.3 and 52.0 mm).
 piece_thk        = 6;       // extrusion thickness of the silhouette plate
-piece_scale      = 1.222;   // global scale on the ARTWORK only -- the hub, the
-                            //   dowel and the cap keep their own millimetres.
-                            //   That asymmetry is the whole point: growing the
-                            //   artwork against a fixed puck is what finally
-                            //   let the taper's waist swallow the puck (see
-                            //   square_size). 1.222 is the smallest scale at
-                            //   which the narrowest waist reaches Ø12.0 > the
-                            //   Ø11.5 puck.
-                            //   Bounded above by the square: a piece hangs
-                            //   pivot_frac * H below the axle and the axle is
-                            //   the square centre, so we need
-                            //     pivot_frac * h_king * scale <= square_size/2
-                            //   -> scale <= 27.5 / (0.5*42) = 1.310.
-                            //   At 1.222 the king hangs 25.66 down into a
-                            //   27.5 half-square: 1.84 mm of headroom.
-                            //   NOTE: the profiles in pieces.scad are drawn in
-                            //   ABSOLUTE mm, so this must be applied as a
-                            //   scale() around the profile -- passing a bigger
-                            //   H would stretch the body while leaving the
-                            //   fixed-size heads (crown, cross, mitre) behind.
 pivot_frac       = 0.50;    // pivot height as a fraction of piece height.
                             //   0.50 puts the pivot on the silhouette's
                             //   bounding-box CENTRE. Two things follow:
@@ -207,21 +324,12 @@ pivot_frac       = 0.50;    // pivot height as a fraction of piece height.
                             //   instead of swinging the body sideways. It
                             //   therefore stays centred through a board flip.
                             //   The cost is pendulum lever: the centre of mass
-                            //   ends up nearer the pivot (d = 4.7-8.7 mm across
-                            //   the set), so the settling error grows unless
+                            //   ends up nearer the pivot (d = 4.7-9.0 mm across
+                            //   BOTH styles -- monolith rook 4.68 at the low
+                            //   end, familiar bishop 9.02 at the high one), so
+                            //   the settling error grows unless
                             //   friction drops to match. That is what the steel
                             //   dowel and the damping grease are paying for.
-// Nominal silhouette heights per type (mm), multiplied by piece_scale to give
-// the real printed height. These are the numbers the ARTWORK is drawn to in
-// pieces.scad; ratio 42/26 = 1.62, inside the 1.6-2.0 band that makes rank
-// read at across-the-room distance. ~3 mm steps, opening to 4 at the top so
-// the king still pulls away from the queen.
-h_pawn   = 26;              // -> 31.77 mm printed
-h_rook   = 30;              // -> 36.66
-h_knight = 32;              // -> 39.10
-h_bishop = 35;              // -> 42.77
-h_queen  = 38;              // -> 46.44
-h_king   = 42;              // -> 51.32
 
 // ---- Rotation hub (the turntable that flips the board 180 deg) ----
 bearing_od       = 90;      // outer dia of the turntable bearing seat

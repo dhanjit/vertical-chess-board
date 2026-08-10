@@ -42,12 +42,21 @@ sheet, a turntable bearing, a wall cleat.
 </p>
 
 - The board is a **vertical plane on a central turntable**. Its playing face
-  is a **thin steel sheet**; each piece sits on a small **hub puck** holding a
-  **magnet** under a **felt disc**, so pieces grip the sheet directly and glide
-  square to square — the same hold every commercial magnetic wall set uses.
+  is a **thin steel sheet**, and a **magnet** grips it directly, so pieces hold
+  on and glide square to square — the same hold every commercial magnetic wall
+  set uses. In the default arrangement that magnet sits in a small printed
+  **hub puck** behind the piece, under a **felt disc**; the alternative puts it
+  inside the piece itself (next bullet).
 - Each piece body hangs on a **low-friction pivot** and is **solid below that
   pivot and hollow above it** — a pendulum that always points up, no matter how
   the board is turned. Nothing is glued or weighted into a piece.
+- **The piece design is a *choice*, not a single answer.** Two piece styles
+  (what a piece **looks like**) and two ways of hanging them (where the
+  **magnet** lives) are kept in the repo side by side, selectable with one line
+  each, and more approaches are expected. The defaults — the familiar-looking
+  set on a hub-puck pivot — are what the rest of this page describes. If you're
+  deciding what to print, the comparison is
+  [`PIECE_DESIGNS.md`](PIECE_DESIGNS.md).
 - *(Later, optionally)* a motor spins the board, hall sensors behind each
   square read the position, and the built-in chess engine follows and
   validates the game.
@@ -167,6 +176,7 @@ self-rights, *then* print the full set.
 |---|---|
 | [`START_HERE.md`](START_HERE.md) | Plain-language first steps + print spec (start here if you're new to printing) |
 | [`DESIGN.md`](DESIGN.md) | How the two mechanics, magnets, and sensing actually work |
+| [`PIECE_DESIGNS.md`](PIECE_DESIGNS.md) | The piece styles and pivot architectures **side by side** — measured, with costs — and how to add another |
 | [`GOALS.md`](GOALS.md) | Full technical roadmap (Phases 0–4) + open decisions to lock |
 | [`PROJECT_REVIEW.md`](PROJECT_REVIEW.md) | Honest difficulty/risk read + beginner staged plan (A–E) |
 | [`BOM.md`](BOM.md) | Shopping list per phase |

@@ -9,7 +9,11 @@ vertically — with two signature mechanics:
   bottom-heavy *by shape* (solid below the pivot, hollow above it — nothing
   glued in), so as the board turns, every piece self-levels and is never
   upside-down.
-- 🧲 **Magnetic pieces** grip a steel-backed vertical surface.
+- 🧲 **Magnetic pieces** grip a steel-sheet vertical playing face.
+- 🎛️ **The piece design is a *choice*, not one answer** — two piece styles and
+  two ways of hanging them sit side by side in the repo, each a one-line
+  selector, and more can be added. Compared measure-for-measure in
+  [`docs/PIECE_DESIGNS.md`](docs/PIECE_DESIGNS.md).
 - 🖨️ **3-D printable** — parametric models, ready for any FDM printer.
 - 🌠 **Aspirational (later):** the board plays *you* (auto-mover) and is
   controllable from a phone app — researched, but deliberately out of the
@@ -32,14 +36,19 @@ docs/
   AUTO_MOVER_ANALYSIS.md← why a vertical self-moving board is hard (physics)
   AUTO_MOVER_DESIGN.md ← how to actually build one (EPM matrix, prior art, prototypes)
   DESIGN.md            ← how it works (the two mechanics, magnets, sensing)
+  PIECE_DESIGNS.md     ← the piece variants side by side — open this to choose
   GOALS.md             ← vision, phases, roadmap, decisions to lock
   BOM.md               ← shopping list per phase
   BUILD_GUIDE.md       ← step-by-step assembly (start at Phase 0!)
   ELECTRONICS.md       ← powered rotation, sensing, auto-mover, firmware plan
 hardware/              ← parametric OpenSCAD models (+ Makefile → STLs)
-  common.scad          ← ⭐ edit this to resize the whole board
-  gravity_gimbal.scad  ← the self-righting pivot
-  pieces.scad          ← the six pieces (flat self-righting silhouettes)
+  common.scad          ← ⭐ edit this to resize the whole board; holds the two
+                          variant selectors (piece_style, pivot_type)
+  gravity_gimbal.scad  ← the self-righting pivot — BOTH architectures
+  pieces.scad          ← the mechanism that turns a silhouette into a piece
+  styles/              ← the artwork: one file per piece style
+    monolith.scad      ←   an invented design language
+    familiar.scad      ←   the vocabulary everyone knows (default)
   board_panel.scad     ← 8×8 surface: steel-sheet face + hall-sensor bores
   frame.scad           ← bezel
   rotation_hub.scad    ← wall plate + turntable + drive
