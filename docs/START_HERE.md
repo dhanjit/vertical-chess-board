@@ -136,11 +136,18 @@ the whole set:
 - **Source:** the 3D-printable parts live in this repo. Full render + print
   instructions are in [`../hardware/README.md`](../hardware/README.md).
 - **Render:** install **OpenSCAD** (free), then from the `hardware/` folder run
-  `make` to generate all the STLs — or render just the ones listed below. The
-  files come set to the defaults (`familiar` pieces, `pin` pivot); nothing needs
-  changing.
+  **`.\build.ps1`** on Windows, or **`make`** on macOS / Linux. Both generate
+  all the STLs. (On Windows use the script, not `make` — Windows does not come
+  with `make`, and the OpenSCAD installer does not put itself on your PATH. The
+  script handles both.) The files come set to the defaults (`familiar` pieces,
+  `pin` pivot); nothing needs changing.
 - **Test batch:** one `gimbal_testpair`, one `piece_pawn`, (optional) one
-  `board_test` tile (`make gimbal board_test` + `make pieces`).
+  `board_test` tile — `.\build.ps1 gimbal`, `.\build.ps1 board_test`,
+  `.\build.ps1 pieces` (or the `make` equivalents).
+- **Sanity check before printing:** each part should appear in your slicer as
+  **one** solid object. The only exception is `gimbal_testpair`, which is two
+  small parts side by side on purpose. If something arrives as a heap of loose
+  fragments, stop and say so — that is a fault in the model, not a setting.
 - **Material:** PLA is fine. 0.2 mm layers, **no supports needed** (parts are
   designed to print flat). ~15–20% infill for the big parts — the panel and
   the frame.

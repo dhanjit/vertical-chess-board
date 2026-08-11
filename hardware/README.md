@@ -15,33 +15,59 @@ to whoever runs the printer — your own printer, a print service, or a makerspa
 | **`board_panel.scad`** | The 8×8 playing surface: printed tray + border labels, with a hall-sensor bore behind every square. A **steel sheet** glues onto the front and the piece magnets grip it directly. | `-D 'QUARTER="all"'`, a quarter `"bl"`/`"br"`/`"tl"`/`"tr"`, the 1×2 Phase-0 tile `"test"`, or the sheet's laser-cutting outline `"sheet_dxf"` |
 | **`frame.scad`** | Bezel that captures the panel and mounts the turntable. Prints as four L-shaped corners. | `-D 'PART="corner"'` (default: the whole bezel, for preview) |
 | **`rotation_hub.scad`** | Wall plate + turntable (lazy-susan bearing) + GT2 drive pulley. | `-D 'PART="wall"'` / `"turntable"` / `"pulley"` (default: assembly preview) |
-| **`Makefile`** | Renders every part to `stl/`. | see below |
+| **`build.ps1`** | Renders every part to `stl/` on **Windows**. Needs neither `make` nor OpenSCAD on PATH. | see below |
+| **`Makefile`** | The same, on **macOS / Linux**. | see below |
 
 ## Render
 
-Requires [OpenSCAD](https://openscad.org) on your PATH — it is free, and it is
-what turns these text files into the STL meshes a printer or print service
-wants.
+Requires [OpenSCAD](https://openscad.org) — free, and it is what turns these
+text files into the STL meshes a printer or print service wants.
+
+**On Windows, use `build.ps1`.** It does everything the Makefile does and needs
+neither `make` nor OpenSCAD on your PATH, because a normal Windows box has
+neither: `make` is not shipped with Git Bash, and the OpenSCAD installer does
+not add itself to PATH. It finds OpenSCAD itself.
+
+```powershell
+cd hardware
+.\build.ps1                 # everything -> hardware\stl\   (default $fn = 96)
+.\build.ps1 pieces -Fn 128  # smoother curves, for final prints
+.\build.ps1 clean           # delete stl\
+```
+
+If PowerShell refuses to run it ("running scripts is disabled"), either unblock
+it once with `Unblock-File .\build.ps1`, or run it for this session only with
+`powershell -ExecutionPolicy Bypass -File .\build.ps1`.
+
+**On macOS / Linux, use the Makefile.** Same targets, same output.
 
 ```
 cd hardware
-make                # everything -> hardware/stl/   (default $fn = 96)
+make                # everything -> hardware/stl/
 make FN=128         # smoother curves, for final prints
-make clean          # delete stl/
+make clean
 ```
 
-Individual targets:
+Individual targets — the two are equivalent:
 
-| Target | Renders |
-|--------|---------|
-| `make pieces` | one STL per type, `stl/piece_<type>.stl` |
-| `make gimbal` | `stl/gimbal_testpair.stl` — hub + cap side by side (or, under `pivot_type = "magnet"`, the pivot test coupon) |
-| `make variant STYLE=familiar PIVOT=pin` | that one combination into `stl/familiar_pin/`, without editing `common.scad` |
-| `make matrix` | all four combinations, side by side, for comparing them |
-| `make board` | the whole panel plus all four quarters |
-| `make board_test` | `stl/board_test.stl` — the 1×2 Phase-0 tile |
-| `make sheet` | `stl/steel_sheet.dxf` — the cutting outline for a laser shop |
-| `make mech` | wall plate, turntable, drive pulley, frame corner |
+| Renders | PowerShell | make |
+|---------|-----------|------|
+| one STL per piece type, `stl/piece_<type>.stl` | `.\build.ps1 pieces` | `make pieces` |
+| `gimbal_testpair.stl` — hub + cap side by side (or, under `pivot_type = "magnet"`, the pivot test coupon) | `.\build.ps1 gimbal` | `make gimbal` |
+| one combination into its own folder, without editing `common.scad` | `.\build.ps1 variant -Style familiar -Pivot pin` | `make variant STYLE=familiar PIVOT=pin` |
+| all four combinations, for comparing them | `.\build.ps1 matrix` | `make matrix` |
+| the whole panel plus all four quarters | `.\build.ps1 board` | `make board` |
+| `board_test.stl` — the 1×2 Phase-0 tile | `.\build.ps1 board_test` | `make board_test` |
+| `steel_sheet.dxf` — the cutting outline for a laser shop | `.\build.ps1 sheet` | `make sheet` |
+| wall plate, turntable, drive pulley, frame corner | `.\build.ps1 mech` | `make mech` |
+
+> **Known defect, Phase 2 part.** `mech` renders `hub_drive_pulley.stl` as **18
+> separate solids** — one body plus 17 loose teeth — so it would print as a
+> pulley and a pile of little blocks. The toothed rim in `rotation_hub.scad` is
+> a GT2 *approximation* (its own header says so) and the teeth are not fused to
+> the body. Nothing in Phase 0 or Phase 1 touches this part. Anything you print
+> should be **one** shell unless it is a deliberate multi-part tray like
+> `gimbal_testpair`; check that in your slicer before printing.
 
 **Phase-0 test batch** — print this first, before committing to a set (see
 [`../docs/BUILD_GUIDE.md`](../docs/BUILD_GUIDE.md)):

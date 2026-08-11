@@ -72,13 +72,27 @@ phases. Read [`DESIGN.md`](DESIGN.md) first for the "why."
    [`common.scad`](../hardware/common.scad). Under `"magnet"`: **Ø4 × 5 magnets**
    and plain **Ø9 × 0.8 steel discs**.
 
-5. From `hardware/`, render everything:
+5. From `hardware/`, render everything. **On Windows use `build.ps1`** — it does
+   the same job and needs neither `make` nor OpenSCAD on your PATH, and a normal
+   Windows box has neither (Git Bash ships no `make`, and the OpenSCAD installer
+   does not add itself to PATH):
+   ```powershell
+   .\build.ps1                 # all STLs into hardware\stl\, using the variant in common.scad
+   .\build.ps1 pieces -Fn 128  # smoother, for final parts
    ```
-   make            # all STLs into hardware/stl/, using the variant in common.scad
+   On macOS / Linux the Makefile does the same:
+   ```
+   make            # all STLs into hardware/stl/
    make FN=128     # smoother, for final parts
    ```
-   Or render individually, e.g. `make pieces`, or
+   Either way you can render one part directly:
    `openscad -D 'PART="king"' -o king.stl pieces.scad`.
+
+   **Check the shell count in your slicer before printing anything.** Every part
+   here should slice as ONE solid, except `gimbal_testpair` which is deliberately
+   two (hub and cap side by side). A part that arrives as several loose pieces is
+   a modelling fault, not a slicer setting — `hub_drive_pulley` currently has
+   one, and it is a Phase-2 part; see [`../hardware/README.md`](../hardware/README.md).
 
 ## 1. Prototype the mechanics (Phase 0 — do this first!)
 
