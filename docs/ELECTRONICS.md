@@ -100,5 +100,5 @@ the algorithms in `chess.js`/`ai.js` are the reference).
 - Fuse the 12 V rail; strain-relieve everything on the rotating side.
 - Give the rotation a **torque limit / current limit** so a hand or cat in the
   way stalls the motor instead of forcing it.
-- Mount to a **stud or proper anchors** — a ~410 mm board faced with a steel
+- Mount to a **stud or proper anchors** — a ~490 mm board faced with a steel
   sheet, plus frame and turntable, is not light.

@@ -159,14 +159,19 @@ custom EPM fabrication proves too fiddly for a first build, fall back to **D**
 
 ## 7. Force & thermal budget (order-of-magnitude, to be measured)
 
-**Piece is light.** A flat PLA silhouette + 8×3 magnet + small steel weight is
-roughly **m ≈ 15–25 g** → weight **≈ 0.15–0.25 N**.
+**Piece is light.** Nothing is weighted into a piece — it is bottom-heavy by
+shape. The silhouette itself is **2.2–4.5 g** modelled in resin in the
+`monolith` style and **3.8–7.5 g** in the default `familiar` one (see
+[`PIECE_DESIGNS.md`](PIECE_DESIGNS.md)). Under `pivot_type = "pin"` add the
+printed hub puck and cap + the 8×3 magnet + the Ø3 × 16 steel dowel, so
+**m ≈ 5–11 g** → weight **≈ 0.05–0.11 N**. Under `"magnet"` the assembly is
+lighter still (no hub, no cap, no dowel; a Ø4 × 5 magnet and a Ø9 × 0.8 disc).
 
 **Holding force needed is small.** On a vertical face, friction must beat
-gravity: `μN ≥ mg` → `N ≥ mg/μ`. With `μ ≈ 0.3–0.5`, **N ≈ 0.3–0.8 N** of
+gravity: `μN ≥ mg` → `N ≥ mg/μ`. With `μ ≈ 0.3–0.5`, **N ≈ 0.1–0.4 N** of
 magnetic normal force per piece. For reference an 8 mm N52 disc pulls ~**10 N**
 to thick steel in ideal contact; against our 0.5–1 mm sheet, through a felt
-disc, it's less but still a **few N** — comfortably above the ~0.5 N needed. **So the
+disc, it's less but still a **few N** — comfortably above the ~0.3 N needed. **So the
 hold is easy to *achieve*; the whole game is delivering it at every square at
 once, cheaply — which is the A-vs-B story.**
 

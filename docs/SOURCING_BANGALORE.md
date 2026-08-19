@@ -24,7 +24,8 @@ render the parts. The print spec (what to render, settings) is in
 **Filament (PLA), Bengaluru / online:**
 - ~₹700–1,300 per 1 kg spool (WOL3D, ClayObjects, iamRapid, Robu.in, Amazon.in).
 - You'll want **two colours** (white/black pieces) + one for the board. Budget
-  ~1.5–2 kg total for the full board.
+  ~2–2.5 kg total for the full board (the panel is 490 mm square) — same
+  quantity as [`BOM.md`](BOM.md).
 
 ### Option 2 — Online print service (upload STL, they print & deliver)
 Good for the **Stage A test parts** or if you have no printer. Render the STLs
@@ -56,9 +57,10 @@ Also the best place for help when you reach the electronics stages.
 | Part | Where (Bengaluru) | Rough ₹ |
 |---|---|---|
 | **Neodymium disc magnets** 8×3 mm N52 (~40) | **SP Road** magnet dealers (physical); Robu.in, Amazon.in, IndiaMART online | ₹5–15 each → ₹300–600 |
-| **Steel sheet** 0.5–1 mm **mild/GI** (galvanized) — *not* stainless (most isn't magnetic) — one ~360 mm square offcut; for Phase 2 have the 64 sensing holes laser-cut (`make sheet` exports the 1:1 cutting DXF) | any sheet-metal/fabrication shop; SP Road; laser-cutting services (small DXF jobs are cheap and common in Bengaluru) | ₹300–800 incl. cutting |
+| **Steel sheet** 0.5–1 mm **mild/GI** (galvanized) — *not* stainless (most isn't magnetic) — one **440 mm** square (the playing grid at the locked 55 mm squares; it glues centred on the 490 mm panel); for Phase 2 have the 64 sensing holes laser-cut (`make sheet` exports the 1:1 cutting DXF) | any sheet-metal/fabrication shop; SP Road; laser-cutting services (small DXF jobs are cheap and common in Bengaluru) | ₹300–800 incl. cutting |
 | **Self-adhesive felt discs** ~10 mm (one per piece + spares; ~40) | stationery/hardware stores; Amazon.in | ₹50–150 |
-| **Steel nuts** **M3** (piece weights — two per piece, glued; ~70) | hardware store | ₹1–2 each → ₹100 |
+| **Steel dowel pins Ø3 × 16 mm** (the piece axles — one per piece + spares; ~40) | fastener/hardware shops; SP Road; IndiaMART | ₹3–10 each → ₹150–400 |
+| **Silicone damping grease** (1 small tube — a dab in each pivot bore) | hardware / model / RC shops; Amazon.in | ₹150–400 |
 | **Lazy-susan / turntable bearing** ~90 mm (design default; any size works if you set `bearing_od`/`bearing_id` in `hardware/common.scad` **before printing**) | IndiaMART, Amazon.in; hardware/furniture-fittings shops | ₹80–400 |
 | **French cleat** (or a strip of wood/aluminium to make one) | timber/hardware shop; Amazon.in | ₹150–500 |
 | **Super glue / epoxy (Araldite)** | anywhere | ₹100–200 |
@@ -93,10 +95,15 @@ Online stores: **Robu.in**, **Robocraze.com**, **Quartzcomponents**,
 Keep it tiny — you're just proving the mechanic:
 - ~10 neodymium magnets (8×3 mm) — ₹100–150
 - a strip of self-adhesive felt discs — ₹50
-- a few M3 nuts + super glue — ₹50
+- a couple of **Ø3 × 16 mm steel dowel pins** + a small tube of **silicone
+  damping grease** + super glue — ₹150–400
 - steel to stick to: any fridge side or offcut works — buy the real sheet at
   Stage B — ₹0
-- (prints: 1 gimbal + 1 king on a personal printer, or ~₹200–400 at a service)
+- (prints: 1 gimbal + 1 **pawn** on a personal printer, or ~₹200–400 at a service)
+
+> **No weights on this list, and nothing is missing.** Earlier revisions glued
+> M3 nuts into a pocket in each piece; that is gone. Every piece is bottom-heavy
+> by shape now — one printed part, nothing added.
 
 **Total ≈ ₹300–600.** Then run the Stage A test in
 [`BUILD_GUIDE.md`](BUILD_GUIDE.md) ("Phase 0") and note how it behaves — the

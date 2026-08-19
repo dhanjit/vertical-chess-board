@@ -11,8 +11,27 @@ website or a screen app.** The two signature mechanics:
 1. **Rotate by turn** — the board turns 180° so the player to move sees it
    from their side (turntable + stepper).
 2. **Gravity-upright pieces** — each piece hangs on a pivot normal to the
-   board and is bottom-weighted, so it self-levels like a pendulum as the
-   board rotates. Pieces are **magnetic** and grip a steel-backed surface.
+   board and is bottom-heavy **by shape** (solid below the pivot, hollow above
+   it — no ballast, nothing glued in), so it self-levels like a pendulum as the
+   board rotates. A magnet grips a steel-sheet playing face directly; **where
+   that magnet lives is a selectable variant** — in a printed hub puck on the
+   board (`pivot_type = "pin"`, the default) or in the piece's own bore
+   (`"magnet"`).
+
+**The piece design is carried as a VARIANT SYSTEM, not one settled answer**
+(decision **D12**). Two independent selectors at the top of
+`hardware/common.scad`:
+
+- `piece_style` — `"monolith"` | `"familiar"` (default) — the **artwork**, one
+  file per style in `hardware/styles/`.
+- `pivot_type` — `"pin"` (default) | `"magnet"` — **how a piece hangs**, both
+  built in `hardware/gravity_gimbal.scad`.
+
+The axes are independent: no style file mentions a pivot, no pivot code mentions
+a style, and all four combinations build. **Never write a doc claiming the set
+*is* one style or one pivot** — say which is the default and that it is
+selectable. `docs/PIECE_DESIGNS.md` is the side-by-side comparison and the page
+to keep in sync when either axis changes.
 
 Aspirational (further-out) scope: the board **plays you** (auto-mover) and is
 **app-controlled** — deliberately *not* the current focus; the near-term goal
@@ -35,12 +54,18 @@ is the hand-played manual board.
 ## Repo layout
 
 - `hardware/` — parametric **OpenSCAD** models. `common.scad` holds ALL shared
-  dimensions; change geometry there and everything downstream follows. Never
-  hardcode a dimension in a part that belongs in `common.scad`.
+  dimensions *and the two variant selectors*; change geometry there and
+  everything downstream follows. Never hardcode a dimension in a part that
+  belongs in `common.scad`. `pieces.scad` is the **mechanism** (extrude, bore,
+  hollow, drain) and draws no artwork; `hardware/styles/*.scad` is the
+  **artwork** and knows nothing about bores or magnets. Each style file exposes
+  exactly three public symbols — `<style>_silhouette2d/_pheight/_drains` — and
+  its own *drawing* constants stay in that file, not in `common.scad`.
 - `software/engine/` — the **brain**: `chess.js` (rules, perft-verified) and
   `ai.js` (negamax opponent). Plain JS, no deps. Shared by firmware + app.
 - `docs/` — `OVERVIEW.md` (one-page what/why/how + plan — the entry point to
-  share), `DESIGN.md` (how it works), `GOALS.md` (roadmap/phases/decisions),
+  share), `DESIGN.md` (how it works), `PIECE_DESIGNS.md` (the piece variants
+  side by side, with measured costs), `GOALS.md` (roadmap/phases/decisions),
   `BOM.md`, `BUILD_GUIDE.md`, `ELECTRONICS.md`.
 - `app/` — future control-app spec.
 
@@ -60,7 +85,11 @@ is the hand-played manual board.
 - **Phasing.** Respect the phases in `GOALS.md`: Phase 1 must stay a complete
   manual board with no electronics. Don't let later-phase complexity leak into
   Phase 1 parts.
-- **Decisions.** Open decisions live in `GOALS.md` (D1–D6) and `DESIGN.md §8`.
+- **Decisions.** Decisions live in `GOALS.md` (D1–D12) and `DESIGN.md §8`.
+  D3–D6 are still open; D1, D2, D7–D11 and D12 are locked on physical grounds —
+  do not silently re-open them. **D12 is locked on the *system* (variants are
+  kept side by side) and still open on the *choice* (which combination gets
+  printed 32 times); D11 is scoped to `"monolith"` only, not repo-wide.**
   If a task depends on one, either use the documented default or ask;
   then record the choice in `GOALS.md`.
 

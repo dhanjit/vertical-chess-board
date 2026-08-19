@@ -39,7 +39,7 @@ much fiddly tuning and how much electronics do you want to take on."
 | Feature | Difficulty for a beginner | Risk | Notes |
 |---|---|---|---|
 | Magnetic pieces holding on a steel-sheet board | 🟢 Easy | Low | Proven idea (every commercial magnetic wall set); just pick magnet strength. |
-| **Gravity self-righting** pieces (the pendulum) | 🟡 Medium | **Medium** | The one thing to prototype first. Tuning = friction + base weight. |
+| **Gravity self-righting** pieces (the pendulum) | 🟡 Medium | **Medium** | The one thing to prototype first. Tuning is **pivot friction only** — the bottom-heaviness is shaped into the part, and mass cancels out of the physics. |
 | Hanging on the wall (French cleat) | 🟢 Easy | Low | Standard picture-hanging method. |
 | Manual 180° rotation on a bearing | 🟡 Medium | Low–Med | Mostly about balancing the board on its axis. |
 | **Motorized** rotation (Phase 2) | 🟠 Hard | Med | First real electronics: motor + driver + homing sensor + code. |
@@ -80,9 +80,10 @@ Five stages, each a clean stopping point. **Most first-timers should aim for
 Stage B and be delighted.**
 
 ### Stage A — Prove the magic (1 weekend, ~₹500)
-Print **one** pendulum pivot + **one** piece; buy a few magnets + felt discs +
-two M3 nuts. Confirm: piece **sticks** to a vertical steel surface and
-**stays upright** when you spin it.
+Print **one** pendulum pivot (hub + cap) + **one pawn**; buy a few magnets, felt
+discs, a **Ø3 × 16 mm steel dowel pin** and a tube of **silicone damping
+grease**. Nothing gets glued *into* the piece. Confirm: piece **sticks** to a
+vertical steel surface and **stays upright** when you spin it.
 → **GO/NO-GO gate.** If it needs tuning, adjust the numbers in
 `hardware/common.scad` (the Phase-0 tuning table in
 [`BUILD_GUIDE.md`](BUILD_GUIDE.md) maps symptom → parameter) before printing a
@@ -119,11 +120,13 @@ we're focused on.** Only if you've caught the bug and want a long project.
 
 - **Skip motorized rotation forever** — spinning by hand is genuinely fine and
   removes all the Stage-C electronics.
-- **Bigger squares, bigger magnets** — a 55–60 mm board is easier to assemble
-  and holds pieces more confidently than tiny parts. (One number in
-  `common.scad` — `square_size`.)
+- **The board is already at the easy size.** `square_size` is locked at **55 mm**
+  (decision D1), which is comfortably big to assemble and to see. Don't shrink
+  it to save filament — below 55 the piece stops hiding the hub puck behind it.
 - **Tune, don't redesign** — if pieces don't self-right cleanly, the fix is
-  usually more base weight or less pivot friction, not a new design.
+  **less pivot friction** (more/better silicone grease, a smoother bore), not a
+  new design and definitely not added weight: mass cancels out of the settling
+  equation, so there is nothing to add and nothing to adjust.
 - **Fallback if the pendulum frustrates you:** pieces whose shape reads the
   same either way up (letters, or symmetric silhouettes) need *no* pivot and
   *no* rotation — you lose the "wow," but it's a guaranteed-simple board. Only
@@ -137,7 +140,7 @@ Detail and shops in [`SOURCING_BANGALORE.md`](SOURCING_BANGALORE.md).
 
 | Path | Rough cost | Notes |
 |---|---|---|
-| Stage A test | ~₹300–600 | a few magnets, felt discs, two M3 nuts; prints are grams of filament |
+| Stage A test | ~₹300–600 | a few magnets, felt discs, a Ø3 × 16 dowel pin, a tube of silicone grease; prints are grams of filament |
 | **Stage B manual board — own/borrowed printer** | **~₹2,500–4,500** | filament + magnets + steel sheet + bearing + cleat + glue |
 | Stage B manual board — *paid* print service | +₹8,000–15,000 | large board = lots of plastic; **a personal printer is far cheaper** |
 | Stage C motorize | +₹1,500–3,000 | stepper, driver, controller, PSU |

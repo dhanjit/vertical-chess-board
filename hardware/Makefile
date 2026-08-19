@@ -1,5 +1,6 @@
 # Render every printable part to STL.
-#   make            -> build all STLs into ./stl/
+#   make            -> build all STLs into ./stl/, using the variant selected
+#                      in common.scad (piece_style / pivot_type)
 #   make pieces     -> just the chess pieces
 #   make clean
 #
@@ -8,11 +9,25 @@
 #
 # High smoothness for final prints:
 #   make FN=128
+#
+# --- Rendering a named VARIANT without editing common.scad -------------
+# The design is kept as selectable variants on two independent axes (see the
+# top of common.scad). To build one without touching the file:
+#
+#   make variant STYLE=familiar PIVOT=pin        -> stl/familiar_pin/
+#   make variant STYLE=monolith PIVOT=magnet     -> stl/monolith_magnet/
+#   make matrix                                  -> all four combinations
+#
+# Each variant directory gets the six pieces plus whatever the pivot
+# architecture actually has printed parts for -- under PIVOT=magnet that is
+# the pivot test coupon, because the hub and the cap do not exist there.
 
 OPENSCAD ?= openscad
 FN       ?= 96
 OUT      ?= stl
 PIECES    = pawn knight bishop rook queen king
+STYLES    = monolith familiar
+PIVOTS    = pin magnet
 
 FLAGS = -D '$$fn=$(FN)'
 
@@ -28,9 +43,29 @@ pieces: dirs
 		$(OPENSCAD) $(FLAGS) -D "PART=\"$$p\"" -o $(OUT)/piece_$$p.stl pieces.scad; \
 	done
 
-# --- Gravity gimbal hub + cap -----------------------------------------
+# --- Gravity gimbal: hub + cap under "pin", test coupon under "magnet" -
 gimbal: dirs
 	$(OPENSCAD) $(FLAGS) -o $(OUT)/gimbal_testpair.stl gravity_gimbal.scad
+
+# --- One named variant, into its own directory ------------------------
+variant:
+	@test -n "$(STYLE)" -a -n "$(PIVOT)" \
+		|| { echo "usage: make variant STYLE=<$(STYLES)> PIVOT=<$(PIVOTS)>"; exit 1; }
+	@mkdir -p $(OUT)/$(STYLE)_$(PIVOT)
+	@echo "variant: $(STYLE) x $(PIVOT)"
+	@for p in $(PIECES); do \
+		echo "  piece: $$p"; \
+		$(OPENSCAD) $(FLAGS) -D 'piece_style="$(STYLE)"' -D 'pivot_type="$(PIVOT)"' \
+			-D "PART=\"$$p\"" -o $(OUT)/$(STYLE)_$(PIVOT)/piece_$$p.stl pieces.scad; \
+	done
+	@$(OPENSCAD) $(FLAGS) -D 'pivot_type="$(PIVOT)"' \
+		-o $(OUT)/$(STYLE)_$(PIVOT)/gimbal_$(PIVOT).stl gravity_gimbal.scad
+
+# --- Every combination, for comparing them side by side ---------------
+matrix:
+	@for s in $(STYLES); do for v in $(PIVOTS); do \
+		$(MAKE) --no-print-directory variant STYLE=$$s PIVOT=$$v FN=$(FN) OUT=$(OUT); \
+	done; done
 
 # --- Board panel (whole, plus quarters for small beds) ----------------
 board: dirs
@@ -57,4 +92,4 @@ mech: dirs
 clean:
 	rm -rf $(OUT)
 
-.PHONY: all dirs pieces gimbal board board_test mech clean
+.PHONY: all dirs pieces gimbal variant matrix board board_test sheet mech clean
