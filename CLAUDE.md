@@ -16,7 +16,8 @@ website or a screen app.** The two signature mechanics:
    board rotates. A magnet grips a steel-sheet playing face directly; **where
    that magnet lives is a selectable variant** — in a printed hub puck on the
    board (`pivot_type = "pin"`, the default) or in the piece's own bore
-   (`"magnet"`).
+   (`"magnet"`). A third architecture, `"bearing"`, keeps the hub and swaps
+   the piece's sliding bore for a bought MR63ZZ ball bearing.
 
 **The piece design is carried as a VARIANT SYSTEM, not one settled answer**
 (decision **D12**). Two independent selectors at the top of
@@ -24,11 +25,11 @@ website or a screen app.** The two signature mechanics:
 
 - `piece_style` — `"monolith"` | `"familiar"` (default) — the **artwork**, one
   file per style in `hardware/styles/`.
-- `pivot_type` — `"pin"` (default) | `"magnet"` — **how a piece hangs**, both
-  built in `hardware/gravity_gimbal.scad`.
+- `pivot_type` — `"pin"` (default) | `"magnet"` | `"bearing"` — **how a piece
+  hangs**, all built in `hardware/gravity_gimbal.scad`.
 
 The axes are independent: no style file mentions a pivot, no pivot code mentions
-a style, and all four combinations build. **Never write a doc claiming the set
+a style, and all six combinations build. **Never write a doc claiming the set
 *is* one style or one pivot** — say which is the default and that it is
 selectable. `docs/PIECE_DESIGNS.md` is the side-by-side comparison and the page
 to keep in sync when either axis changes.

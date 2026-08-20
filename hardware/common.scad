@@ -89,7 +89,21 @@ piece_style      = "familiar";   // "monolith" | "familiar"
 //   Two things about "magnet" are UNPROVEN and are NOT in those numbers —
 //   whether the disc stays put through a board flip, and the face friction
 //   from the piece being clamped to the sheet. See gravity_gimbal.scad.
-pivot_type       = "pin";        // "pin" | "magnet"
+//
+//     "bearing" The "pin" architecture with the piece's plain bore replaced
+//               by a bought MR63ZZ ball bearing (Ø3 x Ø6 x 2.5) pressed into
+//               the piece from the back; hub puck, dowel, magnet, felt and
+//               cap are IDENTICAL to "pin". Rolling friction makes the
+//               parking error effectively zero REGARDLESS of mu -- this is
+//               the fallback if Phase 0 measures friction far above the
+//               assumed 0.08. What it does NOT solve is damping: the greased
+//               pin's grease was the damper, and a near-frictionless pivot
+//               lets a piece ring after every board flip. That cost is real,
+//               unmeasured, and documented in gravity_gimbal.scad.
+//               PER PIECE: 3 PRINTED (body, hub puck, press cap) + 3 BOUGHT
+//               (Ø8 x 3 magnet, Ø3 x 16 dowel, MR63ZZ bearing) = 6 components,
+//               plus a felt disc.
+pivot_type       = "pin";        // "pin" | "magnet" | "bearing"
 
 // ---- Board geometry ----
 square_size      = 55;      // edge length of one playing square. RESOLVES D1.
@@ -256,6 +270,30 @@ disc_seat_slop   = 0.3;     // RADIAL clearance per side, so the seat is Ø9.6.
                             //   styles put at the pivot is the monolith king's
                             //   12.1 mm. Any wider and that piece runs out of
                             //   silhouette to put the seat in.
+// ---- Gravity gimbal, pivot_type "bearing" only -------------------------
+// A bought MR63ZZ deep-groove bearing (bore 3 = axle_dia, so the SAME hub
+// and dowel as "pin") pressed into the piece from the BACK face. The piece
+// then turns on rolling balls instead of a greased sliding bore, which takes
+// mu -- the one unmeasured input in the settling equation -- out of the
+// parking error entirely. The trade, stated in gravity_gimbal.scad: ~0.5 g
+// of steel riding exactly at the pivot, a bearing to buy per piece, and
+// NOTHING LEFT TO DAMP THE SWING. Unused when pivot_type is "pin"/"magnet".
+pivot_bearing_od = 6;       // MR63ZZ outer diameter. The smallest stock size
+                            //   on a Ø3 shaft; its seat + hollow_wall needs
+                            //   only Ø7.9 of silhouette at the pivot, so every
+                            //   current piece clears it (narrowest waist: 12).
+pivot_bearing_w  = 2.5;     // MR63ZZ width. Seated from the back face, the
+                            //   remaining 3.5 mm of plate in front of it is a
+                            //   solid wall with a loose clearance bore.
+pivot_bearing_seat_fit = 0.05;    // radial clearance per side for the outer-race
+                            //   seat (Ø6.10). Printed holes come out snug, so
+                            //   this lands as a light press in practice --
+                            //   tune like magnet_fit on the Phase-0 print.
+pivot_bearing_clear_dia = 5;      // loose through-bore in FRONT of the seat, so the
+                            //   plate never touches the dowel -- only the
+                            //   bearing does. Any plain contact would put the
+                            //   greased-bore friction right back.
+
 // ---- Bottom-heaviness: shaped in, not glued in ----------------------
 // A piece self-rights because its centre of mass sits BELOW the pivot -- that
 // is `d` in the settling equation above. There are two ways to arrange it, and

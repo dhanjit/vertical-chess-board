@@ -9,7 +9,7 @@ to whoever runs the printer — your own printer, a print service, or a makerspa
 | File | What it makes | Render options |
 |------|---------------|----------------|
 | **`common.scad`** | Shared parameters + helpers — **every dimension the whole system is built from.** Edit this to resize everything; it is `include`d by all the parts below. The two **variant selectors** and the pivot physics are written out at the top. Not a part: it renders nothing on its own. | — |
-| **`gravity_gimbal.scad`** | The self-righting pivot, **both architectures**. Under `pivot_type = "pin"`: hub puck **Ø11.5 × 8** (a Ø8 magnet press-fits in its back, the front is bored for the axle) + a **Ø6** press cap, turning on a bought **Ø3 × 16 steel dowel**. Under `"magnet"`: nothing printed at all — a bought **Ø4 × 5** magnet in the piece's own bore and a bought **Ø9 × 0.8** retaining disc — so it renders the pivot test coupon instead. Also exports the bore + counterbore geometry `pieces.scad` subtracts, so that arithmetic lives in exactly one place. | none — follows `pivot_type` |
+| **`gravity_gimbal.scad`** | The self-righting pivot, **all three architectures**. Under `pivot_type = "pin"`: hub puck **Ø11.5 × 8** (a Ø8 magnet press-fits in its back, the front is bored for the axle) + a **Ø6** press cap, turning on a bought **Ø3 × 16 steel dowel**. Under `"magnet"`: nothing printed at all — a bought **Ø4 × 5** magnet in the piece's own bore and a bought **Ø9 × 0.8** retaining disc — so it renders the pivot test coupon instead. Under `"bearing"`: the same printed parts as `"pin"`; the piece turns on a bought **MR63ZZ** bearing in its own back face instead of sliding on the dowel. Also exports the bore + seat geometry `pieces.scad` subtracts, so that arithmetic lives in exactly one place. | none — follows `pivot_type` |
 | **`pieces.scad`** | **The mechanism, and no artwork.** Takes a silhouette from a style file and applies the same operations to it: extrude, bore the pivot, **model a cavity above the pivot**, drain it through the back face. **No weight pocket, nothing glued in** — bottom-heaviness is shaped in. | `-D 'PART="pawn"'` … `"king"`, or `"all"` for a six-piece tray |
 | **`styles/*.scad`** | **The artwork, and no mechanism.** One file per piece style — `monolith.scad` and `familiar.scad` today — each drawing six flat silhouettes and nothing else. A style file knows nothing about bores, magnets, hollowing or plate thickness. See **Adding a style** below. | selected by `piece_style` |
 | **`board_panel.scad`** | The 8×8 playing surface: printed tray + border labels, with a hall-sensor bore behind every square. A **steel sheet** glues onto the front and the piece magnets grip it directly. | `-D 'QUARTER="all"'`, a quarter `"bl"`/`"br"`/`"tl"`/`"tr"`, the 1×2 Phase-0 tile `"test"`, or the sheet's laser-cutting outline `"sheet_dxf"` |
@@ -53,9 +53,9 @@ Individual targets — the two are equivalent:
 | Renders | PowerShell | make |
 |---------|-----------|------|
 | one STL per piece type, `stl/piece_<type>.stl` | `.\build.ps1 pieces` | `make pieces` |
-| `gimbal_testpair.stl` — hub + cap side by side (or, under `pivot_type = "magnet"`, the pivot test coupon) | `.\build.ps1 gimbal` | `make gimbal` |
+| `gimbal_testpair.stl` — hub + cap side by side (under `pivot_type = "magnet"` the pivot test coupon instead; under `"bearing"` the same hub + cap pair as `"pin"`) | `.\build.ps1 gimbal` | `make gimbal` |
 | one combination into its own folder, without editing `common.scad` | `.\build.ps1 variant -Style familiar -Pivot pin` | `make variant STYLE=familiar PIVOT=pin` |
-| all four combinations, for comparing them | `.\build.ps1 matrix` | `make matrix` |
+| all six combinations, for comparing them | `.\build.ps1 matrix` | `make matrix` |
 | the whole panel plus all four quarters | `.\build.ps1 board` | `make board` |
 | `board_test.stl` — the 1×2 Phase-0 tile | `.\build.ps1 board_test` | `make board_test` |
 | `steel_sheet.dxf` — the cutting outline for a laser shop | `.\build.ps1 sheet` | `make sheet` |
@@ -129,11 +129,11 @@ selectors** at the top of `common.scad` choose it, and more approaches are
 expected to arrive:
 
 ```
-piece_style = "familiar";   // "monolith" | "familiar"   — the ARTWORK
-pivot_type  = "pin";        // "pin"      | "magnet"     — how it HANGS
+piece_style = "familiar";   // "monolith" | "familiar"        — the ARTWORK
+pivot_type  = "pin";        // "pin" | "magnet" | "bearing"   — how it HANGS
 ```
 
-Any of the four combinations builds. The two axes never touch: **no style file
+Any of the six combinations builds. The two axes never touch: **no style file
 mentions a pivot, and no pivot code mentions a style.** A bad value fails loudly
 rather than rendering an empty file — `piece_style = "art-deco"` stops with
 `ERROR: Assertion 'false' failed: "pieces.scad: unknown piece_style ..."`.
@@ -149,7 +149,12 @@ rather than rendering an empty file — `piece_style = "art-deco"` stops with
   (body, hub, cap) plus a bought dowel and magnet. `"magnet"` puts a Ø4 × 5
   magnet in the **piece's own bore** and retains it with a Ø9 × 0.8 steel disc:
   **1 printed part per piece**, and about 0.4–0.6° more lean for it. Over a full
-  32-piece set that is 64 fewer printed parts and 32 fewer dowels.
+  32-piece set that is 64 fewer printed parts and 32 fewer dowels. `"bearing"`
+  is `"pin"` with the piece's sliding bore replaced by a bought **MR63ZZ ball
+  bearing**: parking error ≈0° at *any* μ — the fallback if Phase 0 measures
+  friction high — at the cost of one bearing per piece and **nothing left to
+  damp the swing** (ring-down is that architecture's open Phase-0 question; see
+  [`../docs/PIECE_DESIGNS.md`](../docs/PIECE_DESIGNS.md)).
 
 ### Rendering a variant
 
@@ -162,7 +167,7 @@ openscad -D 'PART="rook"' -D 'piece_style="monolith"' -D 'pivot_type="magnet"' \
 
 # 2. a whole variant into its own folder — still no edit to common.scad
 make variant STYLE=familiar PIVOT=pin        # -> stl/familiar_pin/
-make matrix                                  # -> all four, side by side
+make matrix                                  # -> all six, side by side
 
 # 3. change the default for everything (plain `make`, and anyone reading later)
 #    edit the two selectors at the top of common.scad
@@ -235,7 +240,7 @@ centred, standing inside their square. `d`, height, width and mass are the
 the last lean column shows. **Bold = at or past the 2.2° working limit, or the
 worst in its column.**
 
-**`monolith` + `magnet` is the one combination of the four that busts the 2.2°
+**`monolith` + `magnet` is the one combination of the six that busts the 2.2°
 limit** — on three pieces of six (rook 2.89°, pawn 2.61°, queen 2.27°), with the
 knight a hair under at 2.19°. The monolith pieces are small, so `d` is small,
 and the magnet architecture's penalty is close to a fixed subtraction from `d`,

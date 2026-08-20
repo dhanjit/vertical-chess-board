@@ -99,11 +99,11 @@ approaches side by side rather than argue about them — and more approaches are
 expected:
 
 ```
-piece_style = "familiar";   // "monolith" | "familiar"   — the artwork   (§3.5)
-pivot_type  = "pin";        // "pin"      | "magnet"     — how it hangs  (§3.2)
+piece_style = "familiar";   // "monolith" | "familiar"        — the artwork   (§3.5)
+pivot_type  = "pin";        // "pin" | "magnet" | "bearing"   — how it hangs  (§3.2)
 ```
 
-The two axes are **independent**. Any of the four combinations builds; no
+The two axes are **independent**. Any of the six combinations builds; no
 artwork file knows anything about bores or magnets, and no pivot code knows a
 style by name. Everything in §3.1, §3.3 and §3.4 below is common to all of
 them. (Rendering a variant: see [`../hardware/README.md`](../hardware/README.md).)
@@ -117,7 +117,7 @@ them. (Rendering a variant: see [`../hardware/README.md`](../hardware/README.md)
 ### 3.1 The physics, stated once
 
 Every number in the piece design answers to one equation, and it is the same
-equation for both pivot architectures. A hanging piece does **not** park
+equation for every pivot architecture. A hanging piece does **not** park
 perfectly upright — it parks at the angle where friction in the bore exactly
 cancels the gravity torque:
 
@@ -171,12 +171,18 @@ friction that causes the lean in the first place. (Dry PTFE lube makes the
 opposite trade; a ball bearing was evaluated and rejected for the same reason —
 see **D9** in [`GOALS.md`](GOALS.md).)
 
-### 3.2 Two pivot architectures — where the magnet lives
+### 3.2 The pivot architectures — where the magnet lives
 
-Both are built by [`gravity_gimbal.scad`](../hardware/gravity_gimbal.scad), and
-`pivot_type` in `common.scad` picks one. **They differ in exactly one decision —
-whether the magnet is on the board or in the piece — and everything else
-follows from it.**
+All of them are built by
+[`gravity_gimbal.scad`](../hardware/gravity_gimbal.scad), and `pivot_type` in
+`common.scad` picks one. **The two magnet architectures differ in exactly one
+decision — whether the magnet is on the board or in the piece — and everything
+else follows from it.** The third, `"bearing"`, is the `"pin"` stack with the
+piece's sliding bore swapped for a bought MR63ZZ ball bearing: parking becomes
+≈0° at *any* friction (the fallback if Phase 0 measures μ badly), at the price
+of one bearing per piece and an undamped swing — its full costing lives in
+[`PIECE_DESIGNS.md`](PIECE_DESIGNS.md), and the table below compares the two
+magnet architectures it modifies.
 
 | | `pivot_type = "pin"` (default) | `pivot_type = "magnet"` |
 |---|---|---|

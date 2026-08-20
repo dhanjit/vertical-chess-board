@@ -51,5 +51,5 @@ the ten-flip procedure, print settings — is in
 | Queen | 46.4 × 25.3 | **2.27°** |
 | King | 51.3 × 25.6 | 1.49° |
 
-**Bold = past the 2.2° working limit.** Full side-by-side of all four
+**Bold = past the 2.2° working limit.** Full side-by-side of all six
 combinations: [`docs/PIECE_DESIGNS.md`](../../docs/PIECE_DESIGNS.md).

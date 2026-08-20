@@ -18,8 +18,8 @@ phases. Read [`DESIGN.md`](DESIGN.md) first for the "why."
    [`hardware/common.scad`](../hardware/common.scad) choose one:
 
    ```
-   piece_style = "familiar";   // "monolith" | "familiar"   — what the pieces LOOK like
-   pivot_type  = "pin";        // "pin"      | "magnet"     — how a piece HANGS and TURNS
+   piece_style = "familiar";   // "monolith" | "familiar"        — what the pieces LOOK like
+   pivot_type  = "pin";        // "pin" | "magnet" | "bearing"   — how a piece HANGS and TURNS
    ```
 
    - **`piece_style`** is artwork only. `"familiar"` is the online-chess /
@@ -34,7 +34,11 @@ phases. Read [`DESIGN.md`](DESIGN.md) first for the "why."
      puck — **3 printed + 2 bought** parts per piece. `"magnet"` puts it **in
      the piece** and drops the hub, dowel and cap entirely — **1 printed +
      2 bought** — for about 0.4–0.6° more lean. (Three parts go, one arrives, so
-     the net saving is two: the one that matters is 3 printed → 1.)
+     the net saving is two: the one that matters is 3 printed → 1.) `"bearing"`
+     is `"pin"` plus a bought **MR63ZZ ball bearing** per piece — **3 printed +
+     3 bought** — which parks ≈0° at *any* friction but leaves the swing
+     undamped; it is the fallback if the Phase-0 friction test fails (see
+     [`PIECE_DESIGNS.md`](PIECE_DESIGNS.md)).
 
    **If you have no opinion yet, build the defaults: `familiar` + `pin`.** They
    are the defaults because `familiar` is both the look most people want *and*
@@ -46,7 +50,7 @@ phases. Read [`DESIGN.md`](DESIGN.md) first for the "why."
    ```
    cd hardware
    make variant STYLE=familiar PIVOT=pin      # -> stl/familiar_pin/
-   make matrix                                # all four, side by side
+   make matrix                                # all six, side by side
    ```
 
 3. The board size is **locked at `square_size = 55`** — this resolves decision
@@ -119,6 +123,8 @@ sin(lean) = mu * r / d
   mu = friction coefficient in the bore  (~0.08 assumed: greased steel on plastic)
   r  = bore radius   ("pin": 1.85 mm, a Ø3.70 bore on a Ø3 dowel)
                      ("magnet": 2.35 mm, a Ø4.70 bore on a Ø4 magnet)
+                     ("bearing": the balls roll instead of the bore sliding, so
+                      mu ~ 0.002 and the parking error is ≈0 at any real mu)
   d  = how far the centre of mass sits BELOW the pivot  (4.7-9.0 mm across the set)
 ```
 
@@ -130,11 +136,13 @@ figure nobody has measured on this hardware, and **one printed pawn plus one
 pivot settles it.** That is the cheapest experiment in the project.
 
 **The one exception to "mass cancels", and it is the whole argument between the
-two pivot architectures:** mass added *at* the pivot still hurts. It contributes
+pivot architectures:** mass added *at* the pivot still hurts. It contributes
 no restoring torque, but it does drag the combined centre of mass toward the
 axis, which shrinks `d`. `pivot_type = "magnet"` hangs the magnet *and* the
 retaining disc on the piece at zero lever arm, which is exactly that case — and
-it is why it measures worse.
+it is why it measures worse. (`"bearing"` hangs ~0.5 g of steel there too, but
+with rolling friction the parking error stays ≈0 regardless — for it the shrunk
+lever costs settling *time*, not parking *angle*.)
 
 A second consequence of the same physics: a piece hangs with its centre of mass
 directly below the pivot, so an asymmetric silhouette has to be balanced
@@ -226,7 +234,9 @@ hollow above it, and that cavity is modelled into the part.
 ### Measure it — the ten-flip test
 
 This is the one number the design is not sure of, and it is the same test in
-both architectures.
+every architecture — except that under `pivot_type = "bearing"` the thing to
+record is different: parking should measure ≈0° there whatever μ is, so **time
+the ring-down instead** (how long the piece swings before it looks still).
 
 1. Stick the assembly to any **steel** surface held vertically — a fridge side,
    a filing cabinet, any steel offcut.
@@ -259,8 +269,17 @@ viable combinations, which makes it an easy number to remember on the bench.
   genuinely steel (a real dowel, or a real magnet — not a printed post) and that
   the bore isn't stringy or under-sized. **Adding mass will not help, ever.** If
   grease doesn't get you there, the honest move is to change variant: `pin` costs
-  0.4–0.6° less than `magnet`, and `familiar` has a longer lever than `monolith`
-  on five pieces of six.
+  0.4–0.6° less than `magnet`, `familiar` has a longer lever than `monolith`
+  on five pieces of six — and `bearing` removes μ from the parking equation
+  entirely, at the price of one MR63ZZ per piece and an undamped swing (see
+  [`PIECE_DESIGNS.md`](PIECE_DESIGNS.md)).
+
+The two `bearing` variants are absent from the table above on purpose: lean
+measures nothing for them. Their ten-flip test instead times ring-down, and its
+pass is subjective but simple — a piece should look still within a couple of
+seconds of the board stopping. If it swings much longer, smear damping grease
+between the piece's back and the hub face (near-zero normal force there: it
+damps viscously without re-adding parking error) and re-time.
 
 ### Also do this — `pivot_type = "magnet"` only
 
@@ -342,7 +361,7 @@ hardware differs — but every lean grows, because `r` goes from 1.85 to 2.35 mm
 | Queen  | 1.12° → 1.60° | 1.48° → **2.27°** |
 | King   | 0.99° → 1.40° | 0.98° → 1.49° |
 
-**`monolith` + `magnet` is the one combination of the four that busts the 2.2°
+**`monolith` + `magnet` is the one combination of the six that busts the 2.2°
 working limit** — on three pieces of six (rook 2.89°, pawn 2.61°, queen 2.27°),
 with the knight a hundredth under it at 2.19°, so only the bishop and king have
 any real margin left. The two axes are independent in the code
@@ -450,7 +469,7 @@ it has three failure modes this design has to be laid out around.
 
 ## 3. Assemble the board panel
 
-Identical in both architectures — the sheet is the playing surface either way.
+Identical in every architecture — the sheet is the playing surface either way.
 
 1. Cut/order the **steel sheet**: `grid_size` square (**440 mm** at the locked
    55 mm square), 0.5–1 mm mild/galvanized steel — **not** stainless 304, which
@@ -501,7 +520,28 @@ There is **no hub, no dowel, no cap and no felt disc** in this architecture, and
 no glue anywhere. In exchange, a piece lifted off the board separates into three
 loose parts rather than staying assembled.
 
-### Both architectures
+### `pivot_type = "bearing"` — 6 steps per piece, done off the board
+
+The `"pin"` sequence with the grease step replaced by a press:
+
+1. Press a **Ø8 × 3 magnet** into the hub's **back** (consistent polarity).
+2. Press a **Ø3 × 16 steel dowel** into the hub's **front** bore until it
+   **bottoms on the magnet**.
+3. Stick a **felt disc** over the magnet.
+4. **Press an MR63ZZ bearing into the piece's back-face seat**, shields out,
+   flush. Firm grip, no splitting — tune `pivot_bearing_seat_fit` in
+   `common.scad` on the first print if needed.
+5. **No grease.** The bearing's inner ring rides the dowel as a slip fit, and
+   the factory fill inside the shields is the only damping the pivot has — do
+   not wash it out, and keep the damping grease for the retrofit below.
+6. Slide the piece onto the dowel and press the cap on — snug, not clamped;
+   the 1.5 mm axial float stays.
+
+If the flip test in §1 shows the piece ringing after the board stops, the
+retrofit is a smear of damping grease between the piece's back and the hub
+face — then re-time.
+
+### Every architecture
 
 **There is no ballast step and there is no weight pocket.** Older versions of
 this guide had you glue lead or M3 nuts into a base pocket; that is gone.
@@ -545,12 +585,12 @@ looks off-centre means the *pivot* is off-centre, not the piece.
 
 ## Troubleshooting
 
-### Both architectures
+### Every architecture
 
 | Symptom | Fix |
 |---|---|
 | **Piece rings for ages after a board flip** | **Thicker grease — not less friction.** This is the counter-intuitive one, so read it twice: friction is what *stops* the swing, so a near-frictionless pivot rings longest. A piece on a ball bearing would swing for minutes. Silicone damping grease adds *viscous* drag (which kills the ringing) without adding the *static* friction that causes the row below. Dry PTFE lube is exactly the wrong move — it removes the damping you want and leaves the stiction you don't |
-| Piece parks a few degrees off vertical | This is friction, not balance: `sin(lean) = mu · bore_radius / lever`. **Mass cancels out — adding weight does nothing**, which is why there is no ballast to adjust. In order: more/better silicone damping grease; confirm the sliding pair really is steel (a real dowel, or a real magnet — not a printed post); check the bore isn't stringy, over-cured or under-size. If grease can't get you there, changing variant can: `"pin"` costs 0.4–0.6° less than `"magnet"` |
+| Piece parks a few degrees off vertical | This is friction, not balance: `sin(lean) = mu · bore_radius / lever`. **Mass cancels out — adding weight does nothing**, which is why there is no ballast to adjust. In order: more/better silicone damping grease; confirm the sliding pair really is steel (a real dowel, or a real magnet — not a printed post); check the bore isn't stringy, over-cured or under-size. If grease can't get you there, changing variant can: `"pin"` costs 0.4–0.6° less than `"magnet"`, and `"bearing"` parks ≈0° at any μ (its own trade: an undamped swing) |
 | Piece hangs low or off-centre in its square | Confirm `pivot_frac` is 0.50 and that the **pivot** (hub puck, or magnet) is on the square's centre. A piece pivoted on its own centre cannot drift — if it looks like it did, one of those two is wrong |
 | **The knight** hangs permanently rotated | Its balance is tuned by a `KDX` constant in its **style** file — [`styles/familiar.scad`](../hardware/styles/familiar.scad) or [`styles/monolith.scad`](../hardware/styles/monolith.scad) — not by structure. If anyone edited the head polygon, `KDX` must be re-solved. The piece renders and prints perfectly either way, so nothing else will warn you |
 | Magnet won't hold on the vertical face | Bigger/stronger magnet, thinner felt disc (`"pin"`), confirm the sheet is ferromagnetic steel and not stainless 304. The heaviest piece is the familiar king at 7.49 g, and **this has not been tested** |

@@ -16,18 +16,20 @@
 #
 #   make variant STYLE=familiar PIVOT=pin        -> stl/familiar_pin/
 #   make variant STYLE=monolith PIVOT=magnet     -> stl/monolith_magnet/
-#   make matrix                                  -> all four combinations
+#   make matrix                                  -> all six combinations
 #
 # Each variant directory gets the six pieces plus whatever the pivot
 # architecture actually has printed parts for -- under PIVOT=magnet that is
-# the pivot test coupon, because the hub and the cap do not exist there.
+# the pivot test coupon, because the hub and the cap do not exist there;
+# under PIVOT=bearing it is the same hub + cap pair as "pin" (the bearing
+# itself is bought).
 
 OPENSCAD ?= openscad
 FN       ?= 96
 OUT      ?= stl
 PIECES    = pawn knight bishop rook queen king
 STYLES    = monolith familiar
-PIVOTS    = pin magnet
+PIVOTS    = pin magnet bearing
 
 FLAGS = -D '$$fn=$(FN)'
 
