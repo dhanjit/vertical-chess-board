@@ -21,8 +21,8 @@ are expected to arrive, so nothing here is "the winner" — they sit side by sid
 so they can be compared.
 
 ```
-piece_style = "familiar";   // "monolith" | "familiar"   — what the pieces LOOK like
-pivot_type  = "pin";        // "pin"      | "magnet"     — how a piece HANGS and TURNS
+piece_style = "familiar";   // "monolith" | "familiar"        — what the pieces LOOK like
+pivot_type  = "pin";        // "pin" | "magnet" | "bearing"   — how a piece HANGS and TURNS
 ```
 
 **Only `pivot_type` changes what you buy.** It decides whether the magnet lives
@@ -54,7 +54,7 @@ If you have no opinion yet, build the defaults: **`familiar` + `pin`**.
 | **Lazy-susan / turntable bearing** (~90 mm OD) | 1 | carries the board, lets it rotate | $8–15 |
 | French cleat (wood/metal) or heavy Z-bracket | 1 | wall mount | $10 |
 | M3 bolts/heat-set inserts assortment | 1 kit | frame ↔ turntable, panel bosses | $10 |
-| **Silicone damping grease** | 1 tube | a dab in each pivot bore, both architectures. Its *viscous* drag stops a piece ringing after a board flip without adding the *static* friction that parks it off-vertical — dry PTFE lube makes the opposite trade and is not recommended here | $8 |
+| **Silicone damping grease** | 1 tube | a dab in each pivot bore under `"pin"` and `"magnet"`. Its *viscous* drag stops a piece ringing after a board flip without adding the *static* friction that parks it off-vertical — dry PTFE lube makes the opposite trade and is not recommended here. Under `"bearing"` keep it **out of the bearing**; the same tube is that architecture's ring-down retrofit, smeared between piece back and hub face if the flip test rings | $8 |
 | Spray paint / epoxy (optional) | — | fill dark squares / finish | $15 |
 
 **Shared subtotal:** ~$85–120 (add ~$15 if you paint or epoxy the squares).
@@ -97,19 +97,36 @@ printed ones.** Buy these *in addition to* block A.
 **"magnet" block subtotal:** ~$13–22
 → **Phase 1 total with `"magnet"`: ~$100–145** + print time.
 
-### The two architectures side by side
+### D. `pivot_type = "bearing"` — 3 printed + 3 bought per piece
 
-| | `"pin"` (default) | `"magnet"` |
-|---|---|---|
-| Components per piece | **5** — 3 printed + 2 bought (+ a felt disc) | **3** — 1 printed + 2 bought |
-| Printed per piece | **3** — piece + hub + cap | **1** — the piece only |
-| Bought per piece | Ø8 × 3 magnet, Ø3 × 16 dowel, felt disc | Ø4 × 5 magnet, Ø9 × 0.8 disc |
-| Where the magnet lives | on the **board** — its mass never enters the pendulum | in the **piece** — at zero lever arm, which is the whole cost |
-| Bore radius `r` | 1.85 mm (Ø3.70 on a Ø3 dowel) | 2.35 mm (Ø4.70 on a Ø4 magnet) |
-| Modelled lean cost | baseline | **+0.4 to +0.6°** across the set |
-| Works with `piece_style` | both | **`familiar` only, in practice** — `monolith` + `magnet` busts the 2.2° working limit on 3 pieces of 6, with a 4th a hundredth under it (see the tables in [`BUILD_GUIDE.md`](BUILD_GUIDE.md) §2) |
-| Assembly | 5 steps per piece, off the board | 4 steps per piece, done **on** the board |
-| Unproven | nothing specific to it | **two things** — see sourcing notes |
+Everything in block **B** unchanged — same hubs, dowels, magnets, felt, caps —
+**plus one ball bearing per piece** pressed into the piece's back face, which
+the piece turns on instead of sliding on the dowel. Parking error becomes ≈0°
+at any friction; what is *not* solved is damping — read the `"bearing"` section
+of [`PIECE_DESIGNS.md`](PIECE_DESIGNS.md) before choosing this, and print one
+pawn + one bearing before buying 40.
+
+| Item | Qty | Notes | ~Cost |
+|------|-----|-------|-------|
+| Everything in block B | — | hub magnets, dowels, felt, printed hubs + caps | $21–30 |
+| **MR63ZZ bearings, Ø3 × Ø6 × 2.5 mm** (shielded) | ~36 | the priciest bought part in any architecture here. **ZZ (metal shields), not 2RS (rubber seals)** — and do **not** degrease them: the factory fill is the only damping this architecture has | $10–25 |
+
+**"bearing" block subtotal:** ~$31–55
+→ **Phase 1 total with `"bearing"`: ~$115–175** + print time.
+
+### The architectures side by side
+
+| | `"pin"` (default) | `"magnet"` | `"bearing"` |
+|---|---|---|---|
+| Components per piece | **5** — 3 printed + 2 bought (+ a felt disc) | **3** — 1 printed + 2 bought | **6** — 3 printed + 3 bought (+ a felt disc) |
+| Printed per piece | **3** — piece + hub + cap | **1** — the piece only | **3** — piece + hub + cap |
+| Bought per piece | Ø8 × 3 magnet, Ø3 × 16 dowel, felt disc | Ø4 × 5 magnet, Ø9 × 0.8 disc | Ø8 × 3 magnet, Ø3 × 16 dowel, MR63ZZ bearing, felt disc |
+| Where the magnet lives | on the **board** — its mass never enters the pendulum | in the **piece** — at zero lever arm, which is the whole cost | on the **board**, exactly as `"pin"` |
+| Bore radius `r` | 1.85 mm (Ø3.70 on a Ø3 dowel) | 2.35 mm (Ø4.70 on a Ø4 magnet) | — (rolling, not sliding; the seat is Ø6.10) |
+| Modelled lean cost | baseline | **+0.4 to +0.6°** across the set | **parking ≈0° at any μ** — but see the next two rows |
+| Works with `piece_style` | both | **`familiar` only, in practice** — `monolith` + `magnet` busts the 2.2° working limit on 3 pieces of 6, with a 4th a hundredth under it (see the tables in [`BUILD_GUIDE.md`](BUILD_GUIDE.md) §2) | both geometrically; its *ringing* risk lands hardest on `familiar`, the style with the least sweep margin |
+| Assembly | 5 steps per piece, off the board | 4 steps per piece, done **on** the board | 6 steps per piece — `"pin"` plus pressing the bearing |
+| Unproven | nothing specific to it | **two things** — see sourcing notes | **ring-down time** — nothing damps the swing; see [`PIECE_DESIGNS.md`](PIECE_DESIGNS.md) |
 
 **Nothing is missing from either list.** There is deliberately **no ballast** on
 them — no lead, no M3 nuts, no steel balls, and no pocket to glue them into.
@@ -254,3 +271,18 @@ weight, not just simpler.
   plastic in the gap, which means the piece's own plastic face slides on the
   sheet's paint. Nothing has tested how that wears, or whether the paint needs a
   clear coat. Add it to what the coupon test tells you.
+
+#### `pivot_type = "bearing"` only
+
+- **MR63ZZ, Ø3 × Ø6 × 2.5 mm:** a standard miniature deep-groove size, sold by
+  RC-hobby and skate-bearing suppliers by the ten. Buy **ZZ (metal shields)**,
+  not **2RS (rubber contact seals)** — a rubber lip is a sliding contact, which
+  puts static friction right back at the pivot this architecture exists to
+  clear. **Do not degrease them:** the light factory fill inside the shields is
+  the *only* damping the pivot has. ABEC grade is irrelevant at these speeds;
+  buy the cheap ones.
+- **Buy one before forty.** Press it into one printed pawn: the seat
+  (`pivot_bearing_seat_fit` in `common.scad`) has to grip the outer race
+  without splitting, and the flip test has to show acceptable **ring-down** —
+  the swing has nothing but the shields' grease to stop it. Both answers come
+  from one pawn, one bearing, and the same hub + cap pair as `"pin"`.

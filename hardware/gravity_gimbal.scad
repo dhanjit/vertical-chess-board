@@ -3,9 +3,11 @@
 // =====================================================================
 //
 // This is the mechanism that makes a piece stay upright no matter how the
-// board is rotated. There are TWO architectures for it and this file builds
-// both; `pivot_type` in common.scad picks one. They differ in WHERE THE
-// MAGNET LIVES, and that single choice decides everything else.
+// board is rotated. There are THREE architectures for it and this file
+// builds all of them; `pivot_type` in common.scad picks one. The first two
+// differ in WHERE THE MAGNET LIVES, and that single choice decides
+// everything else; the third keeps the magnet on the board and changes WHAT
+// THE PIECE TURNS ON.
 //
 // ---------------------------------------------------------------------
 // pivot_type = "pin"  — the magnet is on the BOARD side.
@@ -90,6 +92,53 @@
 //   pivot_test_coupon() below is the cheap part that settles both.
 //
 // ---------------------------------------------------------------------
+// pivot_type = "bearing" — "pin", with the sliding bore replaced by a
+//                          bought ball bearing.
+//   PER PIECE: 3 PRINTED (piece body, hub puck, press cap)
+//            + 3 BOUGHT  (Ø8 x 3 magnet, Ø3 x 16 steel dowel, MR63ZZ bearing)
+//            = 6 components, plus a felt disc.
+// ---------------------------------------------------------------------
+//   Everything board-side is IDENTICAL to "pin" -- same hub puck, same
+//   magnet, same dowel, same press cap, same 1.5 mm axial float. The one
+//   change is in the piece: instead of a Ø3.70 plain bore sliding on the
+//   dowel, an MR63ZZ deep-groove bearing (Ø3 bore x Ø6 OD x 2.5 wide)
+//   presses into a seat in the piece's BACK face, and a LOOSE Ø5 bore runs
+//   through the 3.5 mm of plate in front of it so nothing but the bearing
+//   ever touches the dowel. The bearing's inner ring is a slip fit on the
+//   dowel; rolling resistance is so far below any sliding interface that
+//   rotation goes through the balls.
+//
+//   WHAT IT BUYS: the parking error stops depending on mu. Rolling
+//   friction is of order mu ~ 0.002, so sin(lean) = mu*r/d parks every
+//   piece within a few hundredths of a degree NO MATTER what Phase 0
+//   measures for the greased bore. This is the fallback architecture if
+//   the ten-flip test comes back far above the assumed 0.08.
+//
+//   WHAT IT COSTS, stated plainly:
+//     * ~0.5 g of steel at exactly zero lever arm. Same objection as the
+//       "magnet" architecture's disc: it shrinks d. With mu ~ 0.002 the
+//       parking error stays ~0 anyway, so this costs settle TIME, not
+//       parking angle.
+//     * a bearing to buy per piece -- 32 of them, the priciest bought part
+//       in any architecture here.
+//     * THE REAL ONE: nothing damps the pendulum any more. On the greased
+//       pin, the grease is simultaneously the parking error AND the damper;
+//       take it away and a piece excited by a board flip keeps swinging --
+//       a near-frictionless pendulum rings for a long time, and while it
+//       rings the familiar style's sweep margins (1.25 mm, worst legal
+//       pair) do not hold. UNMEASURED how long: the ZZ shields' factory
+//       grease fill gives some drag, and the Phase-0 flip test measures
+//       ring-down time as its first question for this architecture.
+//       Retrofit dampers if it rings too long, in order of preference:
+//       a smear of damping grease between piece back and hub face (near-
+//       zero normal force there, so it shears viscously -- tune amount on
+//       the real part), or an eddy-current damper (conductive disc on the
+//       piece, off-axis magnets in the hub) -- which does NOT fit in the
+//       Ø11.5 puck; it needs ~Ø15, which only the familiar style's waists
+//       can hide. Neither is modelled; both are recorded so the flip test
+//       knows what it is deciding between.
+//
+// ---------------------------------------------------------------------
 // Print the hub and cap in any material; PETG is a good tough choice.
 //
 // FRICTION IS THE TUNING KNOB, and it cuts both ways. Too much and the piece
@@ -110,10 +159,15 @@ include <common.scad>
 // pieces.scad calls these and never repeats the arithmetic itself.
 // =====================================================================
 
-// The bore the piece turns in. This is `r` (halved) in sin(lean) = mu*r/d.
+// The bore the piece turns in. Under "pin"/"magnet" this is `r` (halved) in
+// sin(lean) = mu*r/d. Under "bearing" it is the OUTER-RACE SEAT — the widest
+// cut at the pivot, which is what the cavity guard in pieces.scad needs; the
+// lean equation loses its meaning there because the balls roll instead of
+// the bore sliding.
 function pivot_bore_dia() =
-      pivot_type == "pin"    ? axle_dia + 2*axle_fit              // 3.70
-    : pivot_type == "magnet" ? pivot_magnet_dia + 2*axle_fit      // 4.70
+      pivot_type == "pin"     ? axle_dia + 2*axle_fit             // 3.70
+    : pivot_type == "magnet"  ? pivot_magnet_dia + 2*axle_fit     // 4.70
+    : pivot_type == "bearing" ? pivot_bearing_od + 2*pivot_bearing_seat_fit   // 6.10
     : assert(false, str("gravity_gimbal.scad: unknown pivot_type \"", pivot_type, "\"")) 0;
 
 // Diameter of the seat that receives the retaining disc ("magnet" only).
@@ -122,19 +176,33 @@ function disc_seat_dia() = retain_disc_dia + 2*disc_seat_slop;
 // Everything subtracted from a piece body at the pivot. Piece coordinates:
 // pivot on the origin, FRONT face at z = 0, BACK face at z = piece_thk.
 module body_pivot_cut() {
+    // The through-bore. Under "bearing" the full-diameter cut is only the
+    // seat (below); what runs through the plate in front of it is a LOOSE
+    // clearance bore, so the plate itself never touches the dowel.
     translate([0, 0, -0.5])
-        cylinder(d = pivot_bore_dia(), h = piece_thk + 1);
+        cylinder(d = pivot_type == "bearing" ? pivot_bearing_clear_dia
+                                             : pivot_bore_dia(),
+                 h = piece_thk + 1);
     if (pivot_type == "magnet")
         // Seat for the steel retaining disc, in the FRONT face. 1.0 deep for
         // a 0.8 disc, so the disc sits 0.2 below flush and never rubs the
         // player's fingers before the piece does.
         translate([0, 0, -0.5])
             cylinder(d = disc_seat_dia(), h = disc_seat_depth + 0.5);
+    if (pivot_type == "bearing")
+        // Seat for the bearing's outer race, opening on the BACK face — the
+        // face-down print orientation leaves it pointing up, so it prints
+        // clean and the bearing presses in after printing.
+        translate([0, 0, piece_thk - pivot_bearing_w])
+            cylinder(d = pivot_bore_dia(), h = pivot_bearing_w + 0.5);
 }
 
 // Solid that the lightening cavity must NOT eat into.
 // Under "pin" the cavity's own bore-wall circle is the whole story, so this
-// is empty. Under "magnet" the disc seat is 1.0 deep and the cavity starts at
+// is empty. Under "bearing" it is empty for the same reason: pivot_bore_dia()
+// reports the seat — the widest cut — so the guard circle in pieces.scad
+// already keeps a full hollow_wall around both the seat and the clearance
+// bore. Under "magnet" the disc seat is 1.0 deep and the cavity starts at
 // hollow_wall = 0.9, so without this the seat would open straight into the
 // cavity above the pivot and the disc would be left bearing on half a floor.
 // It is a local collar, not a thicker front wall: it adds solid only within
@@ -252,7 +320,10 @@ module retain_disc() {
 
 // ---- Render dispatch --------------------------------------------------
 // Under "magnet" the hub and the cap are not part of the design at all, so
-// they are not exported: the file renders the coupon instead.
+// they are not exported: the file renders the coupon instead. Under
+// "bearing" the printed pivot parts are exactly the "pin" ones — the bearing
+// itself is bought — so it renders the same test pair.
 if (pivot_type == "pin") gimbal_testprint();
+else if (pivot_type == "bearing") gimbal_testprint();
 else if (pivot_type == "magnet") pivot_test_coupon();
 else assert(false, str("gravity_gimbal.scad: unknown pivot_type \"", pivot_type, "\""));

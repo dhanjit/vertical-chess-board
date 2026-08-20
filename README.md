@@ -44,7 +44,7 @@ docs/
 hardware/              ← parametric OpenSCAD models (+ Makefile → STLs)
   common.scad          ← ⭐ edit this to resize the whole board; holds the two
                           variant selectors (piece_style, pivot_type)
-  gravity_gimbal.scad  ← the self-righting pivot — BOTH architectures
+  gravity_gimbal.scad  ← the self-righting pivot — ALL the architectures
   pieces.scad          ← the mechanism that turns a silhouette into a piece
   styles/              ← the artwork: one file per piece style
     monolith.scad      ←   an invented design language

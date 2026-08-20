@@ -15,13 +15,13 @@
 .PARAMETER Target
     all         everything below (default)
     pieces      just the six chess pieces
-    gimbal      the pivot: hub + cap under "pin", the test coupon under "magnet"
+    gimbal      the pivot: hub + cap under "pin"/"bearing", the coupon under "magnet"
     board       the 8x8 panel, whole plus the four quarters
     board_test  the small Phase-0 test tile
     sheet       the steel sheet's cutting outline, as DXF for a laser shop
     mech        turntable, wall plate, drive pulley, frame corner
     variant     one named combination into its own folder (needs -Style/-Pivot)
-    matrix      all four combinations, for comparing them side by side
+    matrix      all six combinations, for comparing them side by side
     clean       delete the output folder
 
 .PARAMETER Fn
@@ -43,8 +43,8 @@ param(
     [string] $Target = 'all',
     [int]    $Fn     = 96,
     [string] $Out    = 'stl',
-    [ValidateSet('monolith','familiar')] [string] $Style,
-    [ValidateSet('pin','magnet')]        [string] $Pivot,
+    [ValidateSet('monolith','familiar')]      [string] $Style,
+    [ValidateSet('pin','magnet','bearing')]   [string] $Pivot,
     [string] $OpenScad
 )
 
@@ -53,7 +53,7 @@ Set-Location $PSScriptRoot
 
 $PIECES = @('pawn','knight','bishop','rook','queen','king')
 $STYLES = @('monolith','familiar')
-$PIVOTS = @('pin','magnet')
+$PIVOTS = @('pin','magnet','bearing')
 
 function Find-OpenScad {
     if ($OpenScad) {

@@ -30,18 +30,18 @@ combination builds.
 ```
    AXIS 1 = the rows (the artwork)      AXIS 2 = the columns (how it hangs)
 
-                        "pin"                      "magnet"
-                        magnet on the BOARD        magnet IN the piece
-                        5 parts/piece              3 parts/piece
-                      ┌──────────────────────────┬──────────────────────────┐
-   "familiar"         │  THE DEFAULT TODAY       │  2 fewer parts/piece     │
-   the look most      │  worst lean 1.44° (rook) │  worst lean 2.09° (rook) │
-   people know        │  ✔ inside the 2.2° limit │  ✔ inside the 2.2° limit │
-                      ├──────────────────────────┼──────────────────────────┤
-   "monolith"         │  committed first         │  2 fewer parts/piece     │
-   an invented        │  worst lean 1.81° (rook) │  worst lean 2.89° (rook) │
-   design language    │  ✔ inside the 2.2° limit │  ✘ busts it on 3 of 6    │
-                      └──────────────────────────┴──────────────────────────┘
+                        "pin"                      "magnet"                   "bearing"
+                        magnet on the BOARD        magnet IN the piece        "pin" + ball bearing
+                        5 parts/piece              3 parts/piece              6 parts/piece
+                      ┌──────────────────────────┬──────────────────────────┬──────────────────────────┐
+   "familiar"         │  THE DEFAULT TODAY       │  2 fewer parts/piece     │  parks ≈0° at ANY μ      │
+   the look most      │  worst lean 1.44° (rook) │  worst lean 2.09° (rook) │  ✔ parking · ? ringing   │
+   people know        │  ✔ inside the 2.2° limit │  ✔ inside the 2.2° limit │    (undamped, unmeasured)│
+                      ├──────────────────────────┼──────────────────────────┼──────────────────────────┤
+   "monolith"         │  committed first         │  2 fewer parts/piece     │  parks ≈0° at ANY μ      │
+   an invented        │  worst lean 1.81° (rook) │  worst lean 2.89° (rook) │  ✔ parking · ? ringing   │
+   design language    │  ✔ inside the 2.2° limit │  ✘ busts it on 3 of 6    │    (undamped, unmeasured)│
+                      └──────────────────────────┴──────────────────────────┴──────────────────────────┘
 
     "lean" = how far off vertical a piece parks once friction stops it turning.
     2.2° is the working limit this repo designs to — see the caveat under
@@ -66,8 +66,8 @@ Two lines at the top of
 [`hardware/common.scad`](../hardware/common.scad):
 
 ```scad
-piece_style = "familiar";   // "monolith" | "familiar"   — the artwork
-pivot_type  = "pin";        // "pin"      | "magnet"     — how it hangs
+piece_style = "familiar";   // "monolith" | "familiar"              — the artwork
+pivot_type  = "pin";        // "pin" | "magnet" | "bearing"         — how it hangs
 ```
 
 Change either, re-render, done. Everything downstream follows — the piece
@@ -80,7 +80,7 @@ To build a combination **without editing the file** (useful for comparing):
 cd hardware
 make variant STYLE=familiar PIVOT=pin      # -> stl/familiar_pin/
 make variant STYLE=monolith PIVOT=magnet   # -> stl/monolith_magnet/
-make matrix                                # all four, side by side
+make matrix                                # all six, side by side
 ```
 
 Or one part at a time:
@@ -299,9 +299,11 @@ where the artwork choice is also a mechanical choice.
 
 # Axis 2 — pivot architecture (how the piece hangs)
 
-Both architectures do the same job: hold the piece on a vertical steel face and
-let it rotate freely about an axis pointing out of the wall. They differ in
-**where the magnet lives**, and that single choice decides everything else.
+All three architectures do the same job: hold the piece on a vertical steel
+face and let it rotate freely about an axis pointing out of the wall. The first
+two differ in **where the magnet lives**, and that single choice decides
+everything else; the third keeps the magnet on the board and changes **what the
+piece turns on**.
 
 > **Jargon, plainly.** A **dowel pin** is a plain ground-steel rod, sold by the
 > hundred in any fastener shop. A **press fit** means the hole is cut slightly
@@ -478,23 +480,112 @@ else. Press a magnet in, stick the disc on, put it on a steel sheet, flip it,
 and try to turn it with a fingertip. About 2 g of plastic answers both
 questions.
 
+## `pivot_type = "bearing"` — the pin, with a ball bearing in the piece
+
+```
+   FRONT — faces the room
+     ┌──────────────┐
+     │  press cap   │  Ø6 × 4.7 mm     PRINTED   identical to "pin"
+     └──────┬───────┘
+     ┌──────┴───────┐
+     │  PIECE BODY  │  6.0 mm thick    PRINTED   loose Ø5 bore in front — the
+     │   ┌────────┐ │                            plate itself NEVER touches the
+     │   │BEARING │ │  MR63ZZ          bought    dowel; an MR63ZZ (Ø3 bore ×
+     └───┴────────┴─┘  Ø3 × Ø6 × 2.5             Ø6 OD × 2.5 wide) presses into
+            │                                    the BACK face and the piece
+     ┌──────┴───────┐                            turns on its balls
+     │   hub puck   │  Ø11.5 × 8 mm    PRINTED   identical to "pin"
+     ├──────────────┤
+     │    magnet    │  Ø8 × 3 mm       bought    identical to "pin"
+     └──────────────┘
+   ═══════════ steel sheet, 0.8 mm ═══════════   (felt disc as under "pin")
+   BACK — the wall
+
+   the axle: the same Ø3 × 16 mm dowel, same 1.5 mm axial float. Everything
+   board-side is the "pin" architecture unchanged; only what the piece turns
+   ON is different — rolling balls instead of a greased sliding bore.
+```
+
+**Parts per piece**
+
+| | Printed | Bought |
+|---|---|---|
+| **"bearing"** | hub puck, piece body, press cap — **3** | Ø8 × 3 magnet, Ø3 × 16 dowel, MR63ZZ bearing — **3** (+ felt disc) |
+
+**For a full 32-piece set: 96 printed parts and 96 bought ones**, plus felt.
+The bearings are the priciest bought part in any architecture on this page.
+
+**What it buys**
+
+- **The parking error stops depending on μ.** Rolling resistance is of order
+  μ ≈ 0.002, so `sin(lean) = μ·r/d` parks every piece within a few hundredths
+  of a degree *whatever* Phase 0 measures for the greased bore. This is the
+  fallback architecture if the ten-flip test comes back far above the assumed
+  0.08 — the one card that removes μ from the game instead of fighting it.
+- **Fits the current pieces as drawn.** The seat plus its wall needs only
+  Ø7.9 of silhouette at the pivot; the narrowest waist in either style is
+  Ø12.0. (The old "a bearing boss is wider than the pawn's head" objection
+  dates from the 45 mm-square era and no longer holds.)
+
+**What it costs, stated plainly**
+
+- **Nothing damps the pendulum any more — and that is the real cost.** On the
+  greased pin, the grease is simultaneously the source of the parking error
+  *and* the damper that stops a piece swinging after a board flip. Remove it
+  and a near-frictionless pendulum keeps ringing; while it rings, the familiar
+  style's 1.25 mm worst-pair sweep margin does not hold. **Ring-down time is
+  unmeasured** — the ZZ shields' factory grease fill gives *some* drag — and
+  measuring it is this architecture's first Phase-0 question. Retrofit dampers,
+  in order: a smear of damping grease between piece back and hub face (near-zero
+  normal force there, so it shears viscously; tune the amount on the real part),
+  or an eddy-current damper (conductive disc on the piece, off-axis magnets in
+  the hub) — which does **not** fit the Ø11.5 puck; it needs ~Ø15, which only
+  the familiar waists can hide.
+- **~0.5 g of steel at exactly zero lever arm** — the same objection as the
+  `"magnet"` disc: it shrinks `d`. With μ ≈ 0.002 the parking error stays ≈0
+  anyway, so here it costs settling *time*, not parking *angle*.
+- **A bearing to buy per piece**, and a printed seat whose press fit
+  (`pivot_bearing_seat_fit`) has to be tuned on the Phase-0 print like every
+  other fit in `common.scad`.
+
+**What is unproven**
+
+- **Ring-down time after a flip** — the whole question. Nothing here is modelled;
+  there is deliberately no number to quote.
+- Whether a printed Ø6.10 seat holds the outer race firmly without splitting.
+- Everything `"pin"` leaves unproven (μ aside — this architecture doesn't care):
+  cap fingers, magnet grip on the heaviest piece.
+
+**The cheap test.** The printed pivot parts are exactly the `"pin"` ones, so
+`make gimbal` renders the same hub + cap pair. Buy **one** MR63ZZ, press it
+into one pawn, and flip the sheet: if the piece settles in a second or two on
+the shields' own grease, this architecture graduates from fallback to
+contender; if it swings for half a minute, the damper retrofit list above is
+what Phase 0 hands back.
+
 ---
 
 ## Where the two axes interact
 
-They are independent **in the code** — you can build any of the four. They are
+They are independent **in the code** — you can build any of the six. They are
 not independent **in the outcome**:
 
-> **`monolith` + `magnet` is the one combination of four that busts the 2.2°
-> working limit** — on three pieces of six (rook 2.89°, pawn 2.61°, queen
-> 2.27°), with the knight 0.01° under it at 2.19°. Four of the six are at or
-> within a hundredth of the limit; only the bishop and king have real margin.
+> **`monolith` + `magnet` is the one combination that busts the 2.2° working
+> limit** — on three pieces of six (rook 2.89°, pawn 2.61°, queen 2.27°), with
+> the knight 0.01° under it at 2.19°. Four of the six are at or within a
+> hundredth of the limit; only the bishop and king have real margin.
 
 The reason is structural, not incidental. The monolith pieces are smaller, so
 `d` is smaller; the `"magnet"` architecture's penalty is roughly a fixed
 subtraction from `d`; a fixed subtraction hurts a small number more. If a future
 style is *smaller* than monolith, expect the same result, and check it before
 printing rather than after.
+
+The `"bearing"` column interacts the other way round: its parking is ≈0° under
+**both** styles, but its unmeasured cost — ringing after a flip — lands hardest
+on the style with the least sweep margin, which is `familiar` (1.25 mm worst
+legal pair, against monolith's 11.67 mm). If the flip test shows long ring-down,
+`monolith` + `bearing` is the pairing that shrugs it off.
 
 ---
 
@@ -515,6 +606,10 @@ printing rather than after.
 - **Both knights' balance is tuned via a constant, not structural.**
 - **`"magnet"` has two unproven claims** (disc retention, face friction), and
   its lean figures are optimistic because they model bore friction only.
+- **`"bearing"`'s ≈0° parking is an order-of-magnitude estimate** (rolling
+  friction ~0.002 in the same equation), not a mesh measurement like the other
+  columns — and its ring-down time after a flip is not modelled at all. No
+  number for it appears in the tables on purpose.
 - **Unchecked in every combination:** print orientation, overhangs, and whether
   the Ø8 hub magnet holds the heaviest piece.
 - **Internal consistency was checked.** All 24 lean figures reproduce from
@@ -528,8 +623,8 @@ printing rather than after.
 ## Adding a new approach
 
 The whole point of this structure is that the next idea is a new file and one
-enum value — there are two styles and two pivot architectures today, and nothing
-in the code caps either number.
+enum value — there are two styles and three pivot architectures today, and
+nothing in the code caps either number.
 
 ### A new piece style
 
@@ -616,6 +711,7 @@ would move it from modelling to measurement:
 | **One pawn + one hub** (`pivot_type = "pin"`) — stick to any steel, hold vertical, flip ten times, note the worst lean | ~1 evening | **μ**, which scales every number on this page. This is Phase 0 and it comes first. |
 | **The pivot coupon** (`pivot_type = "magnet"`, `make gimbal`) — magnet in, disc on, flip, then try to turn it | ~2 g of plastic | Both of the `"magnet"` unknowns: does the disc stay on, and does the piece still turn once its back face is clamped to the sheet. |
 | **One king in each style**, held at arm's length across a room | 2 prints | The readability question, which is the *only* part of the axis-1 choice that numbers cannot answer. |
+| **One MR63ZZ in one pawn** (`pivot_type = "bearing"`) — press it in, flip the sheet, time how long the piece swings | 1 pawn + 1 bearing | `"bearing"`'s only open question: whether it needs a damper. Settling in seconds graduates it from fallback to contender; ringing for half a minute prices in the damper retrofit. |
 
 Record what comes back in [`GOALS.md`](GOALS.md), including the measured μ.
 
@@ -628,6 +724,6 @@ Record what comes back in [`GOALS.md`](GOALS.md), including the measured μ.
 - [`DESIGN.md`](DESIGN.md) — how the two board mechanics work, the physics in
   context, and the sensing/rotation design around the pieces.
 - [`BUILD_GUIDE.md`](BUILD_GUIDE.md) — Phase 0, the test that settles μ.
-- [`GOALS.md`](GOALS.md) — the roadmap and the decision log (D1–D11).
+- [`GOALS.md`](GOALS.md) — the roadmap and the decision log (D1–D12).
 - [`../hardware/common.scad`](../hardware/common.scad) — the two selector lines
   and every dimension either axis depends on.
