@@ -40,8 +40,10 @@ use <gravity_gimbal.scad>
 //     <style>_silhouette2d(t)   <style>_pheight(t)   <style>_drains(t)
 // There are TWO styles today. ADDING A THIRD IS: drop the file in styles/,
 // then add its four lines to the block below (one `use`, one branch in each
-// dispatcher) and its name to the piece_style comment in common.scad. Nothing
-// else in the project changes — no mechanism here knows a style by name.
+// dispatcher) and its name to the piece_style comment in common.scad. No
+// MECHANISM changes — nothing here knows a style by name. What does have to
+// learn it is the two build scripts' matrix lists (STYLES in ../Makefile,
+// $STYLES in ../build.ps1); miss those and only `matrix` is wrong, silently.
 //
 // Why the names are prefixed rather than literally identical across styles:
 // OpenSCAD has no namespaces and no dynamic `include`, so every style file
@@ -69,7 +71,17 @@ function style_drains(t) =
 
 PART = "all";   // overridden with -D on the command line
 
-// Real printed height of a piece. Public: other files and the docs use it.
+// THE PIECE TYPES. This is the list, and it is what an unknown PART is rejected
+// against: without it monolith's trailing `else` quietly draws a KING for any
+// name at all (exit 0, a plausible-looking STL of the wrong piece) and familiar
+// draws nothing at all. The style axis and the pivot axis both have loud
+// asserts; this is PART's.
+PIECE_TYPES = ["pawn", "knight", "bishop", "rook", "queen", "king"];
+function is_piece_type(t) = len([for (p = PIECE_TYPES) if (p == t) 1]) > 0;
+
+// Real printed height of a piece. Kept as a named alias because it is the
+// mechanism's word for the thing, and every use of it below reads better for
+// it; the style dispatcher underneath is an implementation detail.
 function piece_height(t) = style_pheight(t);
 
 // ---- The lightening cavity --------------------------------------------
@@ -90,16 +102,31 @@ module hollow_cavity(t, H, py) {
                         // keep only what is ABOVE the pivot
                         translate([-2*H, py]) square([4*H, 1.5*H]);
                     }
-                    // never break into the pivot bore: leave a full wall round it
-                    translate([0, py]) circle(d = pivot_bore_dia() + 2*hollow_wall);
+                    // never break into the pivot bore: leave a full wall round
+                    // it. The diameter is gravity_gimbal.scad's to work out --
+                    // it is the one that knows which cut is widest under which
+                    // architecture.
+                    translate([0, py]) circle(d = pivot_cavity_guard_dia());
                 }
         pivot_cavity_keepout();
     }
 }
 
 module piece(t) {
+    assert(is_piece_type(t),
+           str("pieces.scad: unknown PART \"", t, "\" -- expected one of ",
+               PIECE_TYPES, ", or \"all\" for a tray."));
     H  = piece_height(t);
     py = pivot_frac * H;   // pivot height from base == the piece's own centre
+    // The mechanism's one size rule (common.scad): the axle IS the square's
+    // centre, so a piece that hangs further than half a square below it fouls
+    // the rank beneath. Asserted here rather than promised in a comment,
+    // because it is the invariant that bounds how large any style may draw --
+    // and a style is free to change its own heights without reading this file.
+    assert(py <= square_size / 2,
+           str("pieces.scad: \"", t, "\" hangs ", py, " mm below the pivot, past ",
+               "the square's half-width of ", square_size / 2, " mm. Either the ",
+               "style's height for it (", H, " mm) or pivot_frac has to come down."));
     difference() {
         // Body, translated so the pivot point sits at the origin.
         translate([0, -py, 0])
@@ -121,10 +148,9 @@ module piece(t) {
 
 // A print tray of all six pieces (one of each) for a quick full set proof.
 module tray() {
-    types = ["pawn", "knight", "bishop", "rook", "queen", "king"];
-    for (i = [0 : len(types)-1])
+    for (i = [0 : len(PIECE_TYPES)-1])
         translate([i * (square_size*0.9), 0, 0])
-            piece(types[i]);
+            piece(PIECE_TYPES[i]);
 }
 
 // ---- Render dispatch --------------------------------------------------

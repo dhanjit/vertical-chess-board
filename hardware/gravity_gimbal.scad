@@ -173,6 +173,12 @@ function pivot_bore_dia() =
 // Diameter of the seat that receives the retaining disc ("magnet" only).
 function disc_seat_dia() = retain_disc_dia + 2*disc_seat_slop;
 
+// The circle the lightening cavity must leave standing around the pivot, so
+// the bore keeps a full wall whichever architecture is selected. pieces.scad
+// subtracts this from its cavity outline; the arithmetic lives HERE, with the
+// rest of the pivot keep-out, rather than half here and half inline there.
+function pivot_cavity_guard_dia() = pivot_bore_dia() + 2*hollow_wall;
+
 // Everything subtracted from a piece body at the pivot. Piece coordinates:
 // pivot on the origin, FRONT face at z = 0, BACK face at z = piece_thk.
 module body_pivot_cut() {
@@ -197,12 +203,12 @@ module body_pivot_cut() {
             cylinder(d = pivot_bore_dia(), h = pivot_bearing_w + 0.5);
 }
 
-// Solid that the lightening cavity must NOT eat into.
-// Under "pin" the cavity's own bore-wall circle is the whole story, so this
-// is empty. Under "bearing" it is empty for the same reason: pivot_bore_dia()
-// reports the seat — the widest cut — so the guard circle in pieces.scad
-// already keeps a full hollow_wall around both the seat and the clearance
-// bore. Under "magnet" the disc seat is 1.0 deep and the cavity starts at
+// Solid that the lightening cavity must NOT eat into, BEYOND the guard circle
+// above. Under "pin" that circle is the whole story, so this is empty. Under
+// "bearing" it is empty for the same reason: pivot_bore_dia() reports the
+// seat — the widest cut — so pivot_cavity_guard_dia() already keeps a full
+// hollow_wall around both the seat and the clearance bore.
+// Under "magnet" the disc seat is 1.0 deep and the cavity starts at
 // hollow_wall = 0.9, so without this the seat would open straight into the
 // cavity above the pivot and the disc would be left bearing on half a floor.
 // It is a local collar, not a thicker front wall: it adds solid only within
@@ -245,13 +251,8 @@ module hub_puck() {
     }
 }
 
-// The dowel itself is BOUGHT, not printed (stock Ø3 x 16 mm). Drawn here only
-// so the assembly preview has something to show; it is not exported.
-module axle_dowel() {
-    color("Silver")
-        translate([0, 0, hub_thk - axle_embed])
-            cylinder(d = axle_dia, h = axle_embed + axle_len);
-}
+// (There is no module for the dowel itself: it is BOUGHT, stock Ø3 x 16 mm,
+// and nothing in this repo renders an assembly preview to draw it into.)
 
 // ---- Press cap: retains the body on the dowel but lets it spin --------
 // A steel dowel has no lip to snap behind, so the cap grips the plain shaft
@@ -261,8 +262,13 @@ module axle_dowel() {
 // It only has to resist knocks — on a vertical board gravity pulls the piece
 // DOWN the silhouette, not OFF the axle.
 module press_cap() {
-    grip = 3.5;    // length of the finger (grip) zone. 3.5 + the 6 mm piece
-                   //   = 9.5 against axle_len 11 -> the 1.5 mm axial float.
+    // DERIVED, not chosen: axial_float is the design intent (common.scad) and
+    // the grip zone is simply what is left of the proud dowel once the piece
+    // and that float are taken out -- 11 - 6 - 1.5 = 3.5. Written this way
+    // because the three numbers CO-DEFINE the float: tuning this one on its own
+    // would silently spend the float, and the first symptom is a piece clamped
+    // between cap and hub that will not turn.
+    grip = axle_len - piece_thk - axial_float;
     back = 1.2;    // solid closed back over the dowel tip
     slit = 1.2;    // slit width. Ø6 cap over a Ø2.85 bore leaves a 1.58 mm
                    //   finger wall, so a 1.2 slit still prints as three
@@ -299,24 +305,23 @@ module gimbal_testprint() {
 // under a fingertip because its back face is clamped to the sheet, this
 // architecture is answered for the cost of one 2 g print.
 // =====================================================================
+// Rim left outside the disc seat's own wall, purely so the coupon can be held
+// between finger and thumb while it is turned against the sheet. It is the one
+// number here that answers to a hand rather than to the mechanism, which is why
+// it is a literal -- but the rest of the disc is not: the coupon has to carry
+// the seat AND the seat's wall at full size or it is not testing the geometry
+// it exists to test.
+coupon_rim = 2.3;      // -> Ø9.6 seat + 2x0.9 wall + 2x2.3 = Ø16, as the docs quote
+
 module pivot_test_coupon() {
     difference() {
-        cylinder(d = 16, h = piece_thk);
+        cylinder(d = disc_seat_dia() + 2*hollow_wall + 2*coupon_rim, h = piece_thk);
         body_pivot_cut();
     }
 }
 
-// The two bought parts, drawn for the assembly preview only. NOT exported.
-module pivot_magnet() {
-    color("DimGray")
-        translate([0, 0, disc_seat_depth])
-            cylinder(d = pivot_magnet_dia, h = pivot_magnet_thk);
-}
-module retain_disc() {
-    color("Silver")
-        translate([0, 0, disc_seat_depth - retain_disc_thk])
-            cylinder(d = retain_disc_dia, h = retain_disc_thk);
-}
+// (The magnet and the retaining disc are BOUGHT and there is no assembly
+// preview in this repo, so neither has a module here.)
 
 // ---- Render dispatch --------------------------------------------------
 // Under "magnet" the hub and the cap are not part of the design at all, so

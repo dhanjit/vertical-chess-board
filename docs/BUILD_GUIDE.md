@@ -56,11 +56,17 @@ phases. Read [`DESIGN.md`](DESIGN.md) first for the "why."
 3. The board size is **locked at `square_size = 55`** — this resolves decision
    **D1**. It is not a taste call: under `pivot_type = "pin"` the hub puck behind
    each piece is a fixed Ø11.5 disc, and the piece has to *hide* it or every
-   piece wears a visible grey collar. Only the artwork scales with the square,
-   not the mechanism, so a bigger square grows the piece until its natural waist
-   swallows the puck. 55 mm is the smallest square where the *narrowest* style
-   (`monolith`, waist Ø12.0) manages it — with 0.5 mm to spare. The panel ends up
-   ~490 mm square.
+   piece wears a visible grey collar. The mechanism is fixed millimetres and the
+   artwork is not, so the pieces were drawn bigger — and a bigger silhouette
+   needs a bigger square to sit in. 55 mm is the smallest square where the
+   *narrowest* style (`monolith`, waist Ø12.0) manages it — with 0.5 mm to
+   spare. The panel ends up ~490 mm square.
+   **Changing `square_size` does not resize the pieces.** No style reads it; the
+   silhouettes are hand-sized against it. If you change it you must re-scale the
+   artwork yourself (`MONO_SCALE` in `styles/monolith.scad`, or `familiar`'s
+   height literals) and re-check that the waist still covers the puck. The
+   render will only stop you if a piece ends up too tall to swing inside its own
+   square.
 
    What you *should* still check against what you actually bought:
    - `magnet_dia` / `magnet_thk` — the hub magnets (`"pin"`, default Ø8 × 3), or
@@ -321,45 +327,27 @@ Under `"magnet"`, add: the disc stayed on, and the coupon still spins freely.
 `d` is the pendulum lever: how far the centre of mass sits below the pivot. It is
 the only geometry term in `sin(lean) = mu · r / d`.
 
-**`piece_style = "familiar"`** (the default)
+**The per-piece table lives in [`PIECE_DESIGNS.md`](PIECE_DESIGNS.md)** — one
+copy, because the five it used to be pasted into had begun to disagree. Go there
+before quoting a number for a particular piece. What you need before you start a
+print is the headline:
 
-| Piece | Height | Width | Lever `d` | Modelled lean | Mass |
-|-------|-------:|------:|----------:|--------------:|-----:|
-| Pawn   | 40.00 mm | 30.00 mm | 7.34 mm | 1.16° | 3.79 g |
-| Rook   | 43.00 mm | 38.00 mm | 5.89 mm | **1.44°** | 6.11 g |
-| Knight | 44.50 mm | 40.47 mm | 7.51 mm | 1.13° | 6.49 g |
-| Bishop | 47.50 mm | 36.00 mm | 9.02 mm | 0.94° | 5.64 g |
-| Queen  | 50.00 mm | 41.80 mm | 7.55 mm | 1.12° | 7.17 g |
-| King   | 52.00 mm | 42.00 mm | 8.59 mm | 0.99° | 7.49 g |
+| | tallest → shortest | worst lean, `"pin"` | worst lean, `"magnet"` | mass per side |
+|---|---|---:|---:|---:|
+| **`familiar`** (default) | 52.0 → 40.0 mm | **1.44°** (rook) | **2.09°** (rook) | ~81 g |
+| **`monolith`** | 51.3 → 31.8 mm | **1.81°** (rook) | **2.89°** (rook) | ~50 g |
 
-**`piece_style = "monolith"`**
-
-| Piece | Height | Width | Lever `d` | Modelled lean | Mass |
-|-------|-------:|------:|----------:|--------------:|-----:|
-| Pawn   | 31.77 mm | 20.74 mm | 5.71 mm | 1.49° | 2.24 g |
-| Rook   | 36.66 mm | 24.61 mm | 4.68 mm | **1.81°** | 3.43 g |
-| Knight | 39.10 mm | 26.44 mm | 6.05 mm | 1.40° | 3.75 g |
-| Bishop | 42.77 mm | 29.98 mm | 7.29 mm | 1.16° | 4.52 g |
-| Queen  | 46.44 mm | 25.34 mm | 5.72 mm | 1.48° | 4.23 g |
-| King   | 51.32 mm | 25.59 mm | 8.68 mm | 0.98° | 4.24 g |
-
-All twelve: single shell (every cavity drained), pivot exactly centred, balanced
-left-to-right, standing inside the square.
+All twelve pieces: single shell (every cavity drained), pivot exactly centred,
+balanced left-to-right, standing inside the square. Mass assumes resin and is
+there for the magnet-grip check only — it has no effect on lean at all.
 
 ### The same sets under `pivot_type = "magnet"`
 
 Heights, widths and masses of the *printed piece* are unchanged — only the pivot
 hardware differs — but every lean grows, because `r` goes from 1.85 to 2.35 mm
-*and* the magnet plus disc now ride with the piece at zero lever arm:
-
-| Piece | familiar: pin → magnet | monolith: pin → magnet |
-|-------|---:|---:|
-| Pawn   | 1.16° → 1.80° | 1.49° → **2.61°** |
-| Rook   | 1.44° → **2.09°** | 1.81° → **2.89°** |
-| Knight | 1.13° → 1.62° | 1.40° → 2.19° |
-| Bishop | 0.94° → 1.37° | 1.16° → 1.75° |
-| Queen  | 1.12° → 1.60° | 1.48° → **2.27°** |
-| King   | 0.99° → 1.40° | 0.98° → 1.49° |
+*and* the magnet plus disc now ride with the piece at zero lever arm. The
+per-piece pin → magnet figures are in
+[`PIECE_DESIGNS.md`](PIECE_DESIGNS.md); the outcome is what matters here.
 
 **`monolith` + `magnet` is the one combination of the six that busts the 2.2°
 working limit** — on three pieces of six (rook 2.89°, pawn 2.61°, queen 2.27°),
@@ -604,7 +592,7 @@ looks off-centre means the *pivot* is off-centre, not the piece.
 |---|---|
 | Piece won't spin at all / stalls mid-swing | The piece is clamped between cap and hub. There should be **1.5 mm of axial float**: 11 mm of dowel proud, 6 mm of piece, 3.5 mm of cap grip. Check the dowel bottomed out on the magnet (11 mm proud, not 9), and back the cap off |
 | Piece falls off the dowel | The cap grips by interference; tighten `cap_grip_fit` (more negative) or reprint the cap. On a *vertical* board gravity pulls the piece down the silhouette, not off the axle — a piece falling off means the cap is genuinely loose |
-| A grey disc shows behind a piece | The Ø11.5 hub puck is peeking out from behind the silhouette. It is meant to be hidden by the piece's own waist. `familiar` clears it easily (its narrowest waist is the rook's 20 mm tower); `monolith` clears it by only 0.5 mm, so check `square_size` is 55 and that `MONO_SCALE` in [`styles/monolith.scad`](../hardware/styles/monolith.scad) is 1.222 — reducing either uncovers the puck |
+| A grey disc shows behind a piece | The Ø11.5 hub puck is peeking out from behind the silhouette. It is meant to be hidden by the piece's own waist. `familiar` clears it easily (the narrowest thing it puts *at the pivot* is the pawn's Ø19.2 body ball; its narrowest waist anywhere is the rook's 20 mm tower); `monolith` clears it by only 0.5 mm, so check that `MONO_SCALE` in [`styles/monolith.scad`](../hardware/styles/monolith.scad) is still **1.222** — that is the number that sizes the artwork, and reducing it uncovers the puck. `square_size` does **not** scale the silhouette, so changing it back to 55 will not on its own put the cover back |
 | Piece drags/scratches when sliding | Thicker felt disc on the hub; clear-coat the sheet's paint |
 
 ### `pivot_type = "magnet"` only

@@ -180,7 +180,8 @@ exist.
 
 ### Adding a style
 
-**One new file plus one enum entry. Nothing else in the project changes.**
+**One new file plus one enum entry — and two build-script lists that have to
+learn the name.** No *mechanism* changes.
 
 1. Drop a file in `styles/`, e.g. `artdeco.scad`, exposing exactly **three
    public symbols** — the whole contract:
@@ -198,12 +199,26 @@ exist.
 2. In `pieces.scad`, in the single block marked **`THE ENUM`**, add one `use
    <styles/artdeco.scad>` and one branch to each of the three dispatchers. Add
    the name to the `piece_style` comment in `common.scad` while you are there.
+3. Add the name to `STYLES` in [`Makefile`](Makefile) **and** to `$STYLES` in
+   [`build.ps1`](build.ps1) — the two per-platform mirrors of the same list.
+   Everything works without this *except* `matrix`, which will silently render
+   one combination short on that platform. Neither script validates the name
+   against its list, so `variant`/`-Style` accepts the new style either way; the
+   real gate is the assert in `pieces.scad`.
 
-Two constraints the mechanism imposes on any new artwork, and they are the only
-two: the piece hangs `pivot_frac × H` below the axle, so **`H ≤ 55 mm`** (the
-square size) with a little to spare for the swing; and under
-`pivot_type = "magnet"` the silhouette must be at least **Ø11.4 wide at the
-pivot** to floor the retaining disc's seat.
+Three constraints the mechanism imposes on any new artwork:
+
+- the piece hangs `pivot_frac × H` below the axle, so **`H ≤ 55 mm`** (the
+  square size) with a little to spare for the swing — `pieces.scad` asserts
+  this one per piece, so you find out at render time;
+- under `pivot_type = "magnet"` the silhouette must be at least **Ø11.4 wide at
+  the pivot** to floor the retaining disc's seat;
+- under `pivot_type = "pin"` (and `"bearing"`) the silhouette must **visually
+  cover the Ø11.5 hub puck** where it crosses the pivot, or every piece in the
+  style wears a grey collar. Nothing asserts this — OpenSCAD cannot measure a
+  silhouette's width — so check it by eye on a render. It is the invariant the
+  55 mm square was chosen around in the first place (**D1**); `monolith` clears
+  it by 0.5 mm, `familiar` by a mile.
 
 > **Why the public names are prefixed** rather than identical across styles:
 > OpenSCAD has no namespaces and no dynamic `include`, so `pieces.scad` has to
@@ -212,33 +227,22 @@ pivot** to floor the retaining disc's seat.
 
 ## The set as modelled (55 mm squares)
 
-**Style `"familiar"`** (the default):
+**The per-piece table lives in
+[`../docs/PIECE_DESIGNS.md`](../docs/PIECE_DESIGNS.md)** — one copy, because
+five copies had already started to disagree. The headline, which is what you
+need at the printer:
 
-| Piece | Height | Width | Lever `d` | Lean, `"pin"` | Lean, `"magnet"` | Mass |
-|-------|-------:|------:|----------:|--------------:|-----------------:|-----:|
-| Pawn   | 40.00 | 30.00 | 7.34 | 1.16° | 1.80° | 3.79 g |
-| Rook   | 43.00 | 38.00 | 5.89 | **1.44°** | **2.09°** | 6.11 g |
-| Knight | 44.50 | 40.47 | 7.51 | 1.13° | 1.62° | 6.49 g |
-| Bishop | 47.50 | 36.00 | 9.02 | 0.94° | 1.37° | 5.64 g |
-| Queen  | 50.00 | 41.80 | 7.55 | 1.12° | 1.60° | 7.17 g |
-| King   | 52.00 | 42.00 | 8.59 | 0.99° | 1.40° | 7.49 g |
-
-**Style `"monolith"`:**
-
-| Piece | Height | Width | Lever `d` | Lean, `"pin"` | Lean, `"magnet"` | Mass |
-|-------|-------:|------:|----------:|--------------:|-----------------:|-----:|
-| Pawn   | 31.77 | 20.74 | 5.71 | 1.49° | **2.61°** | 2.24 g |
-| Rook   | 36.66 | 24.61 | 4.68 | **1.81°** | **2.89°** | 3.43 g |
-| Knight | 39.10 | 26.44 | 6.05 | 1.40° | 2.19° | 3.75 g |
-| Bishop | 42.77 | 29.98 | 7.29 | 1.16° | 1.75° | 4.52 g |
-| Queen  | 46.44 | 25.34 | 5.72 | 1.48° | **2.27°** | 4.23 g |
-| King   | 51.32 | 25.59 | 8.68 | 0.98° | 1.49° | 4.24 g |
+| | tallest → shortest | worst lean, `"pin"` | worst lean, `"magnet"` | mass per side |
+|---|---|---:|---:|---:|
+| **`familiar`** (default) | 52.0 → 40.0 mm | **1.44°** (rook) | **2.09°** (rook) | ~81 g |
+| **`monolith`** | 51.3 → 31.8 mm | **1.81°** (rook) | **2.89°** (rook) | ~50 g |
 
 All 24 combinations: single shell (so every cavity drained), pivot exactly
-centred, standing inside their square. `d`, height, width and mass are the
-`"pin"` figures; under `"magnet"` `d` is smaller on every piece, which is what
-the last lean column shows. **Bold = at or past the 2.2° working limit, or the
-worst in its column.**
+centred, standing inside their square. Heights, widths and masses are the same
+under every pivot — only the pivot hardware changes — but under `"magnet"` `d`
+is smaller on every piece, which is what the second lean column shows. Masses
+assume resin and matter only for the magnet-grip check; mass cancels out of the
+lean equation entirely.
 
 **`monolith` + `magnet` is the one combination of the six that busts the 2.2°
 limit** — on three pieces of six (rook 2.89°, pawn 2.61°, queen 2.27°), with the
@@ -320,6 +324,13 @@ See [`../docs/DESIGN.md` §3.1](../docs/DESIGN.md).
   `pivot_type = "pin"` you then drop it over the dowel and push the press cap
   on; under `"magnet"` you push a Ø4 × 5 magnet into its bore from the back
   and drop the Ø9 × 0.8 steel disc onto the magnet through the front.
+- **Pieces print SOLID — 100 % infill. This is not optional.** The cavity above
+  the pivot is modelled into the part and stays hollow whatever you set, so a
+  default ~15 % infill does not lighten the top; it lightens the *solid half
+  below the pivot*, which is the exact mass the piece self-rights with. That
+  shortens the lever `d` and increases the lean directly. Sparse infill is fine
+  — expected, even — for the panel and the frame. (This replaced the retired
+  ballast step; there is no slug to compensate with.)
 - **Print a piece in cheap PETG before printing the set in resin.** That test
   is *valid* here in a way it would not be with a ballast slug: because the
   piece is one material, density cancels out of the settling equation, so the

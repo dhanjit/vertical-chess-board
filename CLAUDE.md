@@ -76,11 +76,21 @@ is the hand-played manual board.
   buildable steps — not UI. If tempted to build a screen app, stop: a digital
   *twin/simulator* is only worth it if explicitly requested.
 - **Parametric discipline.** Add new dimensions to `common.scad`; reference
-  them. If OpenSCAD is on PATH, actually render touched parts (`cd hardware &&
-  make FN=32` for a quick pass) and check the log for `non-manifold`/`WARNING`;
-  otherwise write clean, standard OpenSCAD and verify syntax by careful reading.
-  A clean render still doesn't prove connectivity — count shells in the STL if
-  a change could disconnect geometry (thin silhouettes, added bosses).
+  them. Actually render touched parts and check the log for
+  `non-manifold`/`WARNING`. **Two entry points, and which one you have depends
+  on the machine:**
+  - POSIX, OpenSCAD on PATH — `cd hardware && make FN=32` for a quick pass.
+  - **Windows — `cd hardware; .\build.ps1 -Fn 32`.** Use this one. A stock
+    Windows box has neither `make` (Git Bash does not ship it) nor OpenSCAD on
+    PATH (its installer does not add itself), so `make` is not a fallback, it
+    simply does not run. `build.ps1` finds OpenSCAD itself and takes the same
+    targets: `pieces`, `gimbal`, `board`, `mech`, `variant -Style X -Pivot Y`,
+    `matrix`, `clean`.
+
+  If neither is available, write clean, standard OpenSCAD and verify syntax by
+  careful reading — and say in the report that nothing was rendered. A clean
+  render still doesn't prove connectivity — count shells in the STL if a change
+  could disconnect geometry (thin silhouettes, added bosses).
 - **Engine correctness.** If you touch `chess.js`, re-run the perft check
   (start position: depth 1/2/3 = 20/400/8902) with Node before committing.
 - **Phasing.** Respect the phases in `GOALS.md`: Phase 1 must stay a complete
@@ -106,7 +116,8 @@ is the hand-played manual board.
 ## Quick commands
 
 ```
-cd hardware && make                 # render all STLs (needs OpenSCAD)
+cd hardware && make                 # render all STLs — POSIX, OpenSCAD on PATH
+cd hardware; .\build.ps1            # render all STLs — Windows (finds OpenSCAD itself)
 node -e 'require("./software/engine/chess.js")'   # smoke-load the engine
 ```
 
