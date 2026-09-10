@@ -317,14 +317,26 @@ this section.**
 
 A second consequence sets the board's scale, and it belongs to `pivot_type =
 "pin"`: the puck sits *behind* the piece, so the piece must **hide** it or every
-piece wears a grey collar. The mechanical parts do not scale with the square —
-only the **artwork** does — so enlarging the square grows the silhouette until
-it swallows the puck. At 45 mm squares the narrowest waist covered only Ø9.8 and
-the puck showed. **55 mm is the smallest square at which the narrowest waist in
-the `monolith` style (Ø12.0) covers the Ø11.5 puck with nothing added** — no
-skirt, no collar, no fake boss; 0.5 mm to spare. (`familiar` is far clear of it:
-its narrowest waist is the rook's 20 mm tower.) That resolves decision **D1**,
-and it is why the panel grew from ~410 mm to ~490 mm square.
+piece wears a grey collar. The mechanical parts are fixed millimetres while the
+artwork is free to be drawn at any size, so the way out was to draw the artwork
+bigger — and a bigger silhouette needs a bigger square to sit in. At 45 mm
+squares the narrowest waist covered only Ø9.8 and the puck showed. **55 mm is
+the smallest square at which the narrowest waist in the `monolith` style (Ø12.0)
+covers the Ø11.5 puck with nothing added** — no skirt, no collar, no fake boss;
+0.5 mm to spare. (`familiar` is far clear of it: what it puts at the pivot is
+the pawn's Ø19.2 body ball at the narrowest, and its narrowest waist anywhere is
+the rook's 20 mm tower.) That resolves decision **D1**, and it is why the panel
+grew from ~410 mm to ~490 mm square.
+
+> **`square_size` is not a knob that drives the artwork.** It is easy to read
+> the paragraph above as though enlarging the square enlarges the pieces. It
+> does not: **no style geometry reads `square_size` at all.** `familiar`'s
+> heights are literals and `monolith` scales by its own literal `MONO_SCALE`.
+> The square was the *constraint the artwork was hand-sized against*, once.
+> Change `square_size` and the silhouettes do not move — you have to re-scale
+> each style yourself and re-check the puck cover. The one relation that **is**
+> enforced is the swing fit, `pivot_frac × H ≤ square_size / 2`, which
+> `pieces.scad` asserts per piece.
 
 Under `pivot_type = "magnet"` there is no puck to hide, but the pivot still
 demands silhouette width at the centre: the Ø9.6 disc seat plus its 0.9 mm wall
@@ -392,7 +404,7 @@ rewrite.
 | Modelled lean (`"pin"`) | 0.98 – 1.81° | 0.94 – 1.44° — better on five pieces of six |
 | Survives `pivot_type = "magnet"` | **no** — busts the 2.2° limit on three pieces, with a fourth 0.01° under it | yes, 1.37 – 2.09° |
 
-`"familiar"` is the default because it is both the look asked for **and** the
+`"familiar"` is the default because it is both the conventional look **and** the
 better mechanism: bigger pieces put more area further below the pivot, and that
 area *is* `d`. What it trades away is width and sweep clearance (§3.6).
 
@@ -460,7 +472,7 @@ three square merlons against four round pearls.
 
 #### `"familiar"` — the vocabulary everyone already knows
 
-The look asked for, and the default: **ball-and-collar pawn, crenellated rook,
+The conventional look, and the default: **ball-and-collar pawn, crenellated rook,
 horse knight, cleft-mitre bishop, coronet queen, cross king.** There is no
 design language to learn — the whole argument for the style is that nobody has
 to be taught what any piece is.
@@ -508,31 +520,19 @@ At 55 mm squares. **Every figure below is measured off an exported mesh — see
 render as **one shell** (so every cavity drained), with the pivot exactly on the
 silhouette centre and the piece standing inside its square.
 
-**Style `"familiar"` (the default):**
+**The per-piece figures live in one place: [`PIECE_DESIGNS.md`](PIECE_DESIGNS.md).**
+They were pasted into five documents and had already begun to drift, so this
+page keeps the headline and the conclusions that follow from it:
 
-| Piece | Height | Width | Lever `d` | Lean, `"pin"` | Lean, `"magnet"` | Mass |
-|-------|-------:|------:|----------:|--------------:|-----------------:|-----:|
-| Pawn   | 40.00 | 30.00 | 7.34 mm | 1.16° | 1.80° | 3.79 g |
-| Rook   | 43.00 | 38.00 | 5.89 mm | **1.44°** | **2.09°** | 6.11 g |
-| Knight | 44.50 | 40.47 | 7.51 mm | 1.13° | 1.62° | 6.49 g |
-| Bishop | 47.50 | 36.00 | 9.02 mm | 0.94° | 1.37° | 5.64 g |
-| Queen  | 50.00 | 41.80 | 7.55 mm | 1.12° | 1.60° | 7.17 g |
-| King   | 52.00 | 42.00 | 8.59 mm | 0.99° | 1.40° | 7.49 g |
+| | tallest → shortest | worst lever `d` | worst lean, `"pin"` | worst lean, `"magnet"` | mass per side |
+|---|---|---:|---:|---:|---:|
+| **`familiar`** (default) | 52.0 → 40.0 mm | 5.89 mm (rook) | **1.44°** (rook) | **2.09°** (rook) | ~81 g |
+| **`monolith`** | 51.3 → 31.8 mm | 4.68 mm (rook) | **1.81°** (rook) | **2.89°** (rook) | ~50 g |
 
-**Style `"monolith"`:**
-
-| Piece | Height | Width | Lever `d` | Lean, `"pin"` | Lean, `"magnet"` | Mass |
-|-------|-------:|------:|----------:|--------------:|-----------------:|-----:|
-| Pawn   | 31.77 | 20.74 | 5.71 mm | 1.49° | **2.61°** | 2.24 g |
-| Rook   | 36.66 | 24.61 | 4.68 mm | **1.81°** | **2.89°** | 3.43 g |
-| Knight | 39.10 | 26.44 | 6.05 mm | 1.40° | **2.19°** | 3.75 g |
-| Bishop | 42.77 | 29.98 | 7.29 mm | 1.16° | 1.75° | 4.52 g |
-| Queen  | 46.44 | 25.34 | 5.72 mm | 1.48° | **2.27°** | 4.23 g |
-| King   | 51.32 | 25.59 | 8.68 mm | 0.98° | 1.49° | 4.24 g |
-
-`d` is the pendulum lever under `"pin"`; under `"magnet"` it is smaller on every
-piece, for the reason in §3.1 consequence 2, which is why the last two columns
-differ. **Bold = at or past the 2.2° working limit, or the worst in its column.**
+The rook is the worst lever in both styles, which is §3.5's point restated: it
+is the piece that runs out first. `d` above is the pendulum lever under `"pin"`;
+under `"magnet"` it is smaller on every piece, for the reason in §3.1
+consequence 2, which is why the two lean columns differ at all.
 
 **The one result that is not a free choice:** `monolith` + `magnet` **busts the
 2.2° limit on three pieces of six** (rook 2.89°, pawn 2.61°, queen 2.27°), with
@@ -808,6 +808,7 @@ grounds, not taste):
 | | Decision | Outcome |
 |---|----------|---------|
 | **D1** | Board size | **55 mm squares** — the smallest square whose artwork hides the hub puck (§3.3) |
+| **D2** | Piece format | **flat silhouette**, one 2-D outline extruded to 6 mm — not 3-D relief. Scoped to the *format*; its original "clean minimal silhouettes" clause was revised when D12 made the drawing a selectable variant. Full text and the revision in [`GOALS.md`](GOALS.md) |
 | **D8** | Pivot placement | **the silhouette's centre**, so settling rotates the piece in place (§3.3) |
 | **D9** | Pivot hardware | **a bought Ø3 × 16 mm steel dowel** + silicone damping grease (§3.1) — this decides the hardware *inside* the `"pin"` architecture; `"magnet"` (§3.2) is an alternative kept alongside it under **D12**, not a replacement for it |
 | **D10** | Bottom-heaviness | **shaped into the body**; no ballast anywhere in either set (§3.4) |

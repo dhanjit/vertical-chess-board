@@ -167,8 +167,10 @@ The board turns itself and follows the game.
 
 ## Decisions to lock
 
-These gate the build. D1–D5 are discussed in
-[`DESIGN.md` §8](DESIGN.md#8-open-design-questions); D6 (auto-mover) in
+These gate the build. D1–D5 are summarised in
+[`DESIGN.md` §8](DESIGN.md#8-open-design-questions) — the open ones in its
+"still open" list, the locked ones in its "recently closed" table; D6
+(auto-mover) in
 [`AUTO_MOVER_ANALYSIS.md`](AUTO_MOVER_ANALYSIS.md) (why) and
 [`AUTO_MOVER_DESIGN.md`](AUTO_MOVER_DESIGN.md) (how). D7–D12 came out of the
 hardware models and their reasoning is written into the code comments in
@@ -179,8 +181,8 @@ hardware models and their reasoning is written into the code comments in
 
 | # | Decision | Options | Status |
 |---|----------|---------|--------|
-| D1 | Board size | 45 / 55 / 60 mm squares | ✅ **locked: 55 mm** (`square_size = 55`) — settled on physical grounds, not taste. The hub puck is a fixed Ø11.5 disc sitting *behind* the piece, and the piece has to hide it or every piece wears a visible grey collar. The mechanical parts do not scale with the square — only the **artwork** does — so growing the square grows the silhouette until it outruns the puck. At 45 mm the narrowest piece covered only a Ø9.8 waist and the puck showed. 55 mm is the **smallest** square at which the narrowest waist in the narrowest style (`monolith`, Ø12.0) covers Ø11.5 with nothing added: no skirt, no collar, no fake boss — 0.5 mm to spare. Cost: the panel grows from ~410 mm to **~490 mm square** (8 × 55 + 2 × 25 margin). |
-| D2 | Piece format | flat silhouette / 3-D relief | ✅ **locked: flat silhouette, minimal** — exterior detailing is explicitly not a requirement; keep pieces as clean minimal silhouettes. This locks the *format*, not the drawing: **which** silhouettes get drawn to it is a selectable variant (**D12**), and `"monolith"` is drawn to the rule set in **D11**. |
+| D1 | Board size | 45 / 55 / 60 mm squares | ✅ **locked: 55 mm** (`square_size = 55`) — settled on physical grounds, not taste. The hub puck is a fixed Ø11.5 disc sitting *behind* the piece, and the piece has to hide it or every piece wears a visible grey collar. The mechanical parts are fixed millimetres while the artwork can be drawn at any size, so the way out was to draw the artwork bigger — and a bigger silhouette needs a bigger square to sit in. At 45 mm the narrowest piece covered only a Ø9.8 waist and the puck showed. 55 mm is the **smallest** square at which the narrowest waist in the narrowest style (`monolith`, Ø12.0) covers Ø11.5 with nothing added: no skirt, no collar, no fake boss — 0.5 mm to spare. Cost: the panel grows from ~410 mm to **~490 mm square** (8 × 55 + 2 × 25 margin). ⚠️ **`square_size` does not drive the artwork** — no style geometry reads it, so changing it moves no silhouette; it was the constraint the artwork was hand-sized against, and re-sizing it means re-scaling each style by hand (`MONO_SCALE`, and `familiar`'s height literals) and re-checking the puck cover. The only relation actually enforced is the swing fit in **D8**, asserted per piece in `pieces.scad`. |
+| D2 | Piece format | flat silhouette / 3-D relief | ✅ **locked: flat silhouette** — one 2-D outline extruded to `piece_thk = 6`; no 3-D relief, no turned profile, nothing that has to be printed standing up. ⚠️ **REVISED when D12 landed, and the revision is recorded here rather than read into the original.** As first written, D2 also said *"exterior detailing is explicitly not a requirement; keep pieces as clean minimal silhouettes"* — which locked a **drawing** instruction as well as a format. That half no longer holds and should not be quoted as though it did: the default style `"familiar"` is deliberately ornamented (three crenellations, a coronet of five ball-tipped points, a horse's head with an eye), and it is the default because it measures **better** as a pendulum, not in spite of being busier — a bigger silhouette puts more area further below the pivot, which is the whole of `d`. So **D2 is now scoped to the format only.** *Which* outline is drawn to that format is D12's selectable variant; `"monolith"` is the style that does still obey "clean and minimal", drawn to the rule set in **D11**, and it remains one selector line away. Nothing was lost — but the ornamented default is blessed by this revision, not by a silent re-reading of the locked text. |
 | D3 | Finish | two-tone print / paint / veneer | ⬜ open |
 | D4 | Rotate policy | every move / button / 2-player only | ⬜ open |
 | D5 | Brain location | phone / Pi / ESP32 | ⬜ open |
@@ -190,7 +192,7 @@ hardware models and their reasoning is written into the code comments in
 | D9 | Piece pivot hardware | printed post / **Ø3 steel dowel** / ball bearing | ✅ **locked: a bought Ø3 × 16 mm steel dowel pin + silicone damping grease** (`axle_dia = 3`). *(This decides the hardware **inside** `pivot_type = "pin"`. Whether a piece hangs on that pin at all, or on a magnet in its own bore, is the separate open question in **D12** — `"magnet"` is an alternative kept alongside `"pin"`, not a replacement for it, and it retires none of the reasoning below.)* Friction sets how straight a piece parks: `sin(lean) = μ · bore_radius / lever`. Ground steel roughly halves μ against a printed post, and grease roughly halves it again. **Ø3 is stronger than the Ø4 it replaced, not weaker** — what changed is that the axle is now *bought steel* rather than a *printed post*: a Ø4 printed post carried only **1.29×** margin against a 20 N sideways knock (it snaps at the layer-line root), while a Ø3 steel dowel carries **3.0×**. Shrinking it also cuts `μ · r`, the entire numerator above — Ø4 → Ø3 is **~19 % less lean for free**. It bottoms out on the magnet (`axle_embed = 5`) so there is no thin printed web, and 11 mm stands proud against a 6 mm piece + 3.5 mm cap grip, leaving **1.5 mm of deliberate axial float** so tolerance stacking cannot clamp the piece and stall it. A ball bearing was **rejected as the default**: being nearly frictionless it leaves nothing to damp the swing — pieces would ring after each flip — and grease is the right answer because *viscous* drag damps without adding *static* friction. *(Update 2026-08: the original size objection — a Ø9 boss "wider than the pawn's head" — dated from the 45 mm-square pieces and no longer holds at 55 mm, so the bearing was added as a third selectable architecture, `pivot_type = "bearing"` (MR63ZZ in the piece; same hub, dowel and cap as `"pin"`). It is the documented **fallback if Phase 0 measures μ well above 0.08** — it parks ≈0° at any μ — and the damping objection stands unresolved against it: ring-down time is its first Phase-0 question. This does not re-open the greased-pin default. Full costing in [`PIECE_DESIGNS.md`](PIECE_DESIGNS.md).)* |
 | D10 | Bottom-heaviness | ballast slug in a pocket / **shaped into the body** | ✅ **locked: shaped in** — the piece is solid below the pivot and **hollow above it** (`hollow_wall = 0.9`, `piece_thk = 6`). There is **no weight pocket and no lead** anywhere in the set. The reason is material independence: with a glued slug the lever depends on the *ratio* of slug density to body density, so tuning done in one material does not transfer and a cheap PETG test print would prove nothing about the final resin part. With one material, **density cancels out** of the settling equation entirely and the test print hangs identically to the real thing. It is also one fewer part and no glue step. Two constraints come with it: the cavity must be **modelled, not left to the slicer** (a slicer's "hollow" tool removes material evenly and produces no top-to-bottom gradient at all — exactly the wrong thing), and every cavity needs a `drain_dia = 2` **drain hole through the back face** or resin is trapped. Verify by counting shells in the exported STL: a cavity the drain missed shows up as a second shell. |
 | D11 | Piece design language, style `"monolith"` | free-form per piece / **one shared rule set ("Tapered Monolith")** | ✅ **locked — but scoped to one style.** As recorded this governs `piece_style = "monolith"` and nothing else; it is *not* a rule the whole repo obeys, because the artwork is now a selectable variant (**D12**) and the default is `"familiar"`, which is drawn to a different vocabulary entirely. Within `monolith`: **one rule set, applied to all six.** Every piece is a single straight-sided taper standing on the same foot flare (same `FOOT_H`, same `FLARE`, one 1:4 slope = 14.04° off vertical). The taper runs up, stops, and **one** terminal event sits on top of it; that event is always narrower than the foot, so the foot is the widest point of every piece and the flare is said exactly once. Rank reads twice over — as height (26/30/32/35/38/42 nominal) and as how far the taper ran before the event began. Crowns are counted with a shared vocabulary (one stroke width, one slot, one tip, one pitch) rather than drawn by hand, and the whole set uses one convex corner radius and one concave fillet. **The knight's head is the single deliberate exception** and it is a priced trade, not an oversight — see the honesty note below. |
-| D12 | How competing piece approaches are carried | pick one and delete the rest / **keep them side by side as selectable variants** | ✅ **locked: a variant system on two independent axes** — and, separately, ⬜ **open: which combination is the build target.** The repo does **not** narrow the piece design to one answer. Two selector lines at the top of [`common.scad`](../hardware/common.scad) choose it: `piece_style` (`"monolith"` \| `"familiar"`, the **artwork**, one file each in [`hardware/styles/`](../hardware/styles)) and `pivot_type` (`"pin"` \| `"magnet"` \| `"bearing"`, **how a piece hangs**, all built in [`gravity_gimbal.scad`](../hardware/gravity_gimbal.scad)). The axes are independent — no style file mentions a pivot, no pivot code mentions a style — so all six combinations build, `make matrix` renders them side by side, and a bad value trips a named assertion rather than rendering an empty part. **Adding a further approach is one new file plus one enum entry**, not a rewrite; more are expected. *Why locked:* competing approaches get compared on measured numbers instead of argued about, and the runner-up is not thrown away. *What is still open:* at some point one combination gets printed 32 times. The files default to **`familiar` + `pin`** (the look asked for, and the architecture with no unproven claims in it); **`monolith` + `magnet` is the one combination the modelling rules out** — it busts the 2.2° working limit. The blocking input is the same one everything else waits on: print the Phase-0 pieces and measure μ. Options laid out side by side in [`PIECE_DESIGNS.md`](PIECE_DESIGNS.md). |
+| D12 | How competing piece approaches are carried | pick one and delete the rest / **keep them side by side as selectable variants** | ✅ **locked: a variant system on two independent axes** — and, separately, ⬜ **open: which combination is the build target.** The repo does **not** narrow the piece design to one answer. Two selector lines at the top of [`common.scad`](../hardware/common.scad) choose it: `piece_style` (`"monolith"` \| `"familiar"`, the **artwork**, one file each in [`hardware/styles/`](../hardware/styles)) and `pivot_type` (`"pin"` \| `"magnet"` \| `"bearing"`, **how a piece hangs**, all built in [`gravity_gimbal.scad`](../hardware/gravity_gimbal.scad)). The axes are independent — no style file mentions a pivot, no pivot code mentions a style — so all six combinations build, `make matrix` renders them side by side, and a bad value trips a named assertion rather than rendering an empty part. **Adding a further approach is one new file plus one enum entry**, not a rewrite; more are expected. *Why locked:* competing approaches get compared on measured numbers instead of argued about, and the runner-up is not thrown away. *What is still open:* at some point one combination gets printed 32 times. The files default to **`familiar` + `pin`** (the conventional look, and the architecture with no unproven claims in it); **`monolith` + `magnet` is the one combination the modelling rules out** — it busts the 2.2° working limit. The blocking input is the same one everything else waits on: print the Phase-0 pieces and measure μ. Options laid out side by side in [`PIECE_DESIGNS.md`](PIECE_DESIGNS.md). |
 
 When a decision is locked, record it here and propagate the values into
 `hardware/common.scad` and the affected parts/docs.
@@ -205,35 +207,23 @@ resin; it is listed for the magnet-grip check only and has **no effect on lean**
 `pivot_type = "pin"` figures; under `"magnet"` `d` is smaller on every piece and
 every lean is higher.
 
-**`piece_style = "familiar"`** — the default:
+**The per-piece table lives in one place: [`PIECE_DESIGNS.md`](PIECE_DESIGNS.md).**
+It used to be pasted into five documents, which drifted. What matters for the
+decisions on this page is the headline:
 
-| Piece | Height | Width | Lever `d` | Lean, `"pin"` | Lean, `"magnet"` | Mass (resin) |
-|-------|-------:|------:|----------:|--------------:|-----------------:|-------------:|
-| Pawn   | 40.00 | 30.00 | 7.34 | 1.16° | 1.80° | 3.79 g |
-| Rook   | 43.00 | 38.00 | 5.89 | **1.44°** | **2.09°** | 6.11 g |
-| Knight | 44.50 | 40.47 | 7.51 | 1.13° | 1.62° | 6.49 g |
-| Bishop | 47.50 | 36.00 | 9.02 | 0.94° | 1.37° | 5.64 g |
-| Queen  | 50.00 | 41.80 | 7.55 | 1.12° | 1.60° | 7.17 g |
-| King   | 52.00 | 42.00 | 8.59 | 0.99° | 1.40° | 7.49 g |
-
-**`piece_style = "monolith"`:**
-
-| Piece | Height | Width | Lever `d` | Lean, `"pin"` | Lean, `"magnet"` | Mass (resin) |
-|-------|-------:|------:|----------:|--------------:|-----------------:|-------------:|
-| Pawn   | 31.77 | 20.74 | 5.71 | 1.49° | **2.61°** | 2.24 g |
-| Rook   | 36.66 | 24.61 | 4.68 | **1.81°** | **2.89°** | 3.43 g |
-| Knight | 39.10 | 26.44 | 6.05 | 1.40° | 2.19° | 3.75 g |
-| Bishop | 42.77 | 29.98 | 7.29 | 1.16° | 1.75° | 4.52 g |
-| Queen  | 46.44 | 25.34 | 5.72 | 1.48° | **2.27°** | 4.23 g |
-| King   | 51.32 | 25.59 | 8.68 | 0.98° | 1.49° | 4.24 g |
+| | tallest → shortest | worst lean, `"pin"` | worst lean, `"magnet"` | mass per side |
+|---|---|---:|---:|---:|
+| **`familiar`** (default) | 52.0 → 40.0 mm | **1.44°** (rook) | **2.09°** (rook) | ~81 g |
+| **`monolith`** | 51.3 → 31.8 mm | **1.81°** (rook) | **2.89°** (rook) | ~50 g |
 
 All 24 combinations verified in software: single shell (every cavity drained),
 pivot exactly centred, balanced about x (the `monolith` knight at +0.06°, every
-other piece at 0.00°), and inside the 55 mm square. **Lean
-scales linearly with μ** — the ten-flip test in Phase 0 is what turns those
-columns into fact. **`monolith` + `magnet` is the one combination that busts the
-2.2° working limit**; full side-by-side comparison, including sweep clearance
-during a flip, is in [`PIECE_DESIGNS.md`](PIECE_DESIGNS.md).
+other piece at 0.00°), and inside the 55 mm square. **Lean scales linearly with
+μ** — the ten-flip test in Phase 0 is what turns those numbers into fact.
+**`monolith` + `magnet` is the one combination that busts the 2.2° working
+limit** (three pieces of six). Full side-by-side comparison — every piece, both
+styles, all three pivots, plus sweep clearance during a flip — in
+[`PIECE_DESIGNS.md`](PIECE_DESIGNS.md).
 
 ---
 
