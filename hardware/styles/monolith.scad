@@ -168,6 +168,13 @@ module profile(t, H) {
 }
 
 module raw_profile(t, H) {
+    // The boss is unioned in ONCE, after the branch, because it is the same on
+    // every piece: same diameter, same place, and it meets no cut on any of
+    // them (the bishop's cleft starts at y 26.5 and the rook's merlon bites at
+    // y 25, both clear of it). Six copies of one line was six chances for the
+    // royals' HALF-wide waist to quietly lose its material.
+    translate([0, pivot_frac * H]) circle(d = BOSS);
+
     if (t == "pawn") {
         // Squattest aspect ratio in the set, and the only piece whose outline
         // has ZERO events: the taper runs into a dome of radius HALF that is
@@ -177,7 +184,6 @@ module raw_profile(t, H) {
         tw = r * cos(TH);              // and its half-width
         tapered_body(tw, ty);
         translate([0, H - r]) circle(r = r);
-        translate([0, pivot_frac * H]) circle(d = BOSS);
     } else if (t == "queen") {
         // Second-longest run of the taper, down to the king's own HALF-wide
         // waist. The ONE event: the taper stops and the piece OPENS into a
@@ -200,7 +206,6 @@ module raw_profile(t, H) {
         }
         for (i = [0 : 3])                      // the pearls
             translate([-hw + TIP/2 + i*PITCH, H - PEARL]) circle(r = PEARL);
-        translate([0, pivot_frac * H]) circle(d = BOSS);
     } else if (t == "bishop") {
         // The taper stops wide, and the ONE event is the mitre: a dome of
         // radius 1.5*STROKE with a STROKE-wide cleft driven down through its
@@ -228,7 +233,6 @@ module raw_profile(t, H) {
             union() {
                 tapered_body(B_TW, B_TY);
                 translate([0, cy]) circle(r = r);
-                translate([0, pivot_frac * H]) circle(d = BOSS);
             }
             translate([-HALF, B_SLOT]) square([STROKE, H + 6 - B_SLOT]);
         }
@@ -273,7 +277,6 @@ module raw_profile(t, H) {
             [ 2.2, 32.0], [-0.2, 32.0], [-0.9, 28.2], [-2.8, 30.6],
             [-5.2, 30.4], [-6.6, 27.2], [-10.8, 26.4], [-10.4, 23.2],
             [-6.4, 22.4], [-3.4, 20.0]]);
-        translate([0, pivot_frac * H]) circle(d = BOSS);
     } else if (t == "rook") {
         // The shortest run of the taper -- squattest body in the set.
         //
@@ -310,18 +313,21 @@ module raw_profile(t, H) {
             union() {
                 tapered_body(tw, ty);
                 head_block(hw, ty - 1.0, H);
-                translate([0, pivot_frac * H]) circle(d = BOSS);
             }
             cuts(3, H, 5.0);
         }
-    } else {
+    } else if (t == "king") {
         // KING. Tallest, leanest run of the same taper. The single event is a
         // cross at the apex: horizontal width appearing exactly where the taper
         // has thinned to one stroke. Limb and arm are both one STROKE.
         tapered_body(HALF, 32.0);
         translate([-HALF, 30.0]) square([STROKE, H - 30.0]);      // vertical limb
         translate([-3.3*HALF, 33.6]) square([6.6*HALF, STROKE]);  // cross arms
-        translate([0, pivot_frac * H]) circle(d = BOSS);
+    } else {
+        // The king USED to be the trailing `else`, which meant any unknown name
+        // silently came out as a king: a clean exit, a plausible STL, and the
+        // wrong piece. Name it like the other five and refuse everything else.
+        assert(false, str("monolith.scad: unknown piece type \"", t, "\""));
     }
 }
 
