@@ -62,6 +62,9 @@ is the hand-played manual board.
   **artwork** and knows nothing about bores or magnets. Each style file exposes
   exactly three public symbols — `<style>_silhouette2d/_pheight/_drains` — and
   its own *drawing* constants stay in that file, not in `common.scad`.
+- `hardware/reference/` — plain reference artwork as STEP, outside the SCAD
+  pipeline; nothing reads it. `familiar_v2/` is the CC0 Thingiverse set the
+  `familiar` style was drawn after — **not** a `piece_style`.
 - `software/engine/` — the **brain**: `chess.js` (rules, perft-verified) and
   `ai.js` (negamax opponent). Plain JS, no deps. Shared by firmware + app.
 - `docs/` — `OVERVIEW.md` (one-page what/why/how + plan — the entry point to
