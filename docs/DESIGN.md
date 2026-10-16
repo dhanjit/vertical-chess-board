@@ -795,7 +795,9 @@ is in [`GOALS.md`](GOALS.md).
   `monolith` + `magnet` is the one combination the modelling rules out (§3.6).
   The blocking input is the same one everything else waits on: **print the
   Phase-0 pieces and measure μ.** The options are set out for comparison in
-  [`PIECE_DESIGNS.md`](PIECE_DESIGNS.md).
+  [`PIECE_DESIGNS.md`](PIECE_DESIGNS.md). *Since 2026-10-16 the artwork half is
+  decided:* **familiar v2** is the adopted base design. It still has to become a
+  `piece_style` before it can be built; the pivot half stays open.
 - **Weight budget** — how heavy before the turntable and stepper need upsizing?
   Now bounded rather than open: the panel is fixed at 490 mm square by D1, so
   this is a check to run at Phase 2, not a shape decision. Note that a familiar
