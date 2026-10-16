@@ -209,7 +209,7 @@ magnet set:
 
 **Where it came from.** This is the look asked for: nobody has to be taught what
 any of these is. It was drawn after a downloaded reference set — the flat
-online-style plates now kept as [familiar v2](#familiar-v2--the-reference-set-as-plain-step)
+online-style plates now kept as [familiar v2](#familiar-v2--the-adopted-base-design)
 — in the same visual language, without copying it, because that set's licence
 was unknown at the time. Unlike "monolith" it is drawn **at final size** — there
 is no scale factor, what is written in the file is what gets printed.
@@ -259,11 +259,13 @@ drawn to 40.5 mm wide and measures 40.47 on the mesh.)
 - **Its knight's balance is tuned, not structural** — same fragility as
   monolith's (below), though as drawn it does hang at 0.00°.
 
-## "familiar v2" — the reference set as plain STEP
+## "familiar v2" — the adopted base design
 
 *Lives in [`hardware/reference/familiar_v2/`](../hardware/reference/familiar_v2/).
-**Not** a `piece_style` — the SCAD pipeline does not read it, and nothing on this
-page's switches selects it.*
+**Adopted 2026-10-16 as the base design for the pieces** (the artwork half of
+D12 in [`GOALS.md`](GOALS.md)). **Not yet** a `piece_style` — the SCAD pipeline
+does not read it, and nothing on this page's switches selects it, so the files
+still default to `familiar` until it becomes one.*
 
 The reference set `familiar` was drawn after: [Thingiverse
 thing:7152789](https://www.thingiverse.com/thing:7152789), six flat 2 mm plates,
@@ -286,6 +288,56 @@ it being a style today, measured on 2026-08-10:
 Turning it into a style means fixing those three in a style file exposing the
 usual `_silhouette2d/_pheight/_drains` — the recipe in
 [Adding a new approach](#a-new-piece-style).
+
+### First bearing prototype (queen, 2026-10-15)
+
+A collaborator drew the first v2 piece with a pivot: the queen on an MR63ZZ
+bearing. It is accepted as a prototype direction, not yet as a build part. The
+drawing is not in the repo; the numbers below were measured from it.
+
+**What it is.** The v2 queen outline, unchanged (it matches the STEP to within
+0.04 mm) and unscaled (31.0 × 28.5 mm). A 2 mm plate. A Ø6 bearing seat
+**11.0 mm** above the base, on the centre line (within 0.04 mm of the centre of
+mass, side to side). A Ø8 ring, 2 mm proud on the back, around the seat. The
+plate below 6.6 mm thickened to 4 mm to put weight low. Positions are measured
+off the drawing, good to about ±0.1 mm.
+
+**Why the base was thickened.** The plain plate's centre of mass is at
+**12.8 mm** — 44.8 % of the height, so **above** a bearing at 11.0 mm. As a plain
+plate the piece turns upside down. The diagnosis on the drawing is correct.
+
+**Balance**, computed from the STEP in FreeCAD at uniform density. "Below" is how
+far the centre of mass hangs under the bearing — the pendulum lever `d`:
+
+| Variant | Centre of mass vs bearing |
+|---|---|
+| Plain 2 mm plate, bearing at 11.0 | 1.94 mm **above** — inverts |
+| **As drawn** (base strip 4 mm, ring) | **0.09 mm below** |
+| Base strip 6 mm instead of 4 | 1.37 mm below |
+| Everything below the bearing 6 mm | 1.49 mm below |
+| Bearing moved up to 12.0, everything below it 4 mm | 1.33 mm below |
+| *For scale:* `familiar` queen (50 mm tall, pin) | *7.55 mm below* |
+
+**Open before it is a build part:**
+
+- **The lever is too short as drawn.** At 0.09 mm (0.3 % of the height, against
+  15 % for the `familiar` queen) a 0.02 mm side-to-side error tilts the piece
+  about 12°, and normal print variation is larger than 0.09 mm. Any of the three
+  variants above gives roughly 15× more.
+- **12.0 mm is the ceiling for the bearing on this queen.** Above it, a Ø7.9
+  seat-plus-wall breaks into the notches between the crown points. That also
+  means **D8's centred pivot does not fit as drawn**: at `pivot_frac = 0.50`
+  (14.3 mm) the seat sits 3.2 mm² outside the outline. Either the notch roots get
+  material or D8 gets revisited — not silently.
+- **Seat detail.** The drawing shows a plain Ø6 hole. The repo's `"bearing"`
+  architecture uses Ø6.10 for the press fit and keeps a solid front wall with a
+  Ø5 clearance bore, so the bearing cannot push through and the plate never
+  touches the dowel.
+- **Scale.** Drawn at original size; 55 mm squares need about 1.5–1.75×.
+  Scaling multiplies the lever by the same factor, so it does not fix the first
+  item.
+- **Pivot axis.** `"bearing"` is D9's documented fallback, not the default, and
+  its ring-down is still the first Phase-0 question.
 
 ## Both knights are fragile in the same way
 

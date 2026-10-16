@@ -8,6 +8,12 @@ hollowing — just the shape. These are **reference artwork, not board-ready
 pieces**, and not a selectable `piece_style` (yet). The SCAD pipeline does not
 read them.
 
+**Status (2026-10-16): adopted as the base design for the pieces** (decision
+D12 in [`docs/GOALS.md`](../../../docs/GOALS.md)). Next it becomes a
+`piece_style`; the blockers below still apply. A first bearing prototype (queen)
+and its balance numbers are in
+[`docs/PIECE_DESIGNS.md`](../../../docs/PIECE_DESIGNS.md#first-bearing-prototype-queen-2026-10-15).
+
 ## Where it's from
 
 [Thingiverse thing:7152789](https://www.thingiverse.com/thing:7152789) —

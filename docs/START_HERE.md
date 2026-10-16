@@ -66,6 +66,11 @@ files — you don't have to change anything, and everything on this page assumes
 them. If you get curious later, [`BUILD_GUIDE.md`](BUILD_GUIDE.md) §0 explains
 how to switch, and [`BOM.md`](BOM.md) lists what each option costs to buy.
 
+*Coming change:* the chosen look for the finished set is **familiar v2** — the
+original online-style pieces that `familiar` was drawn after. It can't be
+printed with a pivot yet. Until it can, the defaults above are still what the
+files build.
+
 ---
 
 ## Do this first: a cheap 1-evening test (don't build everything yet!)
