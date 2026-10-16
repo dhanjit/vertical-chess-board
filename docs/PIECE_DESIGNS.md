@@ -208,8 +208,11 @@ magnet set:
 | **King** | Plinth, vase, flared crown with two lobes, and a **cross** rising between them. |
 
 **Where it came from.** This is the look asked for: nobody has to be taught what
-any of these is. Unlike "monolith" it is drawn **at final size** — there is no
-scale factor, what is written in the file is what gets printed.
+any of these is. It was drawn after a downloaded reference set — the flat
+online-style plates now kept as [familiar v2](#familiar-v2--the-reference-set-as-plain-step)
+— in the same visual language, without copying it, because that set's licence
+was unknown at the time. Unlike "monolith" it is drawn **at final size** — there
+is no scale factor, what is written in the file is what gets printed.
 
 Internally it uses two drawing languages on purpose. Five pieces are hulls of
 circles, half-drawn and mirror-unioned, so they are *exactly* symmetric by
@@ -255,6 +258,34 @@ drawn to 40.5 mm wide and measures 40.47 on the mesh.)
   wall. Whether the Ø8 magnet holds that is **unchecked**.
 - **Its knight's balance is tuned, not structural** — same fragility as
   monolith's (below), though as drawn it does hang at 0.00°.
+
+## "familiar v2" — the reference set as plain STEP
+
+*Lives in [`hardware/reference/familiar_v2/`](../hardware/reference/familiar_v2/).
+**Not** a `piece_style` — the SCAD pipeline does not read it, and nothing on this
+page's switches selects it.*
+
+The reference set `familiar` was drawn after: [Thingiverse
+thing:7152789](https://www.thingiverse.com/thing:7152789), six flat 2 mm plates,
+**public domain (CC0 1.0)** — checked on the listing 2026-10-11. That check is what
+changed: on 2026-08-10 the licence was unknown, so `familiar` redrew the look
+rather than ship the meshes. With CC0 confirmed, the originals ship here as
+editable STEP (lines + B-splines, within 0.005 mm of the source outline),
+original size, no pivot, no holes, no hollow.
+
+It is kept because it is the original look `familiar` imitates: smaller (pawn 25.7 mm → king 30.1 mm tall, a 1.17× spread
+against `familiar`'s 1.30×) and with its own drawing of every piece. What stops
+it being a style today, measured on 2026-08-10:
+
+- **Bishop and knight have no material at the pivot** — the centre lands in the
+  bishop's cleft and the knight's neck notch.
+- **Not exactly mirror-symmetric** — off by a fraction of a millimetre, enough to
+  hang crooked.
+- **Too small for 55 mm squares as drawn** — it needs ~1.5–1.75×.
+
+Turning it into a style means fixing those three in a style file exposing the
+usual `_silhouette2d/_pheight/_drains` — the recipe in
+[Adding a new approach](#a-new-piece-style).
 
 ## Both knights are fragile in the same way
 
