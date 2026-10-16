@@ -62,6 +62,10 @@ is the hand-played manual board.
   **artwork** and knows nothing about bores or magnets. Each style file exposes
   exactly three public symbols — `<style>_silhouette2d/_pheight/_drains` — and
   its own *drawing* constants stay in that file, not in `common.scad`.
+- `hardware/reference/` — plain reference artwork as STEP, outside the SCAD
+  pipeline; nothing reads it. `familiar_v2/` is the CC0 Thingiverse set the
+  `familiar` style was drawn after — **not** a `piece_style` yet, but since
+  2026-10-16 the **adopted base design** for the pieces (D12).
 - `software/engine/` — the **brain**: `chess.js` (rules, perft-verified) and
   `ai.js` (negamax opponent). Plain JS, no deps. Shared by firmware + app.
 - `docs/` — `OVERVIEW.md` (one-page what/why/how + plan — the entry point to
@@ -100,7 +104,8 @@ is the hand-played manual board.
   D3–D6 are still open; D1, D2, D7–D11 and D12 are locked on physical grounds —
   do not silently re-open them. **D12 is locked on the *system* (variants are
   kept side by side) and still open on the *choice* (which combination gets
-  printed 32 times); D11 is scoped to `"monolith"` only, not repo-wide.**
+  printed 32 times) — its artwork half is now decided (familiar v2), its pivot
+  half is not; D11 is scoped to `"monolith"` only, not repo-wide.**
   If a task depends on one, either use the documented default or ask;
   then record the choice in `GOALS.md`.
 

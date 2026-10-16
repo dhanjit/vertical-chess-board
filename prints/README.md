@@ -20,7 +20,7 @@ which combination gets printed 32 times is still open.
 
 | Folder | Artwork | Pivot | Printed parts per piece | Worst modelled lean (rook) | Verdict |
 |---|---|---|---:|---:|---|
-| [`familiar_pin/`](familiar_pin/) | recognizable chess vocabulary | magnet on the board, piece turns on a steel pin | 3 | 1.44° | **the default** — the look asked for, no unproven claims |
+| [`familiar_pin/`](familiar_pin/) | recognizable chess vocabulary | magnet on the board, piece turns on a steel pin | 3 | 1.44° | **the default** — the conventional look, no unproven claims |
 | [`familiar_magnet/`](familiar_magnet/) | same artwork | magnet in the piece, no printed pivot parts | 1 | 2.09° | viable, but two claims unproven — print the coupon first |
 | [`monolith_pin/`](monolith_pin/) | austere invented language | pin | 3 | 1.81° | viable — smaller, quieter set, less margin than familiar |
 | [`monolith_magnet/`](monolith_magnet/) | monolith | magnet | 1 | 2.89° | **ruled out by the modelling** — busts the 2.2° limit on 3 of 6 pieces; kept for honest comparison |

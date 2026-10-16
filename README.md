@@ -49,6 +49,10 @@ hardware/              ← parametric OpenSCAD models (+ Makefile → STLs)
   styles/              ← the artwork: one file per piece style
     monolith.scad      ←   an invented design language
     familiar.scad      ←   the vocabulary everyone knows (default)
+  reference/
+    familiar_v2/       ← plain STEP of the online-style reference set (CC0) —
+                          the adopted base design; artwork only, no pivot,
+                          not built by the SCAD pipeline yet
   board_panel.scad     ← 8×8 surface: steel-sheet face + hall-sensor bores
   frame.scad           ← bezel
   rotation_hub.scad    ← wall plate + turntable + drive
