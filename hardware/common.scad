@@ -27,8 +27,9 @@
 //
 // AXIS 1 — PIECE STYLE: the artwork, i.e. what the silhouette looks like.
 //   One file per style in styles/, each exposing the same three-symbol
-//   contract. Adding a style is one new file plus one entry in "THE ENUM"
-//   block in pieces.scad.
+//   contract. Adding a style is one new file, one entry in the "THE ENUM"
+//   block in pieces.scad, its name in the list below -- and the same name in
+//   STYLES (Makefile) and $STYLES (build.ps1), which is what "matrix" reads.
 //
 //     "monolith"  One 1:4 taper, one stroke width, one convex and one
 //                 concave radius, a shared foot; rank reads as height plus
@@ -49,60 +50,41 @@
 //        bishop   47.5 x 36.0  0.94    42.8 x 30.0  1.16
 //        queen    50.0 x 41.8  1.12    46.4 x 25.3  1.48
 //        king     52.0 x 42.0  0.99    51.3 x 25.6  0.98
-//   "familiar" is the default: it is both the look asked for AND the better
+//   "familiar" is the default: it is both the conventional look AND the better
 //   mechanism on five pieces of six — bigger pieces put more area further
 //   below the pivot, which is the whole of `d`. The trade it makes is width:
 //   its knight is 40.5 wide against the monolith's 26.4, and its pieces fill
 //   the square instead of sitting in it.
 piece_style      = "familiar";   // "monolith" | "familiar"
 
-// AXIS 2 — PIVOT ARCHITECTURE: how the piece hangs and turns. Built in
-//   gravity_gimbal.scad, which documents both in full.
+// AXIS 2 — PIVOT ARCHITECTURE: how the piece hangs and turns. All three are
+//   built in gravity_gimbal.scad, and THAT FILE'S HEADER IS THE FULL ACCOUNT:
+//   how each one works, what each one costs, and what is still unproven about
+//   it. Repeated here is only what you need to pick one from this line — the
+//   component count and the measured lean. Do not grow this back into a second
+//   copy of that header; correct the header instead.
 //
-//     "pin"     A separate printed HUB PUCK (Ø11.5 x 8) holds the magnet and
-//               sticks to the steel board; a bought Ø3 x 16 steel dowel
-//               presses into it; the piece turns on that dowel; a Ø6 printed
-//               press cap retains it. The magnet is on the BOARD side, so its
-//               mass never enters the pendulum.
+//     "pin"     Magnet on the BOARD, in a printed Ø11.5 x 8 hub puck; the piece
+//               turns on a bought Ø3 x 16 steel dowel under a Ø6 press cap.
 //               PER PIECE: 3 PRINTED (body, hub puck, press cap) + 2 BOUGHT
 //               (Ø8 x 3 magnet, Ø3 x 16 dowel) = 5 components, plus a felt disc.
-//     "magnet"  No hub, no dowel, no cap. A Ø4 x 5 magnet sits in the piece's
-//               own bore and the piece turns ON THE MAGNET; a Ø9 x 0.8 steel
-//               disc, held by that same magnet with no glue, recesses into a
-//               1.0 mm counterbore in the FRONT face and stops the piece
-//               pulling off.
+//     "magnet"  Magnet IN THE PIECE: no hub, no dowel, no cap. The piece turns
+//               on a Ø4 x 5 magnet in its own bore, kept on by a Ø9 x 0.8 steel
+//               disc recessed into the FRONT face.
 //               PER PIECE: 1 PRINTED (the body) + 2 BOUGHT (Ø4 x 5 magnet,
-//               Ø9 x 0.8 disc) = 3 components. Three named parts go away (hub,
-//               dowel, cap) and one arrives (the disc), so the NET saving is
-//               TWO components -- and, the part that matters, PRINTED parts
-//               per piece go 3 -> 1.
+//               Ø9 x 0.8 disc) = 3 components. NET saving TWO components -- and,
+//               the part that matters, PRINTED parts per piece go 3 -> 1.
+//     "bearing" "pin" with the piece's plain bore replaced by a bought MR63ZZ
+//               ball bearing (Ø3 x Ø6 x 2.5). Board side identical to "pin".
+//               PER PIECE: 3 PRINTED (body, hub puck, press cap) + 3 BOUGHT
+//               (Ø8 x 3 magnet, Ø3 x 16 dowel, MR63ZZ bearing) = 6 components,
+//               plus a felt disc.
 //
 //   MEASURED, style "familiar": pin -> magnet costs
 //        pawn  1.16 -> 1.80 deg      king  0.99 -> 1.40 deg
 //   i.e. ~0.4-0.6 deg of extra lean to drop two of the five components per
-//   piece -- and two of the three PRINTED ones. It costs
-//   on two fronts and both are in that number: r in sin(lean) = mu*r/d
-//   becomes the Ø4.70 bore's radius instead of the Ø3.70 bore's, AND the
-//   magnet + disc now ride WITH the piece at zero lever arm, dragging the
-//   combined centre of mass toward the axis. (A Ø5 magnet was measured too
-//   and is worse on both counts: pawn 2.27, king 1.73. Ø4 is the choice.)
-//   Two things about "magnet" are UNPROVEN and are NOT in those numbers —
-//   whether the disc stays put through a board flip, and the face friction
-//   from the piece being clamped to the sheet. See gravity_gimbal.scad.
-//
-//     "bearing" The "pin" architecture with the piece's plain bore replaced
-//               by a bought MR63ZZ ball bearing (Ø3 x Ø6 x 2.5) pressed into
-//               the piece from the back; hub puck, dowel, magnet, felt and
-//               cap are IDENTICAL to "pin". Rolling friction makes the
-//               parking error effectively zero REGARDLESS of mu -- this is
-//               the fallback if Phase 0 measures friction far above the
-//               assumed 0.08. What it does NOT solve is damping: the greased
-//               pin's grease was the damper, and a near-frictionless pivot
-//               lets a piece ring after every board flip. That cost is real,
-//               unmeasured, and documented in gravity_gimbal.scad.
-//               PER PIECE: 3 PRINTED (body, hub puck, press cap) + 3 BOUGHT
-//               (Ø8 x 3 magnet, Ø3 x 16 dowel, MR63ZZ bearing) = 6 components,
-//               plus a felt disc.
+//   piece -- and two of the three PRINTED ones. Why it costs that, and the two
+//   UNPROVEN claims that are not in those numbers, are in gravity_gimbal.scad.
 pivot_type       = "pin";        // "pin" | "magnet" | "bearing"
 
 // ---- Board geometry ----
@@ -112,16 +94,29 @@ square_size      = 55;      // edge length of one playing square. RESOLVES D1.
                             //   piece, and the piece has to HIDE it or every
                             //   piece wears a grey collar. At 45 mm squares the
                             //   narrowest piece only covered a Ø9.8 waist, so the
-                            //   puck showed. The mechanical parts do not scale
-                            //   with the square -- only the ARTWORK does -- so
-                            //   growing the square grows the silhouette until it
-                            //   outruns the puck. 55 is the SMALLEST square at
-                            //   which the narrowest waist in the "monolith" style
+                            //   puck showed. 55 is the SMALLEST square at which
+                            //   the narrowest waist in the "monolith" style
                             //   (Ø12.0) covers Ø11.5 with nothing added: no skirt,
                             //   no collar, no fake boss. 0.5 mm to spare. The
                             //   "familiar" style is far clear of it -- its
-                            //   narrowest waist is the rook's 20 mm tower.
-                            //   Panel goes ~410 -> ~490 mm square as a result.
+                            //   narrowest silhouette AT THE PIVOT is the pawn's
+                            //   Ø19.2 body ball (its narrowest waist anywhere is
+                            //   the rook's 20 mm tower, which is also where its
+                            //   puck hides). Panel goes ~410 -> ~490 mm square.
+                            //
+                            //   THIS NUMBER DOES NOT DRIVE THE ARTWORK, and it
+                            //   is easy to read the paragraph above as though it
+                            //   did. NO style geometry reads square_size: the
+                            //   "familiar" heights are literals and "monolith"
+                            //   scales by its own literal MONO_SCALE. The square
+                            //   was the CONSTRAINT the artwork was sized against
+                            //   by hand, once, not a live input. Change it and
+                            //   nothing moves on its own -- you must re-scale
+                            //   each style yourself (MONO_SCALE, and familiar's
+                            //   height literals) and re-check the puck cover.
+                            //   The one relation that IS enforced is the swing
+                            //   fit, pivot_frac*H <= square_size/2, asserted per
+                            //   piece in pieces.scad.
 board_margin     = 25;      // border around the 8x8 grid (holds frame + labels)
 board_thickness  = 10;      // thickness of the printed panel (back cavity +
                             //   sensor bores; the steel sheet glues onto its
@@ -194,15 +189,26 @@ axle_dia         = 3;       // dowel pin diameter (stock Ø3 h8 x 16 mm).
                             //   which is the entire numerator of the settling
                             //   equation above: Ø4 -> Ø3 is ~19% less lean for
                             //   free.
-axle_len         = 11;      // how far the dowel stands proud of the hub face.
-                            //   11 proud + 5 embedded = a stock 16 mm dowel,
-                            //   so nothing has to be cut to length.
-                            //   Body (6) + cap grip (3.5) = 9.5, leaving
-                            //   1.5 mm axial float so print tolerance can't
-                            //   clamp the body against the hub and stall it.
+dowel_len        = 16;      // LENGTH OF THE BOUGHT DOWEL (stock Ø3 h8 x 16 mm).
+                            //   Nothing is ever cut to length; the two lines
+                            //   below are how this one number is spent.
 axle_embed       = 5;       // how deep the dowel presses into the hub. Bottoms
                             //   out ON the magnet, so there is no thin printed
                             //   web to crack and the dowel cannot creep deeper.
+axle_len         = dowel_len - axle_embed;
+                            // = 11: how far the dowel stands proud of the hub
+                            //   face. DERIVED, so buying a different dowel moves
+                            //   it instead of leaving two literals to drift into
+                            //   a length somebody has to saw.
+axial_float      = 1.5;     // DELIBERATE slack along the dowel. What sits in
+                            //   front of the hub is piece_thk (6) plus the press
+                            //   cap's grip zone, and that stack is kept SHORTER
+                            //   than axle_len by exactly this much, so print
+                            //   tolerance cannot clamp the body between cap and
+                            //   hub and stall the rotation. The cap's grip length
+                            //   is DERIVED from this in gravity_gimbal.scad:
+                            //   tune the float HERE, never the grip THERE, or the
+                            //   float silently goes to zero and the piece jams.
 axle_press_fit   = -0.10;   // hub bore = axle_dia + this. NEGATIVE = a real
                             //   interference fit; add a drop of CA if a given
                             //   printer runs loose.
@@ -216,8 +222,9 @@ axle_root_fillet = 1.2;     // chamfer at the mouth of the hub's dowel bore, so
                             //   countersink, and it no longer has one.
 hub_dia          = 11.5;    // diameter of the magnetic hub puck. Was 22, which
                             //   was never a requirement: the puck only ever had
-                            //   to hold one Ø8 magnet, so 11.5 leaves a 1.75 mm
-                            //   wall all round it. Checked against TIPPING
+                            //   to hold one Ø8 magnet, so 11.5 leaves a 1.6 mm
+                            //   wall all round the Ø8.3 cavity that magnet
+                            //   actually gets. Checked against TIPPING
                             //   rather than against area -- a 3 g piece hanging
                             //   11 mm proud of the wall tips the puck with
                             //   ~0.0003 N.m, and the magnet on steel resists
@@ -225,9 +232,13 @@ hub_dia          = 11.5;    // diameter of the magnetic hub puck. Was 22, which
                             //   marginal number. What it buys is that the piece
                             //   HIDES it: the silhouettes conceal Ø12.0 at the
                             //   waist, so 11.5 disappears with 0.5 mm to spare.
-hub_thk          = 8;       // thickness of the hub puck. Set by the stack-up:
-                            //   magnet_thk (3, from the back) + axle_embed (5,
-                            //   from the front) = 8, meeting in the middle.
+hub_thk          = magnet_thk + axle_embed;
+                            // = 8: the puck IS its stack-up -- magnet_thk (3,
+                            //   pressed in from the back) meeting axle_embed (5,
+                            //   bored from the front) in the middle, with no
+                            //   printed web between them to crack. Written as
+                            //   the sum so it cannot fall out of step with
+                            //   either half.
 cap_dia          = 6;       // retaining cap that keeps the body on the axle.
                             //   Was 8. The cap is the one part of the mechanism
                             //   that faces the ROOM, sitting in the middle of
@@ -246,10 +257,15 @@ pivot_magnet_dia = 4;       // the magnet the piece turns ON. Ø4 not Ø5: it is
                             //   lean directly. Measured, style "familiar":
                             //   Ø4 -> pawn 1.80 / king 1.40 deg,
                             //   Ø5 -> pawn 2.27 / king 1.73 deg.
-pivot_magnet_thk = 5;       // = piece_thk - disc_seat_depth, so the magnet
-                            //   drops in from the BACK and finishes flush with
-                            //   the back face, touching the steel sheet with
-                            //   no plastic in the gap.
+pivot_magnet_thk = 5;       // must equal piece_thk - disc_seat_depth, so the
+                            //   magnet drops in from the BACK and finishes flush
+                            //   with the back face, touching the steel sheet with
+                            //   no plastic in the gap. It stays a literal because
+                            //   it is a BOUGHT thickness -- you can only have the
+                            //   stock sizes -- but the relation is no longer a
+                            //   promise in a comment: it is asserted at the foot
+                            //   of this file, and a magnet that does not satisfy
+                            //   it fails the render instead of the assembly.
 retain_disc_dia  = 9;       // steel disc on the magnet's front pole, held by
                             //   the magnet itself -- NO GLUE. Wider than the
                             //   Ø4.70 bore, so it cannot pass through it, and
@@ -351,7 +367,9 @@ drain_dia        = 2;       // resin drain hole through the BACK face into the
 // below the axle, and the axle is the square centre, so every style must keep
 //     pivot_frac * H <= square_size / 2      i.e.  H <= 55 mm
 // with a little to spare for the swing. Both styles clear it (tallest pieces
-// 51.3 and 52.0 mm).
+// 51.3 and 52.0 mm). This is the ONE relation between square_size and the
+// artwork that is actually enforced, and pieces.scad asserts it per piece --
+// square_size drives nothing else about a silhouette (see its own comment).
 piece_thk        = 6;       // extrusion thickness of the silhouette plate
 pivot_frac       = 0.50;    // pivot height as a fraction of piece height.
                             //   0.50 puts the pivot on the silhouette's
@@ -414,3 +432,21 @@ module rrect(w, h, r) {
         circle(r);
     }
 }
+
+// Invariants ------------------------------------------------------------
+// Stack-ups that USED to be promises in a comment. Each one is a relation
+// between numbers a builder is invited to edit, and each one fails silently in
+// the assembly rather than in the render if it is broken -- which is the worst
+// possible place to find out, because by then it has been printed.
+assert(pivot_magnet_thk + disc_seat_depth == piece_thk,
+       str("common.scad: pivot_type \"magnet\" needs the magnet flush with the ",
+           "BACK face -- pivot_magnet_thk (", pivot_magnet_thk, ") + ",
+           "disc_seat_depth (", disc_seat_depth, ") must equal piece_thk (",
+           piece_thk, "). It does not, so the magnet would stand proud of the ",
+           "face or sit behind it with plastic in the magnetic gap."));
+
+assert(axle_len - piece_thk - axial_float > 0,
+       str("common.scad: nothing is left of the dowel for the press cap to grip ",
+           "-- axle_len (", axle_len, ") - piece_thk (", piece_thk, ") - ",
+           "axial_float (", axial_float, ") <= 0. Buy a longer dowel ",
+           "(dowel_len), thin the plate, or spend less on float."));

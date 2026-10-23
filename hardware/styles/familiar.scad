@@ -147,8 +147,10 @@ module pc_rook() {
 // those are different points. Sliding the head to reconcile them takes 12-20
 // mm and looks broken — the fix is structural: the SYMMETRIC foot is drawn
 // wider than the head reaches on either side, so the foot owns both bbox
-// edges, the bbox centre is pinned on x = 0 by construction, KSH is 0 and
-// stays 0, and KDX is left with the single job of centring the mass.
+// edges, THE BBOX CENTRE IS PINNED ON x = 0 BY CONSTRUCTION and nothing has to
+// shift the whole piece to put it there, and KDX is left with the single job
+// of centring the mass. (There was a KSH knob for that whole-piece shift; it
+// was 0, it had to stay 0, and a knob that may not be turned is not a knob.)
 //
 // THE PRICE, stated plainly: this is why the knight (40.5) is WIDER than the
 // bishop (36) and the rook (38). The foot has to out-reach the muzzle.
@@ -158,7 +160,6 @@ module pc_rook() {
 // will keep rendering perfectly, keep passing the shell check and keep
 // looking right while hanging crooked. The balance is TUNED, not structural.
 KDX =  0.75742;
-KSH =  0.00000;   // zero BY CONSTRUCTION: the foot owns both bbox edges.
 
 module knight_head(H) {
     kcap(-6.0, H - 2.2, -6.0, 39.5, 2.2);   // near ear -- capsule, so the
@@ -171,17 +172,15 @@ module knight_head(H) {
 }
 
 module knight_raw(H) {
-    translate([-KSH, 0]) {
-        kfoot(21.0, 18.0);
-        kcol(18.0, 7.0, 14.0, 16.0);
-        translate([KDX, 0]) difference() {
-            knight_head(H);
-            // The eye sits high and set back, where a horse's actually is —
-            // and, not by coincidence, where the head is thick. Any hole must
-            // keep more than 2*KCORNER of material to the outline, or the
-            // opening erodes the band to nothing and the eye breaks out.
-            translate([-6.5, 34.0]) circle(r = 2.2);
-        }
+    kfoot(21.0, 18.0);
+    kcol(18.0, 7.0, 14.0, 16.0);
+    translate([KDX, 0]) difference() {
+        knight_head(H);
+        // The eye sits high and set back, where a horse's actually is —
+        // and, not by coincidence, where the head is thick. Any hole must
+        // keep more than 2*KCORNER of material to the outline, or the
+        // opening erodes the band to nothing and the eye breaks out.
+        translate([-6.5, 34.0]) circle(r = 2.2);
     }
 }
 
@@ -219,9 +218,11 @@ module pc_queen() {
         polygon([[-0.6, 11.0], [13.0, 11.0], [11.0, 21.5], [15.0, 27.0], [-0.6, 27.0]]);
         polygon([[-0.6, 26.5], [15.0, 26.5], [20.4, 33.5], [-0.6, 33.5]]);   // flared coronet
     }
-    spike(  0.00, 32.0, 50.0, 5.6, 3.0);
-    spike(  9.15, 31.8, 45.0, 5.4, 2.9);   spike( -9.15, 31.8, 45.0, 5.4, 2.9);
-    spike( 18.10, 31.4, 40.5, 5.2, 2.8);   spike(-18.10, 31.4, 40.5, 5.2, 2.8);
+    spike(  0.00, 32.0, 50.0, 5.6, 3.0);   // the tall centre point, on the axis
+    sym() {                                // the graded pairs, mirrored not retyped
+        spike(  9.15, 31.8, 45.0, 5.4, 2.9);
+        spike( 18.10, 31.4, 40.5, 5.2, 2.8);
+    }
 }
 
 // KING  H 52  W 42 — plinth, vase, flared crown with two lobes, and the
@@ -245,6 +246,10 @@ module familiar_silhouette2d(t) {
     else if (t == "bishop") pc_bishop();
     else if (t == "queen")  pc_queen();
     else if (t == "king")   pc_king();
+    // An unknown name used to fall off the end of this chain and draw NOTHING,
+    // which OpenSCAD reports as a generic "nothing to export". Say what is
+    // actually wrong instead.
+    else assert(false, str("familiar.scad: unknown piece type \"", t, "\""));
 }
 
 function familiar_pheight(t) =
@@ -260,14 +265,16 @@ function familiar_pheight(t) =
 // connected region of the cavity needs one, or that region is a sealed void
 // that traps uncured resin — and it shows up as an extra shell in the STL.
 // A drain on the centreline is not safe by default: it has to land in broad
-// cavity, above the pivot, clear of the bore boss and of every cut.
+// cavity, above the pivot, clear of the pivot keep-out and of every cut.
 function familiar_drains(t) =
       t == "pawn"   ? [[0.0, 34.40]]   // head ball
     : t == "rook"   ? [[0.0, 28.00]]   // tower, under the corbel
     : t == "knight" ? [[0.0, 27.60]]   // thick of the head, clear of the eye
-    : t == "bishop" ? [[0.0, 40.85]]   // above the cross: the centreline below
-                                       //   it is blocked by the bore boss and
-                                       //   by the cross itself
+    : t == "bishop" ? [[0.0, 40.85]]   // above the cross: the centreline below it
+                                       //   is blocked by the cross, and lower
+                                       //   still by the ring of solid the cavity
+                                       //   leaves round the bore (pieces.scad --
+                                       //   this style draws no boss of its own)
     : t == "queen"  ? [[0.0, 30.50]]   // coronet band
     : t == "king"   ? [[0.0, 32.76]]   // crown band
     : [[0, 0]];

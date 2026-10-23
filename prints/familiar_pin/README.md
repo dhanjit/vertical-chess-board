@@ -4,7 +4,7 @@ The **`familiar`** artwork (ball-and-collar pawn, crenellated rook, horse
 knight, cleft mitre bishop, coronet queen, cross king — nobody has to be taught
 what any piece is) on the **`pin`** pivot (the magnet lives in a printed hub
 puck on the board; the piece turns on a bought Ø3 steel dowel). This is the
-repo's documented default: the look asked for, and the only pivot architecture
+repo's documented default: the conventional look, and the only pivot architecture
 with no unproven claims in it. It pays for that with parts count — **3 printed
 parts per piece** plus two bought ones.
 

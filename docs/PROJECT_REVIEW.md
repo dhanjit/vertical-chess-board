@@ -84,10 +84,10 @@ Print **one** pendulum pivot (hub + cap) + **one pawn**; buy a few magnets, felt
 discs, a **Ø3 × 16 mm steel dowel pin** and a tube of **silicone damping
 grease**. Nothing gets glued *into* the piece. Confirm: piece **sticks** to a
 vertical steel surface and **stays upright** when you spin it.
-→ **GO/NO-GO gate.** If it needs tuning, adjust the numbers in
-`hardware/common.scad` (the Phase-0 tuning table in
-[`BUILD_GUIDE.md`](BUILD_GUIDE.md) maps symptom → parameter) before printing a
-whole set. *(This is exactly why we test one piece before printing 32.)*
+→ **GO/NO-GO gate.** If it needs tuning, work the troubleshooting table in
+[`BUILD_GUIDE.md`](BUILD_GUIDE.md) before printing a whole set — mostly grease,
+seating and magnet checks, with a parameter named in the few rows where one is
+actually the answer. *(This is exactly why we test one piece before printing 32.)*
 
 ### Stage B — The manual wall board (1–2 weekends, ~₹3–4.5k) ⭐ the real goal
 Print the full set + board panel (in quarters) + frame; add the lazy-susan

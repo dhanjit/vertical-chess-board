@@ -207,7 +207,7 @@ magnet set:
 | **Queen** | Plinth, vase, flared **coronet of five ball-tipped points**, graded tallest in the centre. |
 | **King** | Plinth, vase, flared crown with two lobes, and a **cross** rising between them. |
 
-**Where it came from.** This is the look asked for: nobody has to be taught what
+**Where it came from.** This is the conventional look: nobody has to be taught what
 any of these is. It was drawn after a downloaded reference set — the flat
 online-style plates now kept as [familiar v2](#familiar-v2--the-adopted-base-design)
 — in the same visual language, without copying it, because that set's licence
@@ -711,7 +711,7 @@ nothing in the code caps either number.
 
 ### A new piece style
 
-**Two edits.**
+**One new file, one enum entry — plus three lists that have to learn the name.**
 
 1. **Drop one file in `hardware/styles/`**, e.g. `artdeco.scad`, exposing
    exactly three public symbols:
@@ -729,9 +729,16 @@ nothing in the code caps either number.
    [`pieces.scad`](../hardware/pieces.scad)** — one `use <styles/artdeco.scad>`
    and one branch in each of the three dispatchers — and the style's name to the
    `piece_style` comment in `common.scad`.
+3. **Add the name to `STYLES` in the [`Makefile`](../hardware/Makefile) *and* to
+   `$STYLES` in [`build.ps1`](../hardware/build.ps1).** These are two mirrors of
+   the same list, one per platform, and they are the honest cost of the recipe:
+   miss them and everything still works *except* `matrix`, which will quietly
+   render five combinations and call it six. Nothing warns you.
 
-Nothing else in the project changes. No mechanism knows a style by name, and no
-style knows anything about bores, magnets, hollowing or thickness.
+No *mechanism* changes: nothing in `pieces.scad` or `gravity_gimbal.scad` knows
+a style by name, no style knows anything about bores, magnets, hollowing or
+thickness, and neither build script validates the name against its list — a bad
+one trips the assert in `pieces.scad`, which is where the real gate lives.
 
 **Two things to know before you draw:**
 
@@ -775,8 +782,11 @@ geometry so `pieces.scad` never repeats the arithmetic. Add a branch to each of:
 | `pivot_cavity_keepout()` | solid the lightening cavity must not eat into (empty is a valid answer — it is, under `"pin"`) |
 | the render dispatch at the bottom | whatever this architecture actually has to print (`"magnet"` has no pivot parts at all, so it renders a test coupon) |
 
-Then add the name to the `pivot_type` comment in `common.scad` and to `PIVOTS`
-in the [`Makefile`](../hardware/Makefile) so `make matrix` picks it up.
+Then add the name to the `pivot_type` comment in `common.scad`, and to **both**
+matrix lists — `PIVOTS` in the [`Makefile`](../hardware/Makefile) and `$PIVOTS`
+in [`build.ps1`](../hardware/build.ps1) — so `make matrix` and
+`.\build.ps1 matrix` each pick it up. Forgetting one leaves that platform
+silently rendering a short matrix.
 
 **Quote its cost the same way**: the bore radius `r`, the mass it adds *at* the
 pivot (which shrinks `d`), the part count printed and bought, and — separately

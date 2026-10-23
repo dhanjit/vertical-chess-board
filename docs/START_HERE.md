@@ -123,10 +123,12 @@ also why a cheap PLA test print tells you the truth about a fancy resin one —
 same shape, same behaviour, whatever the plastic weighs.
 
 If that works and feels good → print the rest. If it needs tuning (spins too
-freely, or won't hold), the fix is usually one number in
-`hardware/common.scad` — the troubleshooting table in
-[`BUILD_GUIDE.md`](BUILD_GUIDE.md) says which one for each symptom. **This is
-the whole reason we test first — it's much cheaper to tweak one piece than 32.**
+freely, or won't hold), work the troubleshooting table in
+[`BUILD_GUIDE.md`](BUILD_GUIDE.md). Be warned what it will mostly tell you:
+the fixes are **physical** — grease, a thicker felt disc, checking the dowel
+bottomed out, a stronger magnet — not a number to change. Only a few rows name
+a parameter. **This is still the whole reason we test first — it's much cheaper
+to find that out on one piece than on 32.**
 
 Full step-by-step is in [`BUILD_GUIDE.md`](BUILD_GUIDE.md) ("Phase 0").
 
@@ -249,8 +251,10 @@ the hand-played wall board, and it's great on its own.
 ## If you get stuck
 
 Note exactly what happened ("the piece won't stay upright," "the magnet is
-too weak," "the printer bed is small"). Nearly every symptom maps to one
-number in `hardware/common.scad` — the troubleshooting table in
+too weak," "the printer bed is small"). The troubleshooting table in
 [`BUILD_GUIDE.md`](BUILD_GUIDE.md) and the "ways to make it easier" list in
-[`PROJECT_REVIEW.md`](PROJECT_REVIEW.md) §5 cover the common ones. The design
-is parametric on purpose: tune the number, re-print the one part.
+[`PROJECT_REVIEW.md`](PROJECT_REVIEW.md) §5 cover the common ones. Expect most
+answers to be something to *do* — grease it, seat the dowel properly, get a
+stronger magnet, print it solid — rather than a parameter to edit. Where a
+number **is** the answer the table names it, and the design is parametric on
+purpose: change it in `hardware/common.scad`, re-print the one part.
